@@ -11,9 +11,6 @@ import {
 import { Link } from "react-router-dom";
 
 function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
-  // Use "/" for local development, base URL for production
-  const homeLink = import.meta.env.DEV ? "/" : import.meta.env.BASE_URL;
-
   return (
     <MuiAppBar
       position="fixed"
@@ -32,7 +29,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
           variant="h6"
           noWrap
           component={Link}
-          to={homeLink}
+          to="/"
           sx={{
             textDecoration: "none",
             color: "inherit",
