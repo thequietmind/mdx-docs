@@ -10,18 +10,24 @@
       const path = window.location.pathname;
       const basePath = "/mdx-docs";
 
+      console.log("404.html - Original path:", path);
+
       // Remove the base path to get the actual route
       let route = path;
       if (path.startsWith(basePath)) {
         route = path.substring(basePath.length);
       }
 
+      console.log("404.html - Extracted route:", route);
+
       // Store the intended route in sessionStorage so the main app can access it
       if (route && route !== "/" && route !== "") {
         sessionStorage.setItem("redirectRoute", route);
+        console.log("404.html - Stored route in sessionStorage:", route);
       }
 
       // Redirect to the main app
+      console.log("404.html - Redirecting to:", basePath + "/");
       window.location.href = basePath + "/";
     </script>
     <p>Redirecting...</p>
