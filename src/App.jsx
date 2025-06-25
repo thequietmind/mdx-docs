@@ -16,19 +16,13 @@ const Wrapper = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log("App - Wrapper component rendered");
-
   // Check for redirect route when component mounts
   useEffect(() => {
-    console.log("App - Component mounted, checking for redirect parameter");
-
     // Check for redirect parameter in URL
     const urlParams = new URLSearchParams(window.location.search);
     const redirectRoute = urlParams.get("redirect");
-    console.log("App - Initial redirect route check:", redirectRoute);
 
     if (redirectRoute) {
-      console.log("App - Found redirect route, navigating to:", redirectRoute);
       // Remove the redirect parameter from URL
       urlParams.delete("redirect");
       const newUrl =
@@ -40,8 +34,6 @@ const Wrapper = ({ children }) => {
   }, [navigate]);
 
   useLayoutEffect(() => {
-    console.log("App - useLayoutEffect - Current location:", location.pathname);
-
     // Scroll to the top of the page when the route changes
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [location.pathname]);
@@ -94,10 +86,6 @@ function AppContent() {
 }
 
 function App() {
-  console.log(
-    "App - App component rendered, BASE_URL:",
-    import.meta.env.BASE_URL
-  );
   return (
     <Router basename={import.meta.env.BASE_URL}>
       <Wrapper>
