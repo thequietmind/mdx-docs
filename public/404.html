@@ -6,8 +6,23 @@
   </head>
   <body>
     <script>
-      // Simple redirect to the main app
-      window.location.href = "/mdx-docs/";
+      // Get the current path and extract the route
+      const path = window.location.pathname;
+      const basePath = "/mdx-docs";
+
+      // Remove the base path to get the actual route
+      let route = path;
+      if (path.startsWith(basePath)) {
+        route = path.substring(basePath.length);
+      }
+
+      // Store the intended route in sessionStorage so the main app can access it
+      if (route && route !== "/" && route !== "") {
+        sessionStorage.setItem("redirectRoute", route);
+      }
+
+      // Redirect to the main app
+      window.location.href = basePath + "/";
     </script>
     <p>Redirecting...</p>
   </body>

@@ -1,6 +1,10 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { useMemo, useState, useLayoutEffect } from "react";
-import { BrowserRouter as Router, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import AppBar from "./components/AppBar";
 import MDXContent from "./components/MDXContent";
@@ -10,11 +14,20 @@ import { createAppTheme } from "./themes";
 
 const Wrapper = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useLayoutEffect(() => {
+    // Check if there's a stored redirect route (from 404.html)
+    const redirectRoute = sessionStorage.getItem("redirectRoute");
+    if (redirectRoute) {
+      sessionStorage.removeItem("redirectRoute");
+      navigate(redirectRoute);
+      return;
+    }
+
     // Scroll to the top of the page when the route changes
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }, [location.pathname]);
+  }, [location.pathname, navigate]);
 
   return children;
 };
