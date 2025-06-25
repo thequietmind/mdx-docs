@@ -1,0 +1,91 @@
+{
+  "hash": "0a50e1ba",
+  "configHash": "dc23df1a",
+  "lockfileHash": "36226da9",
+  "browserHash": "ef8417fc",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "5e61a8b7",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "dd80e822",
+      "needsInterop": true
+    },
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/esm/index.js",
+      "file": "@mui_material.js",
+      "fileHash": "18c9048e",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "e09eac49",
+      "needsInterop": false
+    },
+    "@mui/icons-material/DarkMode": {
+      "src": "../../node_modules/@mui/icons-material/esm/DarkMode.js",
+      "file": "@mui_icons-material_DarkMode.js",
+      "fileHash": "37f4e405",
+      "needsInterop": false
+    },
+    "@mui/icons-material/LightMode": {
+      "src": "../../node_modules/@mui/icons-material/esm/LightMode.js",
+      "file": "@mui_icons-material_LightMode.js",
+      "fileHash": "cc78e358",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Menu": {
+      "src": "../../node_modules/@mui/icons-material/esm/Menu.js",
+      "file": "@mui_icons-material_Menu.js",
+      "fileHash": "4b38313d",
+      "needsInterop": false
+    },
+    "@mdx-js/react": {
+      "src": "../../node_modules/@mdx-js/react/index.js",
+      "file": "@mdx-js_react.js",
+      "fileHash": "a374f855",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Check": {
+      "src": "../../node_modules/@mui/icons-material/esm/Check.js",
+      "file": "@mui_icons-material_Check.js",
+      "fileHash": "1356cdcb",
+      "needsInterop": false
+    },
+    "@mui/icons-material/ContentCopy": {
+      "src": "../../node_modules/@mui/icons-material/esm/ContentCopy.js",
+      "file": "@mui_icons-material_ContentCopy.js",
+      "fileHash": "8bf66e41",
+      "needsInterop": false
+    },
+    "prism-react-renderer": {
+      "src": "../../node_modules/prism-react-renderer/dist/index.mjs",
+      "file": "prism-react-renderer.js",
+      "fileHash": "c15d875a",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-WEJJOBXA": {
+      "file": "chunk-WEJJOBXA.js"
+    },
+    "chunk-C6WWHQR7": {
+      "file": "chunk-C6WWHQR7.js"
+    },
+    "chunk-Y4FAKSHF": {
+      "file": "chunk-Y4FAKSHF.js"
+    },
+    "chunk-2KHBIA62": {
+      "file": "chunk-2KHBIA62.js"
+    },
+    "chunk-VCDLJVZS": {
+      "file": "chunk-VCDLJVZS.js"
+    }
+  }
+}
