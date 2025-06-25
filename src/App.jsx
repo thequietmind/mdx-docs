@@ -20,13 +20,21 @@ const Wrapper = ({ children }) => {
 
   // Check for redirect route when component mounts
   useEffect(() => {
-    console.log("App - Component mounted, checking for redirect route");
-    const redirectRoute = sessionStorage.getItem("redirectRoute");
+    console.log("App - Component mounted, checking for redirect parameter");
+
+    // Check for redirect parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectRoute = urlParams.get("redirect");
     console.log("App - Initial redirect route check:", redirectRoute);
 
     if (redirectRoute) {
       console.log("App - Found redirect route, navigating to:", redirectRoute);
-      sessionStorage.removeItem("redirectRoute");
+      // Remove the redirect parameter from URL
+      urlParams.delete("redirect");
+      const newUrl =
+        window.location.pathname +
+        (urlParams.toString() ? "?" + urlParams.toString() : "");
+      window.history.replaceState({}, "", newUrl);
       navigate(redirectRoute);
     }
   }, [navigate]);
@@ -34,26 +42,9 @@ const Wrapper = ({ children }) => {
   useLayoutEffect(() => {
     console.log("App - useLayoutEffect - Current location:", location.pathname);
 
-    // Check if there's a stored redirect route (from 404.html)
-    const redirectRoute = sessionStorage.getItem("redirectRoute");
-    console.log(
-      "App - useLayoutEffect - Stored redirect route:",
-      redirectRoute
-    );
-
-    if (redirectRoute) {
-      console.log(
-        "App - useLayoutEffect - Navigating to stored route:",
-        redirectRoute
-      );
-      sessionStorage.removeItem("redirectRoute");
-      navigate(redirectRoute);
-      return;
-    }
-
     // Scroll to the top of the page when the route changes
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  }, [location.pathname, navigate]);
+  }, [location.pathname]);
 
   return children;
 };

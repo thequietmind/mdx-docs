@@ -20,15 +20,16 @@
 
       console.log("404.html - Extracted route:", route);
 
-      // Store the intended route in sessionStorage so the main app can access it
+      // Redirect to the main app with the route as a URL parameter
       if (route && route !== "/" && route !== "") {
-        sessionStorage.setItem("redirectRoute", route);
-        console.log("404.html - Stored route in sessionStorage:", route);
+        const redirectUrl =
+          basePath + "/?redirect=" + encodeURIComponent(route);
+        console.log("404.html - Redirecting to:", redirectUrl);
+        window.location.href = redirectUrl;
+      } else {
+        console.log("404.html - Redirecting to:", basePath + "/");
+        window.location.href = basePath + "/";
       }
-
-      // Redirect to the main app
-      console.log("404.html - Redirecting to:", basePath + "/");
-      window.location.href = basePath + "/";
     </script>
     <p>Redirecting...</p>
   </body>
