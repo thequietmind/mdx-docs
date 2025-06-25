@@ -1,0 +1,161 @@
+import { Button } from "@mui/material";
+
+# Button
+
+The `Button` component is a fundamental UI element that allows users to trigger actions and events. Material UI's Button component provides a consistent, accessible, and customizable button implementation.
+
+Buttons can be used to trigger actions, submit forms, or navigate to different pages.
+
+## Variants
+
+Material UI buttons come in several variants to suit different use cases:
+
+### Contained Button
+
+The most prominent button style, used for primary actions:
+
+<Button variant="contained" color="primary">
+  Primary Action
+</Button>
+
+```jsx
+<Button variant="contained" color="primary">
+  Primary Action
+</Button>
+```
+
+### Outlined Button
+
+Used for secondary actions or when you want a less prominent button:
+
+<Button variant="outlined" color="secondary">
+  Secondary Action
+</Button>
+
+```jsx
+<Button variant="outlined" color="secondary">
+  Secondary Action
+</Button>
+```
+
+### Text Button
+
+The most subtle button style, often used for tertiary actions:
+
+<Button variant="text" color="inherit">
+  Text Button
+</Button>
+
+```jsx
+<Button variant="text" color="inherit">
+  Text Button
+</Button>
+```
+
+## Colors
+
+Buttons support different color schemes:
+
+<Button variant="contained" color="primary" sx={{ mr: 1 }}>
+  Primary
+</Button>
+<Button variant="contained" color="secondary" sx={{ mr: 1 }}>
+  Secondary
+</Button>
+<Button variant="contained" color="success" sx={{ mr: 1 }}>
+  Success
+</Button>
+<Button variant="contained" color="error">
+  Error
+</Button>
+
+## Sizes
+
+Buttons come in three sizes to accommodate different design needs:
+
+<Button size="small" variant="contained" sx={{ mr: 1 }}>
+  Small
+</Button>
+<Button size="medium" variant="contained" sx={{ mr: 1 }}>
+  Medium
+</Button>
+<Button size="large" variant="contained">
+  Large
+</Button>
+
+## Common Props
+
+The Button component accepts various props to customize its appearance and behavior:
+
+```jsx
+<Button
+  variant="contained" // 'text' | 'outlined' | 'contained'
+  color="primary" // 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'
+  size="medium" // 'small' | 'medium' | 'large'
+  disabled={false} // boolean
+  fullWidth={false} // boolean
+  startIcon={<Icon />} // ReactNode
+  endIcon={<Icon />} // ReactNode
+  onClick={handleClick} // function
+>
+  Button Text
+</Button>
+```
+
+## Accessibility
+
+Material UI buttons are built with accessibility in mind:
+
+- **Keyboard navigation**: Buttons can be focused and activated using the keyboard
+- **Screen readers**: Proper ARIA labels and roles are automatically applied
+- **Color contrast**: Meets WCAG guidelines for color contrast ratios
+- **Focus indicators**: Clear visual focus indicators for keyboard users
+
+## Best Practices
+
+1. **Use clear, action-oriented text** that describes what the button does
+2. **Choose appropriate variants** - contained for primary actions, outlined for secondary
+3. **Maintain consistent sizing** within your interface
+4. **Provide loading states** for buttons that trigger async operations
+5. **Use appropriate colors** to convey meaning (success, error, etc.)
+
+## Examples
+
+### Button with Icons
+
+```jsx
+import { Button } from '@mui/material';
+import { Send, Download } from '@mui/icons-material';
+
+<Button variant="contained" startIcon={<Send />}>
+  Send Message
+</Button>
+
+<Button variant="outlined" endIcon={<Download />}>
+  Download File
+</Button>
+```
+
+### Disabled State
+
+Use the `disabled` attribute to specify that a button should be disabled.
+
+```jsx
+<Button variant="contained" disabled>
+  Disabled Button
+</Button>
+```
+
+### Full Width Button
+
+Use the `fullWidth` attribute to specify that a button should be full width.
+
+```jsx
+<Button variant="contained" fullWidth>
+  Full Width Button
+</Button>
+```
+
+## Documentation
+
+- [Material UI - Button](https://mui.com/material-ui/react-button/)
