@@ -11,6 +11,9 @@ import {
 import { Link } from "react-router-dom";
 
 function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
+  // Use Vite's BASE_URL for the home link
+  const baseUrl = import.meta.env.BASE_URL;
+
   return (
     <MuiAppBar
       position="fixed"
@@ -29,7 +32,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
           variant="h6"
           noWrap
           component={Link}
-          to="/"
+          to={baseUrl}
           sx={{
             textDecoration: "none",
             color: "inherit",
