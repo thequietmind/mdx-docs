@@ -17,9 +17,14 @@ const Wrapper = ({ children }) => {
   const navigate = useNavigate();
 
   useLayoutEffect(() => {
+    console.log("App - Current location:", location.pathname);
+
     // Check if there's a stored redirect route (from 404.html)
     const redirectRoute = sessionStorage.getItem("redirectRoute");
+    console.log("App - Stored redirect route:", redirectRoute);
+
     if (redirectRoute) {
+      console.log("App - Navigating to stored route:", redirectRoute);
       sessionStorage.removeItem("redirectRoute");
       navigate(redirectRoute);
       return;
