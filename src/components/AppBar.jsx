@@ -6,6 +6,7 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Box,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -30,7 +31,6 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
           component={Link}
           to="/"
           sx={{
-            flexGrow: 1,
             textDecoration: "none",
             color: "inherit",
             "&:hover": {
@@ -40,6 +40,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
         >
           Design System
         </Typography>
+        <Box sx={{ flexGrow: 1 }} />
         <IconButton
           onClick={() => setDarkMode(!darkMode)}
           color="inherit"
