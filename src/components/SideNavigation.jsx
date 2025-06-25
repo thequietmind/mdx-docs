@@ -32,6 +32,18 @@ const SideNavigation = ({ mobileOpen, handleDrawerToggle }) => {
     handleDrawerToggle();
   };
 
+  // Helper function to get the correct route path
+  const getRoutePath = (route) => {
+    // For the home route, use "/" for local development, base URL for production
+    if (route === "/") {
+      return import.meta.env.DEV ? "/" : import.meta.env.BASE_URL;
+    }
+    // For other routes, prepend the base URL in production
+    return import.meta.env.DEV
+      ? route
+      : `${import.meta.env.BASE_URL}${route.slice(1)}`;
+  };
+
   const drawer = (
     <div>
       <Toolbar />
@@ -40,7 +52,7 @@ const SideNavigation = ({ mobileOpen, handleDrawerToggle }) => {
           <ListItem disablePadding key={page.route}>
             <ListItemButton
               component={Link}
-              to={page.route}
+              to={getRoutePath(page.route)}
               onClick={() => handleNavigationClick()}
               sx={{
                 "&:hover": {
