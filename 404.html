@@ -10,24 +10,18 @@
       const path = window.location.pathname;
       const basePath = "/mdx-docs";
 
-      console.log("404.html - Original path:", path);
-
       // Remove the base path to get the actual route
       let route = path;
       if (path.startsWith(basePath)) {
         route = path.substring(basePath.length);
       }
 
-      console.log("404.html - Extracted route:", route);
-
       // Redirect to the main app with the route as a URL parameter
       if (route && route !== "/" && route !== "") {
         const redirectUrl =
           basePath + "/?redirect=" + encodeURIComponent(route);
-        console.log("404.html - Redirecting to:", redirectUrl);
         window.location.href = redirectUrl;
       } else {
-        console.log("404.html - Redirecting to:", basePath + "/");
         window.location.href = basePath + "/";
       }
     </script>
