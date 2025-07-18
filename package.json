@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:coverage:average": "npm run test:coverage && node scripts/coverage-average.js",
     "test:ui": "vitest --ui"
   },
   "dependencies": {

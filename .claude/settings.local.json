@@ -3,7 +3,11 @@
     "allow": [
       "Bash(yarn add:*)",
       "Bash(yarn test:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(npm test:*)"
     ],
     "deny": []
   }
