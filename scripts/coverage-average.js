@@ -13,16 +13,18 @@ try {
     lines: 80,
     statements: 80,
     functions: 80,
-    branches: 80
+    branches: 80,
   };
 
   try {
-    const vitestConfigPath = pathToFileURL(join(process.cwd(), "vitest.config.js"));
+    const vitestConfigPath = pathToFileURL(
+      join(process.cwd(), "vitest.config.js")
+    );
     const vitestConfig = await import(vitestConfigPath);
     if (vitestConfig.default?.test?.coverage?.thresholds) {
       thresholds = vitestConfig.default.test.coverage.thresholds;
     }
-  } catch (error) {
+  } catch {
     console.warn("Could not read vitest.config.js, using default thresholds");
   }
 
@@ -50,11 +52,11 @@ try {
       metrics.branches) /
     4;
 
-  // ANSI color codes
+  // ANSI color codes (matching vitest's coverage colors)
   const colors = {
-    green: '\x1b[32m',
-    red: '\x1b[31m',
-    reset: '\x1b[0m'
+    green: "\x1b[32;1m",  // Bold green
+    red: "\x1b[31;1m",    // Bold red
+    reset: "\x1b[0m",
   };
 
   // Helper function to colorize based on percentage and metric type
@@ -65,18 +67,47 @@ try {
   };
 
   // Calculate average threshold for the average line
-  const avgThreshold = (thresholds.lines + thresholds.statements + thresholds.functions + thresholds.branches) / 4;
+  const avgThreshold =
+    (thresholds.lines +
+      thresholds.statements +
+      thresholds.functions +
+      thresholds.branches) /
+    4;
 
   // Output results
   console.log("\n========================================");
   console.log("Coverage Summary:");
   console.log("========================================");
-  console.log(colorize('lines', metrics.lines, `Lines:      ${metrics.lines.toFixed(2)}%`));
-  console.log(colorize('statements', metrics.statements, `Statements: ${metrics.statements.toFixed(2)}%`));
-  console.log(colorize('functions', metrics.functions, `Functions:  ${metrics.functions.toFixed(2)}%`));
-  console.log(colorize('branches', metrics.branches, `Branches:   ${metrics.branches.toFixed(2)}%`));
+  console.log(
+    colorize("lines", metrics.lines, `Lines:      ${metrics.lines.toFixed(2)}%`)
+  );
+  console.log(
+    colorize(
+      "statements",
+      metrics.statements,
+      `Statements: ${metrics.statements.toFixed(2)}%`
+    )
+  );
+  console.log(
+    colorize(
+      "functions",
+      metrics.functions,
+      `Functions:  ${metrics.functions.toFixed(2)}%`
+    )
+  );
+  console.log(
+    colorize(
+      "branches",
+      metrics.branches,
+      `Branches:   ${metrics.branches.toFixed(2)}%`
+    )
+  );
   console.log("----------------------------------------");
-  console.log(`${average >= avgThreshold ? colors.green : colors.red}Average:    ${average.toFixed(2)}%${colors.reset}`);
+  console.log(
+    `${
+      average >= avgThreshold ? colors.green : colors.red
+    }Average:    ${average.toFixed(2)}%${colors.reset}`
+  );
   console.log("========================================\n");
 } catch (error) {
   console.error("Error reading coverage data:", error.message);

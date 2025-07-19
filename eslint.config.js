@@ -5,7 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 
 export default [
-  { ignores: ["dist"] },
+  { ignores: ["dist", "coverage"] },
   {
     files: ["**/*.{js,jsx}"],
     languageOptions: {
@@ -63,6 +63,24 @@ export default [
           },
         },
       ],
+    },
+  },
+  // Configuration for Node.js scripts
+  {
+    files: ["scripts/**/*.js"],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+  // Configuration for test files
+  {
+    files: ["**/*.test.{js,jsx}", "**/__tests__/**/*.{js,jsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.jest,
+        global: "readonly",
+      },
     },
   },
 ];
