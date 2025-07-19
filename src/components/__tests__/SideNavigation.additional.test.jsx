@@ -1,32 +1,33 @@
-import { render, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import SideNavigation from '../SideNavigation';
+import { render, act } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
-describe('SideNavigation component - Additional Coverage Tests', () => {
+import SideNavigation from "../SideNavigation";
+
+describe("SideNavigation component - Additional Coverage Tests", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     // Reset body overflow style
-    document.body.style.overflow = '';
+    document.body.style.overflow = "";
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it('should reset body overflow after route change', () => {
+  it("should reset body overflow after route change", () => {
     // Set initial overflow
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     const { rerender } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={["/"]}>
         <SideNavigation mobileOpen={false} handleDrawerToggle={() => {}} />
       </MemoryRouter>
     );
 
     // Change route
     rerender(
-      <MemoryRouter initialEntries={['/colors']}>
+      <MemoryRouter initialEntries={["/colors"]}>
         <SideNavigation mobileOpen={false} handleDrawerToggle={() => {}} />
       </MemoryRouter>
     );
@@ -37,14 +38,14 @@ describe('SideNavigation component - Additional Coverage Tests', () => {
     });
 
     // Body overflow should be reset
-    expect(document.body.style.overflow).toBe('');
+    expect(document.body.style.overflow).toBe("");
   });
 
-  it('should clear timeout on unmount', () => {
-    const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout');
+  it("should clear timeout on unmount", () => {
+    const clearTimeoutSpy = vi.spyOn(global, "clearTimeout");
 
     const { unmount } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={["/"]}>
         <SideNavigation mobileOpen={false} handleDrawerToggle={() => {}} />
       </MemoryRouter>
     );
@@ -56,24 +57,24 @@ describe('SideNavigation component - Additional Coverage Tests', () => {
     expect(clearTimeoutSpy).toHaveBeenCalled();
   });
 
-  it('should handle multiple rapid route changes', () => {
-    document.body.style.overflow = 'hidden';
+  it("should handle multiple rapid route changes", () => {
+    document.body.style.overflow = "hidden";
 
     const { rerender } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={["/"]}>
         <SideNavigation mobileOpen={false} handleDrawerToggle={() => {}} />
       </MemoryRouter>
     );
 
     // Multiple rapid route changes
     rerender(
-      <MemoryRouter initialEntries={['/colors']}>
+      <MemoryRouter initialEntries={["/colors"]}>
         <SideNavigation mobileOpen={false} handleDrawerToggle={() => {}} />
       </MemoryRouter>
     );
 
     rerender(
-      <MemoryRouter initialEntries={['/typography']}>
+      <MemoryRouter initialEntries={["/typography"]}>
         <SideNavigation mobileOpen={false} handleDrawerToggle={() => {}} />
       </MemoryRouter>
     );
@@ -84,6 +85,6 @@ describe('SideNavigation component - Additional Coverage Tests', () => {
     });
 
     // Body overflow should still be reset
-    expect(document.body.style.overflow).toBe('');
+    expect(document.body.style.overflow).toBe("");
   });
 });
