@@ -30,7 +30,8 @@ export default defineConfig({
         'eslint.config.js',
         'src/App.jsx',
         'src/components/MDXContent.jsx',
-        'src/components/InlineCode.jsx'
+        'src/components/InlineCode.jsx',
+        'scripts/**'
       ],
       thresholds: {
         branches: 70,
