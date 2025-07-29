@@ -11,8 +11,8 @@ vi.mock("prism-react-renderer", () => ({
       className: `language-${language}`,
       style: {},
       tokens: [[{ content: code, types: ["plain"] }]],
-      getLineProps: () => ({}),
-      getTokenProps: () => ({ children: code }),
+      getLineProps: ({ key }) => ({ key }),
+      getTokenProps: ({ key }) => ({ key, children: code }),
     });
   },
   themes: {

@@ -90,10 +90,10 @@ const InlineCode = ({ children, ...props }) => {
             const { key: lineKey, ...restLineProps } = lineProps;
             return (
               <div key={lineKey} {...restLineProps}>
-                {line.map((token, key) => {
-                  const tokenProps = getTokenProps({ token, key });
+                {line.map((token, tokenIndex) => {
+                  const tokenProps = getTokenProps({ token, key: tokenIndex });
                   const { key: tokenKey, ...restTokenProps } = tokenProps;
-                  return <span key={tokenKey} {...restTokenProps} />;
+                  return <span key={`${i}-${tokenIndex}`} {...restTokenProps} />;
                 })}
               </div>
             );
