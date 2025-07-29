@@ -99,4 +99,23 @@ describe("useTheme hook - Additional Coverage Tests", () => {
       expect.any(Function)
     );
   });
+
+  it("should default to dark mode when matchMedia is not available", () => {
+    // Save original matchMedia
+    const originalMatchMedia = window.matchMedia;
+    
+    // Remove matchMedia to simulate unsupported browser
+    delete window.matchMedia;
+    
+    // Clear localStorage to ensure we go through getSystemPreference
+    localStorage.clear();
+    
+    const { result } = renderHook(() => useTheme());
+    
+    // Should default to dark mode when matchMedia is not available
+    expect(result.current.darkMode).toBe(true);
+    
+    // Restore matchMedia
+    window.matchMedia = originalMatchMedia;
+  });
 });

@@ -31,16 +31,18 @@ export const useTheme = () => {
 
   // Listen for system preference changes (only if no user preference is stored)
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (e) => {
-      // Only update if user hasn't set a preference
-      if (localStorage.getItem("darkMode") === null) {
-        setDarkMode(e.matches);
-      }
-    };
+    if (typeof window !== "undefined" && window.matchMedia) {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = (e) => {
+        // Only update if user hasn't set a preference
+        if (localStorage.getItem("darkMode") === null) {
+          setDarkMode(e.matches);
+        }
+      };
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
   }, []);
 
   return { darkMode, setDarkMode };
