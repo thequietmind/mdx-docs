@@ -23,10 +23,12 @@ return (
   elevation={1}
   sx={{
     p: 2,
-    mb: 2,
     display: "flex",
     alignItems: "center",
     gap: 2,
+    width: "100%",
+    minWidth: 0,
+    overflow: "hidden",
   }}
 >
   <Box
@@ -36,13 +38,33 @@ return (
       backgroundColor: color,
       borderRadius: 1,
       border: "1px solid rgba(0,0,0,0.12)",
+      flexShrink: 0,
     }}
   />
-  <Box sx={{ flexGrow: 1 }}>
-    <Typography variant="body2" color="text.secondary">
+  <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        "& strong": {
+          display: "inline",
+        },
+      }}
+    >
       <strong>{displayVariable || variable}</strong>
     </Typography>
-    <Typography variant="body2" color="text.secondary">
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      }}
+    >
       {color}
     </Typography>
   </Box>
@@ -52,6 +74,7 @@ return (
       size="small"
       sx={{
         color: copied ? "success.main" : "text.secondary",
+        flexShrink: 0,
         "&:hover": {
           color: copied ? "success.main" : "text.primary",
         },
@@ -66,54 +89,81 @@ return (
 export const ThemeColors = () => {
   const theme = useMuiTheme();
 
+const gridStyle = {
+display: 'grid',
+gridTemplateColumns: {
+xs: '1fr',
+md: 'repeat(2, 1fr)',
+lg: 'repeat(3, 1fr)',
+},
+gap: 2,
+mb: 3
+};
+
 return (
 
 <Box>
-      <Typography variant="h6" sx={{ mb: 2 }}>Primary</Typography>
-      <ColorSwatch color={theme.palette.primary.light} variable="theme.palette.primary.light" displayVariable="palette.primary.light" />
-      <ColorSwatch color={theme.palette.primary.main} variable="theme.palette.primary.main" displayVariable="palette.primary.main" />
-      <ColorSwatch color={theme.palette.primary.dark} variable="theme.palette.primary.dark" displayVariable="palette.primary.dark" />
-      <ColorSwatch color={theme.palette.primary.contrastText} variable="theme.palette.primary.contrastText" displayVariable="palette.primary.contrastText" />
+<Typography variant="h6" sx={{ mb: 2 }}>Primary</Typography>
+<Box sx={gridStyle}>
+<ColorSwatch color={theme.palette.primary.light} variable="theme.palette.primary.light" displayVariable="palette.primary.light" />
+<ColorSwatch color={theme.palette.primary.main} variable="theme.palette.primary.main" displayVariable="palette.primary.main" />
+<ColorSwatch color={theme.palette.primary.dark} variable="theme.palette.primary.dark" displayVariable="palette.primary.dark" />
+<ColorSwatch color={theme.palette.primary.contrastText} variable="theme.palette.primary.contrastText" displayVariable="palette.primary.contrastText" />
+</Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Secondary</Typography>
-      <ColorSwatch color={theme.palette.secondary.light} variable="theme.palette.secondary.light" displayVariable="palette.secondary.light" />
-      <ColorSwatch color={theme.palette.secondary.main} variable="theme.palette.secondary.main" displayVariable="palette.secondary.main" />
-      <ColorSwatch color={theme.palette.secondary.dark} variable="theme.palette.secondary.dark" displayVariable="palette.secondary.dark" />
-      <ColorSwatch color={theme.palette.secondary.contrastText} variable="theme.palette.secondary.contrastText" displayVariable="palette.secondary.contrastText" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.secondary.light} variable="theme.palette.secondary.light" displayVariable="palette.secondary.light" />
+        <ColorSwatch color={theme.palette.secondary.main} variable="theme.palette.secondary.main" displayVariable="palette.secondary.main" />
+        <ColorSwatch color={theme.palette.secondary.dark} variable="theme.palette.secondary.dark" displayVariable="palette.secondary.dark" />
+        <ColorSwatch color={theme.palette.secondary.contrastText} variable="theme.palette.secondary.contrastText" displayVariable="palette.secondary.contrastText" />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Background</Typography>
-      <ColorSwatch color={theme.palette.background.default} variable="theme.palette.background.default" displayVariable="palette.background.default" />
-      <ColorSwatch color={theme.palette.background.paper} variable="theme.palette.background.paper" displayVariable="palette.background.paper" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.background.default} variable="theme.palette.background.default" displayVariable="palette.background.default" />
+        <ColorSwatch color={theme.palette.background.paper} variable="theme.palette.background.paper" displayVariable="palette.background.paper" />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Text</Typography>
-      <ColorSwatch color={theme.palette.text.primary} variable="theme.palette.text.primary" displayVariable="palette.text.primary" />
-      <ColorSwatch color={theme.palette.text.secondary} variable="theme.palette.text.secondary" displayVariable="palette.text.secondary" />
-      <ColorSwatch color={theme.palette.text.disabled} variable="theme.palette.text.disabled" displayVariable="palette.text.disabled" />
-      <ColorSwatch color={theme.palette.text.icon} variable="theme.palette.text.icon" displayVariable="palette.text.icon" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.text.primary} variable="theme.palette.text.primary" displayVariable="palette.text.primary" />
+        <ColorSwatch color={theme.palette.text.secondary} variable="theme.palette.text.secondary" displayVariable="palette.text.secondary" />
+        <ColorSwatch color={theme.palette.text.disabled} variable="theme.palette.text.disabled" displayVariable="palette.text.disabled" />
+        <ColorSwatch color={theme.palette.text.icon} variable="theme.palette.text.icon" displayVariable="palette.text.icon" />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Error</Typography>
-      <ColorSwatch color={theme.palette.error.light} variable="theme.palette.error.light" displayVariable="palette.error.light" />
-      <ColorSwatch color={theme.palette.error.main} variable="theme.palette.error.main" displayVariable="palette.error.main" />
-      <ColorSwatch color={theme.palette.error.dark} variable="theme.palette.error.dark" displayVariable="palette.error.dark" />
-      <ColorSwatch color={theme.palette.error.contrastText} variable="theme.palette.error.contrastText" displayVariable="palette.error.contrastText" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.error.light} variable="theme.palette.error.light" displayVariable="palette.error.light" />
+        <ColorSwatch color={theme.palette.error.main} variable="theme.palette.error.main" displayVariable="palette.error.main" />
+        <ColorSwatch color={theme.palette.error.dark} variable="theme.palette.error.dark" displayVariable="palette.error.dark" />
+        <ColorSwatch color={theme.palette.error.contrastText} variable="theme.palette.error.contrastText" displayVariable="palette.error.contrastText" />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Warning</Typography>
-      <ColorSwatch color={theme.palette.warning.light} variable="theme.palette.warning.light" displayVariable="palette.warning.light" />
-      <ColorSwatch color={theme.palette.warning.main} variable="theme.palette.warning.main" displayVariable="palette.warning.main" />
-      <ColorSwatch color={theme.palette.warning.dark} variable="theme.palette.warning.dark" displayVariable="palette.warning.dark" />
-      <ColorSwatch color={theme.palette.warning.contrastText} variable="theme.palette.warning.contrastText" displayVariable="palette.warning.contrastText" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.warning.light} variable="theme.palette.warning.light" displayVariable="palette.warning.light" />
+        <ColorSwatch color={theme.palette.warning.main} variable="theme.palette.warning.main" displayVariable="palette.warning.main" />
+        <ColorSwatch color={theme.palette.warning.dark} variable="theme.palette.warning.dark" displayVariable="palette.warning.dark" />
+        <ColorSwatch color={theme.palette.warning.contrastText} variable="theme.palette.warning.contrastText" displayVariable="palette.warning.contrastText" />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Info</Typography>
-      <ColorSwatch color={theme.palette.info.light} variable="theme.palette.info.light" displayVariable="palette.info.light" />
-      <ColorSwatch color={theme.palette.info.main} variable="theme.palette.info.main" displayVariable="palette.info.main" />
-      <ColorSwatch color={theme.palette.info.dark} variable="theme.palette.info.dark" displayVariable="palette.info.dark" />
-      <ColorSwatch color={theme.palette.info.contrastText} variable="theme.palette.info.contrastText" displayVariable="palette.info.contrastText" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.info.light} variable="theme.palette.info.light" displayVariable="palette.info.light" />
+        <ColorSwatch color={theme.palette.info.main} variable="theme.palette.info.main" displayVariable="palette.info.main" />
+        <ColorSwatch color={theme.palette.info.dark} variable="theme.palette.info.dark" displayVariable="palette.info.dark" />
+        <ColorSwatch color={theme.palette.info.contrastText} variable="theme.palette.info.contrastText" displayVariable="palette.info.contrastText" />
+      </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>Success</Typography>
-      <ColorSwatch color={theme.palette.success.light} variable="theme.palette.success.light" displayVariable="palette.success.light" />
-      <ColorSwatch color={theme.palette.success.main} variable="theme.palette.success.main" displayVariable="palette.success.main" />
-      <ColorSwatch color={theme.palette.success.dark} variable="theme.palette.success.dark" displayVariable="palette.success.dark" />
-      <ColorSwatch color={theme.palette.success.contrastText} variable="theme.palette.success.contrastText" displayVariable="palette.success.contrastText" />
+      <Box sx={gridStyle}>
+        <ColorSwatch color={theme.palette.success.light} variable="theme.palette.success.light" displayVariable="palette.success.light" />
+        <ColorSwatch color={theme.palette.success.main} variable="theme.palette.success.main" displayVariable="palette.success.main" />
+        <ColorSwatch color={theme.palette.success.dark} variable="theme.palette.success.dark" displayVariable="palette.success.dark" />
+        <ColorSwatch color={theme.palette.success.contrastText} variable="theme.palette.success.contrastText" displayVariable="palette.success.contrastText" />
+      </Box>
     </Box>
 
 );
