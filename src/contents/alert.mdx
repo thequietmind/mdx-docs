@@ -1,0 +1,349 @@
+import { Alert, AlertTitle, Box, IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { useState } from "react";
+
+export const DismissibleAlert = ({ severity, children }) => {
+  const [open, setOpen] = useState(true);
+
+  if (!open) return null;
+
+  return (
+    <Alert
+      severity={severity}
+      action={
+        <IconButton
+          aria-label="close"
+          color="inherit"
+          size="small"
+          onClick={() => setOpen(false)}
+        >
+          <Close fontSize="inherit" />
+        </IconButton>
+      }
+    >
+      {children}
+    </Alert>
+  );
+};
+
+# Alert
+
+The `Alert` component displays important messages to users, such as success confirmations, error notifications, warnings, or informational messages. Material UI's Alert component provides a consistent, accessible, and customizable way to communicate feedback to users.
+
+Alerts are used to provide contextual feedback about user actions, system status, or important information that requires user attention.
+
+## Variants
+
+Material UI Alerts come in three variants to suit different design needs:
+
+### Standard
+
+The default variant with a colored background:
+
+<Alert severity="info">This is an info alert — check it out!</Alert>
+
+```jsx
+<Alert severity="info">This is an info alert — check it out!</Alert>
+```
+
+### Filled
+
+A variant with a solid colored background:
+
+<Alert severity="success" variant="filled">
+  This is a filled success alert — check it out!
+</Alert>
+
+```jsx
+<Alert severity="success" variant="filled">
+  This is a filled success alert — check it out!
+</Alert>
+```
+
+### Outlined
+
+A variant with an outlined border:
+
+<Alert severity="warning" variant="outlined">
+  This is an outlined warning alert — check it out!
+</Alert>
+
+```jsx
+<Alert severity="warning" variant="outlined">
+  This is an outlined warning alert — check it out!
+</Alert>
+```
+
+## Severity Levels
+
+Alerts support different severity levels to convey different types of messages:
+
+### Success
+
+Used to indicate successful operations or positive feedback:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <Alert severity="success">This is a success alert — check it out!</Alert>
+  <Alert severity="success" variant="filled">
+    This is a filled success alert — check it out!
+  </Alert>
+  <Alert severity="success" variant="outlined">
+    This is an outlined success alert — check it out!
+  </Alert>
+</Box>
+
+```jsx
+<Alert severity="success">This is a success alert — check it out!</Alert>
+```
+
+### Error
+
+Used to indicate errors or problems that need attention:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <Alert severity="error">This is an error alert — check it out!</Alert>
+  <Alert severity="error" variant="filled">
+    This is a filled error alert — check it out!
+  </Alert>
+  <Alert severity="error" variant="outlined">
+    This is an outlined error alert — check it out!
+  </Alert>
+</Box>
+
+```jsx
+<Alert severity="error">This is an error alert — check it out!</Alert>
+```
+
+### Warning
+
+Used to indicate warnings or cautionary information:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <Alert severity="warning">This is a warning alert — check it out!</Alert>
+  <Alert severity="warning" variant="filled">
+    This is a filled warning alert — check it out!
+  </Alert>
+  <Alert severity="warning" variant="outlined">
+    This is an outlined warning alert — check it out!
+  </Alert>
+</Box>
+
+```jsx
+<Alert severity="warning">This is a warning alert — check it out!</Alert>
+```
+
+### Info
+
+Used to provide informational messages:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <Alert severity="info">This is an info alert — check it out!</Alert>
+  <Alert severity="info" variant="filled">
+    This is a filled info alert — check it out!
+  </Alert>
+  <Alert severity="info" variant="outlined">
+    This is an outlined info alert — check it out!
+  </Alert>
+</Box>
+
+```jsx
+<Alert severity="info">This is an info alert — check it out!</Alert>
+```
+
+## With Title
+
+Alerts can include a title for better organization:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <Alert severity="error">
+    <AlertTitle>Error</AlertTitle>
+    This is an error alert with a title — check it out!
+  </Alert>
+  <Alert severity="warning">
+    <AlertTitle>Warning</AlertTitle>
+    This is a warning alert with a title — check it out!
+  </Alert>
+  <Alert severity="info">
+    <AlertTitle>Info</AlertTitle>
+    This is an info alert with a title — check it out!
+  </Alert>
+  <Alert severity="success">
+    <AlertTitle>Success</AlertTitle>
+    This is a success alert with a title — check it out!
+  </Alert>
+</Box>
+
+```jsx
+<Alert severity="error">
+  <AlertTitle>Error</AlertTitle>
+  This is an error alert with a title — check it out!
+</Alert>
+```
+
+## Icons
+
+### With Icons (Default)
+
+By default, alerts display an icon based on their severity:
+
+<Alert severity="success">This alert has an icon by default</Alert>
+
+### Without Icons
+
+You can hide the icon if needed:
+
+<Alert severity="info" icon={false}>
+  This alert has no icon
+</Alert>
+
+```jsx
+<Alert severity="info" icon={false}>
+  This alert has no icon
+</Alert>
+```
+
+## Dismissible Alerts
+
+Alerts can be made dismissible with a close button:
+
+<DismissibleAlert severity="info">
+  This is a dismissible alert — click the X to close it!
+</DismissibleAlert>
+
+```jsx
+const [open, setOpen] = useState(true);
+
+if (!open) return null;
+
+<Alert
+  severity="info"
+  action={
+    <IconButton
+      aria-label="close"
+      color="inherit"
+      size="small"
+      onClick={() => setOpen(false)}
+    >
+      <Close fontSize="inherit" />
+    </IconButton>
+  }
+>
+  This is a dismissible alert — click the X to close it!
+</Alert>
+```
+
+## Common Props
+
+The Alert component accepts various props to customize its appearance and behavior:
+
+```jsx
+<Alert
+  severity="info" // 'error' | 'info' | 'success' | 'warning'
+  variant="standard" // 'standard' | 'filled' | 'outlined'
+  icon={true} // boolean | ReactNode
+  onClose={handleClose} // function (makes alert dismissible)
+  color="info" // 'error' | 'info' | 'success' | 'warning'
+  action={<Button>Action</Button>} // ReactNode - custom action button
+  sx={{}} // object - custom styles
+>
+  Alert content
+</Alert>
+```
+
+## Accessibility
+
+Material UI Alerts are built with accessibility in mind:
+
+- **ARIA roles**: Proper ARIA roles and attributes for screen readers
+- **Color contrast**: Meets WCAG guidelines for color contrast ratios
+- **Icon indicators**: Visual and semantic indicators for different severity levels
+- **Keyboard navigation**: Full keyboard support for dismissible alerts
+- **Focus management**: Proper focus handling when alerts appear or disappear
+- **Screen reader announcements**: Alerts are properly announced to screen readers
+
+## Best Practices
+
+1. **Use appropriate severity levels** - Choose the right severity (error, warning, info, success) to match the message importance
+2. **Keep messages concise** - Alert messages should be brief and actionable
+3. **Use titles for complex messages** - Add AlertTitle for longer or more structured messages
+4. **Make critical alerts dismissible** - Allow users to dismiss non-critical alerts
+5. **Don't overuse alerts** - Reserve alerts for important information that requires attention
+6. **Provide actionable content** - Include clear next steps when appropriate
+7. **Consider placement** - Position alerts where users will notice them without being intrusive
+8. **Use consistent styling** - Maintain consistent alert styling throughout your application
+
+## Examples
+
+### Form Validation Error
+
+```jsx
+<Alert severity="error">
+  <AlertTitle>Validation Error</AlertTitle>
+  Please correct the following errors:
+  <ul>
+    <li>Email is required</li>
+    <li>Password must be at least 8 characters</li>
+  </ul>
+</Alert>
+```
+
+### Success Confirmation
+
+```jsx
+<Alert severity="success" variant="filled">
+  Your changes have been saved successfully!
+</Alert>
+```
+
+### Warning Message
+
+```jsx
+<Alert severity="warning" variant="outlined">
+  <AlertTitle>Warning</AlertTitle>
+  This action cannot be undone. Are you sure you want to continue?
+</Alert>
+```
+
+### Info with Action
+
+```jsx
+<Alert
+  severity="info"
+  action={
+    <Button color="inherit" size="small">
+      Learn More
+    </Button>
+  }
+>
+  New features are available. Click to learn more!
+</Alert>
+```
+
+### Auto-dismissing Alert
+
+```jsx
+const [open, setOpen] = useState(true);
+
+useEffect(() => {
+  if (open) {
+    const timer = setTimeout(() => {
+      setOpen(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }
+}, [open]);
+
+{open && (
+  <Alert
+    severity="success"
+    onClose={() => setOpen(false)}
+  >
+    Operation completed successfully!
+  </Alert>
+)}
+```
+
+## Documentation
+
+- [Material UI - Alert](https://mui.com/material-ui/react-alert/)
+

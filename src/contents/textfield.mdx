@@ -1,0 +1,404 @@
+import { TextField, Box, InputAdornment, IconButton } from "@mui/material";
+import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
+import { useState } from "react";
+
+# TextField
+
+The `TextField` component is a versatile form input component that wraps the Input component with additional features like labels, helper text, and validation states. Material UI's TextField provides a consistent, accessible, and customizable input implementation for forms.
+
+TextField components are used to collect user input in various formats including text, numbers, passwords, emails, and multiline text.
+
+## Variants
+
+Material UI TextFields come in three variants to suit different design needs:
+
+### Standard
+
+The default variant with an underline:
+
+<TextField label="Standard" variant="standard" defaultValue="Standard input" />
+
+```jsx
+<TextField label="Standard" variant="standard" defaultValue="Standard input" />
+```
+
+### Outlined
+
+A variant with an outlined border:
+
+<TextField label="Outlined" variant="outlined" defaultValue="Outlined input" />
+
+```jsx
+<TextField label="Outlined" variant="outlined" defaultValue="Outlined input" />
+```
+
+### Filled
+
+A variant with a filled background:
+
+<TextField label="Filled" variant="filled" defaultValue="Filled input" />
+
+```jsx
+<TextField label="Filled" variant="filled" defaultValue="Filled input" />
+```
+
+## Input Types
+
+TextField supports various input types for different data formats:
+
+### Text Input
+
+<TextField label="Text" type="text" defaultValue="Text input" />
+
+```jsx
+<TextField label="Text" type="text" defaultValue="Text input" />
+```
+
+### Password Input
+
+<TextField label="Password" type="password" defaultValue="password123" />
+
+```jsx
+<TextField label="Password" type="password" />
+```
+
+### Password with Toggle Visibility
+
+```jsx
+const [showPassword, setShowPassword] = useState(false);
+
+<TextField
+  label="Password"
+  type={showPassword ? "text" : "password"}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          onClick={() => setShowPassword(!showPassword)}
+          edge="end"
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
+```
+
+### Email Input
+
+<TextField label="Email" type="email" defaultValue="user@example.com" />
+
+```jsx
+<TextField label="Email" type="email" defaultValue="user@example.com" />
+```
+
+### Number Input
+
+<TextField label="Number" type="number" defaultValue="42" />
+
+```jsx
+<TextField label="Number" type="number" defaultValue="42" />
+```
+
+### Multiline Input
+
+<TextField
+  label="Multiline"
+  multiline
+  rows={4}
+  defaultValue="This is a multiline text field that can contain multiple lines of text."
+/>
+
+```jsx
+<TextField
+  label="Multiline"
+  multiline
+  rows={4}
+  defaultValue="Multiline text"
+/>
+```
+
+## States
+
+### Default State
+
+<TextField label="Default" defaultValue="Default state" />
+
+### Error State
+
+<TextField
+  label="Error"
+  error
+  helperText="This field has an error"
+  defaultValue="Error state"
+/>
+
+```jsx
+<TextField
+  label="Error"
+  error
+  helperText="This field has an error"
+/>
+```
+
+### Disabled State
+
+<TextField label="Disabled" disabled defaultValue="Disabled input" />
+
+```jsx
+<TextField label="Disabled" disabled defaultValue="Disabled input" />
+```
+
+### Required Field
+
+<TextField label="Required" required defaultValue="Required field" />
+
+```jsx
+<TextField label="Required" required />
+```
+
+## Helper Text
+
+Helper text provides additional context or validation messages:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <TextField
+    label="With Helper Text"
+    helperText="This is helper text"
+    defaultValue="Helper text example"
+  />
+  <TextField
+    label="Error with Helper Text"
+    error
+    helperText="This field is required"
+    defaultValue="Error helper text"
+  />
+</Box>
+
+```jsx
+<TextField
+  label="With Helper Text"
+  helperText="This is helper text"
+/>
+
+<TextField
+  label="Error with Helper Text"
+  error
+  helperText="This field is required"
+/>
+```
+
+## Icons and Adornments
+
+TextField supports icons at the start or end of the input:
+
+### Start Adornment
+
+<TextField
+  label="Email"
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <Email />
+      </InputAdornment>
+    ),
+  }}
+  defaultValue="user@example.com"
+/>
+
+```jsx
+<TextField
+  label="Email"
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <Email />
+      </InputAdornment>
+    ),
+  }}
+/>
+```
+
+### End Adornment
+
+<TextField
+  label="Password"
+  type="password"
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <Lock />
+      </InputAdornment>
+    ),
+  }}
+  defaultValue="password123"
+/>
+
+```jsx
+<TextField
+  label="Password"
+  type="password"
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <Lock />
+      </InputAdornment>
+    ),
+  }}
+/>
+```
+
+## Sizes
+
+TextField comes in three sizes:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  <TextField label="Small" size="small" defaultValue="Small size" />
+  <TextField label="Medium" size="medium" defaultValue="Medium size" />
+</Box>
+
+```jsx
+<TextField label="Small" size="small" />
+<TextField label="Medium" size="medium" />
+```
+
+## Full Width
+
+TextField can span the full width of its container:
+
+<TextField label="Full Width" fullWidth defaultValue="Full width input" />
+
+```jsx
+<TextField label="Full Width" fullWidth />
+```
+
+## Common Props
+
+The TextField component accepts various props to customize its appearance and behavior:
+
+```jsx
+<TextField
+  variant="outlined" // 'standard' | 'outlined' | 'filled'
+  label="Label" // string
+  placeholder="Placeholder" // string
+  type="text" // 'text' | 'password' | 'email' | 'number' | etc.
+  multiline={false} // boolean
+  rows={1} // number (for multiline)
+  required={false} // boolean
+  disabled={false} // boolean
+  error={false} // boolean
+  helperText="" // string
+  fullWidth={false} // boolean
+  size="medium" // 'small' | 'medium'
+  defaultValue="" // string
+  value="" // string (controlled)
+  onChange={handleChange} // function
+  InputProps={{}} // object - for adornments, etc.
+/>
+```
+
+## Accessibility
+
+Material UI TextFields are built with accessibility in mind:
+
+- **Labels**: Proper label association for screen readers
+- **Error states**: ARIA attributes for error announcements
+- **Keyboard navigation**: Full keyboard support for all interactions
+- **Focus indicators**: Clear visual focus indicators
+- **Helper text**: Properly associated with the input field
+- **Required fields**: Clear indication for required fields
+
+## Best Practices
+
+1. **Always provide labels** - Labels are essential for accessibility and usability
+2. **Use appropriate input types** - Use specific types (email, password, number) for better mobile experience
+3. **Provide helpful error messages** - Use helper text to explain validation errors clearly
+4. **Use helper text sparingly** - Don't overwhelm users with too much information
+5. **Consider mobile users** - Use appropriate input types to trigger correct mobile keyboards
+6. **Validate on blur** - Show validation errors after the user leaves the field
+7. **Use required sparingly** - Only mark fields as required when they're truly necessary
+8. **Provide clear placeholder text** - Use placeholders to show expected format
+
+## Examples
+
+### Login Form
+
+```jsx
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 400 }}>
+  <TextField
+    label="Email"
+    type="email"
+    required
+    fullWidth
+  />
+  <TextField
+    label="Password"
+    type="password"
+    required
+    fullWidth
+  />
+</Box>
+```
+
+### Search Input
+
+```jsx
+<TextField
+  label="Search"
+  placeholder="Search..."
+  InputProps={{
+    startAdornment: (
+      <InputAdornment position="start">
+        <SearchIcon />
+      </InputAdornment>
+    ),
+  }}
+  fullWidth
+/>
+```
+
+### Form with Validation
+
+```jsx
+const [email, setEmail] = useState("");
+const [error, setError] = useState(false);
+
+const handleEmailChange = (event) => {
+  const value = event.target.value;
+  setEmail(value);
+  setError(!value.includes("@"));
+};
+
+<TextField
+  label="Email"
+  type="email"
+  value={email}
+  onChange={handleEmailChange}
+  error={error}
+  helperText={error ? "Please enter a valid email address" : ""}
+  required
+/>
+```
+
+### Multiline with Character Count
+
+```jsx
+const [value, setValue] = useState("");
+const maxLength = 200;
+
+<TextField
+  label="Description"
+  multiline
+  rows={4}
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+  helperText={`${value.length}/${maxLength} characters`}
+  inputProps={{ maxLength }}
+/>
+```
+
+## Documentation
+
+- [Material UI - TextField](https://mui.com/material-ui/react-text-field/)
+

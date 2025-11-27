@@ -1,0 +1,374 @@
+import {
+  Chip,
+  Box,
+  Stack,
+  Avatar,
+} from "@mui/material";
+import { Face, Delete, Check } from "@mui/icons-material";
+import { useState } from "react";
+
+export const DeletableChips = () => {
+  const [chips, setChips] = useState(["Chip 1", "Chip 2", "Chip 3"]);
+
+  const handleDelete = (chipToDelete) => {
+    setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
+  };
+
+  return (
+    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+      {chips.map((chip) => (
+        <Chip
+          key={chip}
+          label={chip}
+          onDelete={() => handleDelete(chip)}
+        />
+      ))}
+    </Box>
+  );
+};
+
+export const ClickableChips = () => {
+  const [selected, setSelected] = useState(false);
+
+  return (
+    <Chip
+      label={selected ? "Selected" : "Click me"}
+      onClick={() => setSelected(!selected)}
+      color={selected ? "primary" : "default"}
+    />
+  );
+};
+
+# Chip
+
+The `Chip` component displays a compact element that can represent an input, attribute, or action. Material UI's Chip component provides a consistent, accessible, and customizable way to display tags, labels, or interactive elements.
+
+Chips are used to display small pieces of information, such as tags, filters, selections, or actions that can be clicked or deleted.
+
+## Variants
+
+Material UI Chips come in two variants:
+
+### Filled (Default)
+
+The default variant with a solid background:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Filled" />
+  <Chip label="Chip" color="primary" />
+  <Chip label="Chip" color="secondary" />
+</Box>
+
+```jsx
+<Chip label="Filled" />
+<Chip label="Chip" color="primary" />
+<Chip label="Chip" color="secondary" />
+```
+
+### Outlined
+
+A variant with an outlined border:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Outlined" variant="outlined" />
+  <Chip label="Chip" variant="outlined" color="primary" />
+  <Chip label="Chip" variant="outlined" color="secondary" />
+</Box>
+
+```jsx
+<Chip label="Outlined" variant="outlined" />
+<Chip label="Chip" variant="outlined" color="primary" />
+<Chip label="Chip" variant="outlined" color="secondary" />
+```
+
+## Sizes
+
+Chips come in two sizes:
+
+<Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
+  <Chip label="Small" size="small" />
+  <Chip label="Medium" size="medium" />
+  <Chip label="Small" size="small" variant="outlined" />
+  <Chip label="Medium" size="medium" variant="outlined" />
+</Box>
+
+```jsx
+<Chip label="Small" size="small" />
+<Chip label="Medium" size="medium" />
+```
+
+## Colors
+
+Chips support different color schemes:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Default" />
+  <Chip label="Primary" color="primary" />
+  <Chip label="Secondary" color="secondary" />
+  <Chip label="Success" color="success" />
+  <Chip label="Error" color="error" />
+  <Chip label="Warning" color="warning" />
+  <Chip label="Info" color="info" />
+</Box>
+
+```jsx
+<Chip label="Primary" color="primary" />
+<Chip label="Secondary" color="secondary" />
+<Chip label="Success" color="success" />
+<Chip label="Error" color="error" />
+<Chip label="Warning" color="warning" />
+<Chip label="Info" color="info" />
+```
+
+## Deletable Chips
+
+Chips can include a delete icon:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Deletable" onDelete={() => {}} />
+  <Chip label="Deletable" variant="outlined" onDelete={() => {}} />
+  <Chip label="Deletable" color="primary" onDelete={() => {}} />
+</Box>
+
+```jsx
+<Chip label="Deletable" onDelete={() => {}} />
+```
+
+### Interactive Deletable Chips
+
+<DeletableChips />
+
+```jsx
+const [chips, setChips] = useState(["Chip 1", "Chip 2", "Chip 3"]);
+
+const handleDelete = (chipToDelete) => {
+  setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
+};
+
+{chips.map((chip) => (
+  <Chip
+    key={chip}
+    label={chip}
+    onDelete={() => handleDelete(chip)}
+  />
+))}
+```
+
+## Clickable Chips
+
+Chips can be made clickable:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Clickable" onClick={() => {}} />
+  <Chip label="Clickable" variant="outlined" onClick={() => {}} />
+  <ClickableChips />
+</Box>
+
+```jsx
+<Chip label="Clickable" onClick={() => {}} />
+```
+
+## Icon Chips
+
+Chips can include icons:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip icon={<Face />} label="With Icon" />
+  <Chip icon={<Face />} label="With Icon" color="primary" />
+  <Chip
+    icon={<Face />}
+    label="Deletable"
+    onDelete={() => {}}
+  />
+</Box>
+
+```jsx
+<Chip icon={<Face />} label="With Icon" />
+<Chip
+  icon={<Face />}
+  label="Deletable"
+  onDelete={() => {}}
+/>
+```
+
+## Avatar Chips
+
+Chips can display avatars:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip avatar={<Avatar>M</Avatar>} label="Avatar" />
+  <Chip
+    avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
+    label="Avatar"
+    variant="outlined"
+  />
+  <Chip
+    avatar={<Avatar>JD</Avatar>}
+    label="Deletable"
+    onDelete={() => {}}
+  />
+</Box>
+
+```jsx
+<Chip avatar={<Avatar>M</Avatar>} label="Avatar" />
+<Chip
+  avatar={<Avatar alt="Natacha" src="/avatar.jpg" />}
+  label="Avatar"
+  variant="outlined"
+/>
+```
+
+## Custom Delete Icon
+
+You can customize the delete icon:
+
+```jsx
+<Chip
+  label="Custom Delete"
+  onDelete={() => {}}
+  deleteIcon={<Check />}
+/>
+```
+
+## Disabled Chips
+
+Chips can be disabled:
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Disabled" disabled />
+  <Chip label="Disabled" disabled variant="outlined" />
+  <Chip label="Disabled" disabled onDelete={() => {}} />
+</Box>
+
+```jsx
+<Chip label="Disabled" disabled />
+<Chip label="Disabled" disabled onDelete={() => {}} />
+```
+
+## Common Props
+
+The Chip component accepts various props to customize its appearance and behavior:
+
+```jsx
+<Chip
+  label="Label" // string | ReactNode
+  variant="filled" // 'filled' | 'outlined'
+  color="default" // 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
+  size="medium" // 'small' | 'medium'
+  icon={<Icon />} // ReactNode
+  avatar={<Avatar />} // ReactNode
+  onDelete={handleDelete} // function - makes chip deletable
+  onClick={handleClick} // function - makes chip clickable
+  disabled={false} // boolean
+  deleteIcon={<DeleteIcon />} // ReactNode - custom delete icon
+  sx={{}} // object - custom styles
+/>
+```
+
+## Accessibility
+
+Material UI Chips are built with accessibility in mind:
+
+- **Keyboard navigation**: Clickable and deletable chips are keyboard accessible
+- **ARIA attributes**: Proper ARIA labels and roles for screen readers
+- **Focus indicators**: Clear visual focus indicators
+- **Delete action**: Delete action is properly announced to screen readers
+- **Color contrast**: Meets WCAG guidelines for color contrast ratios
+- **Interactive elements**: All interactive chips have proper event handlers
+
+## Best Practices
+
+1. **Use chips for tags and labels** - Chips work well for displaying tags, categories, or labels
+2. **Keep labels concise** - Short, clear labels work best in chips
+3. **Provide delete functionality** - Use deletable chips when users should be able to remove items
+4. **Use appropriate colors** - Choose colors that match your design system and convey meaning
+5. **Consider clickable chips** - Make chips clickable when they represent selectable options
+6. **Use icons meaningfully** - Icons can enhance understanding but shouldn't replace clear labels
+7. **Group related chips** - Display related chips together in a flex container
+8. **Handle deletion gracefully** - Provide clear feedback when chips are deleted
+
+## Examples
+
+### Filter Chips
+
+```jsx
+const [filters, setFilters] = useState(["Active", "Featured"]);
+
+const handleDelete = (filterToDelete) => {
+  setFilters((filters) => filters.filter((filter) => filter !== filterToDelete));
+};
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  {filters.map((filter) => (
+    <Chip
+      key={filter}
+      label={filter}
+      onDelete={() => handleDelete(filter)}
+      color="primary"
+    />
+  ))}
+</Box>
+```
+
+### Selectable Chips
+
+```jsx
+const [selected, setSelected] = useState([]);
+
+const handleToggle = (value) => {
+  setSelected((prev) =>
+    prev.includes(value)
+      ? prev.filter((item) => item !== value)
+      : [...prev, value]
+  );
+};
+
+const options = ["Option 1", "Option 2", "Option 3"];
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  {options.map((option) => (
+    <Chip
+      key={option}
+      label={option}
+      onClick={() => handleToggle(option)}
+      color={selected.includes(option) ? "primary" : "default"}
+    />
+  ))}
+</Box>
+```
+
+### User Tags
+
+```jsx
+const users = [
+  { name: "John Doe", avatar: "JD" },
+  { name: "Jane Smith", avatar: "JS" },
+];
+
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  {users.map((user) => (
+    <Chip
+      key={user.name}
+      avatar={<Avatar>{user.avatar}</Avatar>}
+      label={user.name}
+      onDelete={() => {}}
+    />
+  ))}
+</Box>
+```
+
+### Status Chips
+
+```jsx
+<Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  <Chip label="Active" color="success" />
+  <Chip label="Pending" color="warning" />
+  <Chip label="Inactive" color="default" />
+  <Chip label="Error" color="error" />
+</Box>
+```
+
+## Documentation
+
+- [Material UI - Chip](https://mui.com/material-ui/react-chip/)
+
