@@ -5,26 +5,26 @@ import { useState } from "react";
 export const DismissibleAlert = ({ severity, children }) => {
   const [open, setOpen] = useState(true);
 
-  if (!open) return null;
+if (!open) return null;
 
-  return (
-    <Alert
-      severity={severity}
-      action={
-        <IconButton
-          aria-label="close"
-          color="inherit"
-          size="small"
-          onClick={() => setOpen(false)}
-        >
-          <Close fontSize="inherit" />
-        </IconButton>
-      }
+return (
+
+<Alert
+  severity={severity}
+  action={
+    <IconButton
+      aria-label="close"
+      color="inherit"
+      size="small"
+      onClick={() => setOpen(false)}
     >
-      {children}
-    </Alert>
-  );
-};
+      <Close fontSize="inherit" />
+    </IconButton>
+  }
+>
+  {children}
+</Alert>
+); };
 
 # Alert
 
@@ -40,10 +40,14 @@ Material UI Alerts come in three variants to suit different design needs:
 
 The default variant with a colored background:
 
-<Alert severity="info">This is an info alert — check it out!</Alert>
+<Alert severity="info">
+  <span>This is an info alert — check it out!</span>
+</Alert>
 
 ```jsx
-<Alert severity="info">This is an info alert — check it out!</Alert>
+<Alert severity="info">
+  <span>This is an info alert — check it out!</span>
+</Alert>
 ```
 
 ### Filled
@@ -51,12 +55,12 @@ The default variant with a colored background:
 A variant with a solid colored background:
 
 <Alert severity="success" variant="filled">
-  This is a filled success alert — check it out!
+  <span>This is a filled success alert — check it out!</span>
 </Alert>
 
 ```jsx
 <Alert severity="success" variant="filled">
-  This is a filled success alert — check it out!
+  <span>This is a filled success alert — check it out!</span>
 </Alert>
 ```
 
@@ -65,12 +69,12 @@ A variant with a solid colored background:
 A variant with an outlined border:
 
 <Alert severity="warning" variant="outlined">
-  This is an outlined warning alert — check it out!
+  <span>This is an outlined warning alert — check it out!</span>
 </Alert>
 
 ```jsx
 <Alert severity="warning" variant="outlined">
-  This is an outlined warning alert — check it out!
+  <span>This is an outlined warning alert — check it out!</span>
 </Alert>
 ```
 
@@ -83,17 +87,21 @@ Alerts support different severity levels to convey different types of messages:
 Used to indicate successful operations or positive feedback:
 
 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-  <Alert severity="success">This is a success alert — check it out!</Alert>
+  <Alert severity="success">
+    <span>This is a success alert — check it out!</span>
+  </Alert>
   <Alert severity="success" variant="filled">
-    This is a filled success alert — check it out!
+    <span>This is a filled success alert — check it out!</span>
   </Alert>
   <Alert severity="success" variant="outlined">
-    This is an outlined success alert — check it out!
+    <span>This is an outlined success alert — check it out!</span>
   </Alert>
 </Box>
 
 ```jsx
-<Alert severity="success">This is a success alert — check it out!</Alert>
+<Alert severity="success">
+  <span>This is a success alert — check it out!</span>
+</Alert>
 ```
 
 ### Error
@@ -101,17 +109,21 @@ Used to indicate successful operations or positive feedback:
 Used to indicate errors or problems that need attention:
 
 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-  <Alert severity="error">This is an error alert — check it out!</Alert>
+  <Alert severity="error">
+    <span>This is an error alert — check it out!</span>
+  </Alert>
   <Alert severity="error" variant="filled">
-    This is a filled error alert — check it out!
+    <span>This is a filled error alert — check it out!</span>
   </Alert>
   <Alert severity="error" variant="outlined">
-    This is an outlined error alert — check it out!
+    <span>This is an outlined error alert — check it out!</span>
   </Alert>
 </Box>
 
 ```jsx
-<Alert severity="error">This is an error alert — check it out!</Alert>
+<Alert severity="error">
+  <span>This is an error alert — check it out!</span>
+</Alert>
 ```
 
 ### Warning
@@ -119,17 +131,21 @@ Used to indicate errors or problems that need attention:
 Used to indicate warnings or cautionary information:
 
 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-  <Alert severity="warning">This is a warning alert — check it out!</Alert>
+  <Alert severity="warning">
+    <span>This is a warning alert — check it out!</span>
+  </Alert>
   <Alert severity="warning" variant="filled">
-    This is a filled warning alert — check it out!
+    <span>This is a filled warning alert — check it out!</span>
   </Alert>
   <Alert severity="warning" variant="outlined">
-    This is an outlined warning alert — check it out!
+    <span>This is an outlined warning alert — check it out!</span>
   </Alert>
 </Box>
 
 ```jsx
-<Alert severity="warning">This is a warning alert — check it out!</Alert>
+<Alert severity="warning">
+  <span>This is a warning alert — check it out!</span>
+</Alert>
 ```
 
 ### Info
@@ -137,17 +153,21 @@ Used to indicate warnings or cautionary information:
 Used to provide informational messages:
 
 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-  <Alert severity="info">This is an info alert — check it out!</Alert>
+  <Alert severity="info">
+    <span>This is an info alert — check it out!</span>
+  </Alert>
   <Alert severity="info" variant="filled">
-    This is a filled info alert — check it out!
+    <span>This is a filled info alert — check it out!</span>
   </Alert>
   <Alert severity="info" variant="outlined">
-    This is an outlined info alert — check it out!
+    <span>This is an outlined info alert — check it out!</span>
   </Alert>
 </Box>
 
 ```jsx
-<Alert severity="info">This is an info alert — check it out!</Alert>
+<Alert severity="info">
+  <span>This is an info alert — check it out!</span>
+</Alert>
 ```
 
 ## With Title
@@ -157,26 +177,26 @@ Alerts can include a title for better organization:
 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
   <Alert severity="error">
     <AlertTitle>Error</AlertTitle>
-    This is an error alert with a title — check it out!
+    <span>This is an error alert with a title — check it out!</span>
   </Alert>
   <Alert severity="warning">
     <AlertTitle>Warning</AlertTitle>
-    This is a warning alert with a title — check it out!
+    <span>This is a warning alert with a title — check it out!</span>
   </Alert>
   <Alert severity="info">
     <AlertTitle>Info</AlertTitle>
-    This is an info alert with a title — check it out!
+    <span>This is an info alert with a title — check it out!</span>
   </Alert>
   <Alert severity="success">
     <AlertTitle>Success</AlertTitle>
-    This is a success alert with a title — check it out!
+    <span>This is a success alert with a title — check it out!</span>
   </Alert>
 </Box>
 
 ```jsx
 <Alert severity="error">
   <AlertTitle>Error</AlertTitle>
-  This is an error alert with a title — check it out!
+  <span>This is an error alert with a title — check it out!</span>
 </Alert>
 ```
 
@@ -186,19 +206,21 @@ Alerts can include a title for better organization:
 
 By default, alerts display an icon based on their severity:
 
-<Alert severity="success">This alert has an icon by default</Alert>
+<Alert severity="success">
+  <span>This alert has an icon by default</span>
+</Alert>
 
 ### Without Icons
 
 You can hide the icon if needed:
 
 <Alert severity="info" icon={false}>
-  This alert has no icon
+  <span>This alert has no icon</span>
 </Alert>
 
 ```jsx
 <Alert severity="info" icon={false}>
-  This alert has no icon
+  <span>This alert has no icon</span>
 </Alert>
 ```
 
@@ -207,7 +229,7 @@ You can hide the icon if needed:
 Alerts can be made dismissible with a close button:
 
 <DismissibleAlert severity="info">
-  This is a dismissible alert — click the X to close it!
+  <span>This is a dismissible alert — click the X to close it!</span>
 </DismissibleAlert>
 
 ```jsx
@@ -228,8 +250,8 @@ if (!open) return null;
     </IconButton>
   }
 >
-  This is a dismissible alert — click the X to close it!
-</Alert>
+  <span>This is a dismissible alert — click the X to close it!</span>
+</Alert>;
 ```
 
 ## Common Props
@@ -246,7 +268,7 @@ The Alert component accepts various props to customize its appearance and behavi
   action={<Button>Action</Button>} // ReactNode - custom action button
   sx={{}} // object - custom styles
 >
-  Alert content
+  <span>Alert content</span>
 </Alert>
 ```
 
@@ -279,7 +301,7 @@ Material UI Alerts are built with accessibility in mind:
 ```jsx
 <Alert severity="error">
   <AlertTitle>Validation Error</AlertTitle>
-  Please correct the following errors:
+  <span>Please correct the following errors:</span>
   <ul>
     <li>Email is required</li>
     <li>Password must be at least 8 characters</li>
@@ -291,7 +313,7 @@ Material UI Alerts are built with accessibility in mind:
 
 ```jsx
 <Alert severity="success" variant="filled">
-  Your changes have been saved successfully!
+  <span>Your changes have been saved successfully!</span>
 </Alert>
 ```
 
@@ -300,7 +322,7 @@ Material UI Alerts are built with accessibility in mind:
 ```jsx
 <Alert severity="warning" variant="outlined">
   <AlertTitle>Warning</AlertTitle>
-  This action cannot be undone. Are you sure you want to continue?
+  <span>This action cannot be undone. Are you sure you want to continue?</span>
 </Alert>
 ```
 
@@ -315,7 +337,7 @@ Material UI Alerts are built with accessibility in mind:
     </Button>
   }
 >
-  New features are available. Click to learn more!
+  <span>New features are available. Click to learn more!</span>
 </Alert>
 ```
 
@@ -333,17 +355,15 @@ useEffect(() => {
   }
 }, [open]);
 
-{open && (
-  <Alert
-    severity="success"
-    onClose={() => setOpen(false)}
-  >
-    Operation completed successfully!
-  </Alert>
-)}
+{
+  open && (
+    <Alert severity="success" onClose={() => setOpen(false)}>
+      <span>Operation completed successfully!</span>
+    </Alert>
+  );
+}
 ```
 
 ## Documentation
 
 - [Material UI - Alert](https://mui.com/material-ui/react-alert/)
-
