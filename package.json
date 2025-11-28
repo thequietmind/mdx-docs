@@ -9,6 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "serve": "vite preview --host",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist -m 'Deploy React app to GitHub Pages'",
     "test": "vitest run",

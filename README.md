@@ -32,26 +32,26 @@ A modern React + Vite application for creating beautiful documentation sites usi
 
 ### Installation
 
-1. Clone the repository:
+Clone the repository:
 
 ```sh
 git clone https://github.com/thequietmind/mdx-docs.git
 cd mdx-docs
 ```
 
-2. Install dependencies:
+Install dependencies:
 
 ```sh
 yarn
 ```
 
-3. Start the development server:
+Start the development server:
 
 ```sh
 yarn dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ## 📋 Available Scripts
 
@@ -59,7 +59,8 @@ yarn dev
 |---------|-------------|
 | `yarn dev` | Start development server |
 | `yarn build` | Build for production |
-| `yarn preview` | Preview production build |
+| `yarn preview` | Preview production build locally |
+| `yarn serve` | Preview production build with network access |
 | `yarn lint` | Run ESLint |
 | `yarn test` | Run tests |
 | `yarn test:watch` | Run tests in watch mode |
@@ -71,7 +72,7 @@ yarn dev
 
 ### Adding New Pages
 
-1. Create a new MDX file in `src/contents/`:
+Create a new MDX file in `src/contents/`:
 
 ```mdx
 # My New Page
@@ -79,7 +80,7 @@ yarn dev
 This is my new documentation page with **markdown** and React components.
 ```
 
-2. Update the pages configuration in `src/config/pages.js`:
+Update the pages configuration in `src/config/pages.js`:
 
 ```js
 import MyNewPageMDX from "../contents/my-new-page.mdx";
@@ -140,7 +141,7 @@ function MyComponent() {
 
 ## 🏗️ Project Structure
 
-```
+```none
 src/
 ├── components/          # React components
 │   ├── AppBar.jsx      # Top navigation bar
@@ -202,13 +203,52 @@ The project is configured for GitHub Pages deployment:
 yarn deploy
 ```
 
-### Custom Deployment
+### Production Serving
 
-For other hosting platforms, build the project and serve the `dist` folder:
+To serve the app in production mode locally:
+
+#### Option 1: Using Vite Preview (Recommended)
 
 ```sh
 yarn build
-# Serve the dist/ directory
+yarn preview
+```
+
+This serves the production build at `http://localhost:4173` (or another port if 4173 is taken).
+
+#### Option 2: Using Vite Preview with Network Access
+
+```sh
+yarn build
+yarn serve
+```
+
+This serves the production build and makes it accessible on your local network.
+
+#### Option 3: Using a Static File Server
+
+Install a static server globally:
+
+```sh
+npm install -g serve
+# or
+yarn global add serve
+```
+
+Then build and serve:
+
+```sh
+yarn build
+serve -s dist -l 3000
+```
+
+### Custom Deployment
+
+For other hosting platforms (Netlify, Vercel, AWS S3, etc.), build the project and serve the `dist` folder:
+
+```sh
+yarn build
+# Upload the dist/ directory to your hosting platform
 ```
 
 ## 🔧 Configuration

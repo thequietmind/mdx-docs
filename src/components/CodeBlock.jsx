@@ -100,6 +100,7 @@ const CodeBlock = ({ children, className = "", ...props }) => {
             size="small"
             onClick={handleCopy}
             color="inherit"
+            aria-label={copied ? "Code copied to clipboard" : "Copy code to clipboard"}
             sx={{ width: 24, height: 24 }}
           >
             {copied ? (

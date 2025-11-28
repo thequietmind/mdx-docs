@@ -21,6 +21,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
           color="inherit"
           edge="start"
           onClick={handleDrawerToggle}
+          aria-label="Toggle navigation menu"
           sx={{ mr: 2, display: { sm: "none" } }}
         >
           <MenuIcon />
@@ -44,6 +45,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
         <IconButton
           onClick={() => setDarkMode(!darkMode)}
           color="inherit"
+          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           sx={{
             ml: 1,
             "&:focus": {
