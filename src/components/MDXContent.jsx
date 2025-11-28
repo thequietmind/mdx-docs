@@ -1,6 +1,6 @@
 import { MDXProvider } from "@mdx-js/react";
-import { Box } from "@mui/material";
-import React from "react";
+import { Box, CircularProgress } from "@mui/material";
+import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import CodeBlock from "./CodeBlock";
@@ -130,19 +130,37 @@ const MDXContent = () => {
           },
         }}
       >
-        <Routes>
-          {pages.map((page) => (
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "200px",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
+          <Routes>
+            {pages.map((page) => {
+              const LazyComponent = page.component;
+              return (
+                <Route
+                  key={page.route}
+                  path={page.route}
+                  element={<LazyComponent />}
+                />
+              );
+            })}
             <Route
-              key={page.route}
-              path={page.route}
-              element={<page.component />}
+              path="*"
+              element={React.createElement(getDefaultPage().component)}
             />
-          ))}
-          <Route
-            path="*"
-            element={React.createElement(getDefaultPage().component)}
-          />
-        </Routes>
+          </Routes>
+        </Suspense>
       </MDXProvider>
     </Box>
   );

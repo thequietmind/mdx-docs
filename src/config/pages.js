@@ -1,12 +1,16 @@
-import AlertMDX from "../contents/alert.mdx";
-import ButtonMDX from "../contents/button.mdx";
-import CardMDX from "../contents/card.mdx";
-import ChipMDX from "../contents/chip.mdx";
-import ColorsMDX from "../contents/colors.mdx";
-import HomeMDX from "../contents/home.mdx";
-import TabsMDX from "../contents/tabs.mdx";
-import TextFieldMDX from "../contents/textfield.mdx";
-import TypographyMDX from "../contents/typography.mdx";
+import { lazy } from "react";
+
+// Lazy load all MDX pages for code splitting
+// This reduces initial bundle size significantly
+const AlertMDX = lazy(() => import("../contents/alert.mdx"));
+const ButtonMDX = lazy(() => import("../contents/button.mdx"));
+const CardMDX = lazy(() => import("../contents/card.mdx"));
+const ChipMDX = lazy(() => import("../contents/chip.mdx"));
+const ColorsMDX = lazy(() => import("../contents/colors.mdx"));
+const HomeMDX = lazy(() => import("../contents/home.mdx"));
+const TabsMDX = lazy(() => import("../contents/tabs.mdx"));
+const TextFieldMDX = lazy(() => import("../contents/textfield.mdx"));
+const TypographyMDX = lazy(() => import("../contents/typography.mdx"));
 
 // Centralized pages configuration
 // This controls both navigation and routing
