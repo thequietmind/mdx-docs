@@ -2,7 +2,7 @@
 
 A React + Vite framework for building MDX-powered documentation sites. Write pages in Markdown with embedded React components, and get a fully-featured site with syntax highlighting, dark/light mode, and responsive navigation out of the box.
 
-**Demo:** https://thequietmind.github.io/mdx-docs/
+**Demo:** https://mdxdocs.com/
 
 ## Features
 
