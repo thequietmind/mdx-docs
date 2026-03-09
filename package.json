@@ -2,7 +2,7 @@
   "name": "@quietmind/mdx-docs",
   "version": "0.1.1",
   "type": "module",
-  "homepage": "https://thequietmind.github.io/mdx-docs",
+  "homepage": "https://mdxdocs.com",
   "exports": {
     ".": {
       "import": "./dist/index.js"
