@@ -1,0 +1,398 @@
+import { Tabs, Tab, Box, Typography } from "@mui/material";
+import { useState } from "react";
+import PhoneIcon from "@mui/icons-material/Phone";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import PersonPinIcon from "@mui/icons-material/PersonPin";
+
+export const TabPanel = ({ children, value, index, ...other }) => {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+};
+
+export const BasicTabs = () => {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Item One" />
+          <Tab label="Item Two" />
+          <Tab label="Item Three" />
+        </Tabs>
+      </Box>
+      <TabPanel value={value} index={0}>
+        Content for Item One
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        Content for Item Two
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Content for Item Three
+      </TabPanel>
+    </Box>
+  );
+};
+
+export const IconTabs = () => {
+  const [value, setValue] = useState(0);
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Tabs value={value} onChange={(e, v) => setValue(v)}>
+        <Tab icon={<PhoneIcon />} label="Recents" />
+        <Tab icon={<FavoriteIcon />} label="Favorites" />
+        <Tab icon={<PersonPinIcon />} label="Nearby" />
+      </Tabs>
+    </Box>
+  );
+};
+
+export const IconOnlyTabs = () => {
+  const [value, setValue] = useState(0);
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Tabs value={value} onChange={(e, v) => setValue(v)}>
+        <Tab icon={<PhoneIcon />} />
+        <Tab icon={<FavoriteIcon />} />
+        <Tab icon={<PersonPinIcon />} />
+      </Tabs>
+    </Box>
+  );
+};
+
+# Tabs
+
+The `Tabs` component provides a way to organize content into multiple panels that can be switched between. Material UI's Tabs component provides a consistent, accessible, and customizable navigation pattern.
+
+Tabs are used to organize related content into separate views, allowing users to switch between different sections without navigating to different pages.
+
+## Basic Tabs
+
+A simple tab navigation with text labels:
+
+<BasicTabs />
+
+```jsx
+const [value, setValue] = useState(0);
+
+const handleChange = (event, newValue) => {
+  setValue(newValue);
+};
+
+<Box sx={{ width: "100%" }}>
+  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Tabs value={value} onChange={handleChange}>
+      <Tab label="Item One" />
+      <Tab label="Item Two" />
+      <Tab label="Item Three" />
+    </Tabs>
+  </Box>
+  <TabPanel value={value} index={0}>
+    Content for Item One
+  </TabPanel>
+  <TabPanel value={value} index={1}>
+    Content for Item Two
+  </TabPanel>
+  <TabPanel value={value} index={2}>
+    Content for Item Three
+  </TabPanel>
+</Box>
+```
+
+## Tab Variants
+
+Tabs support different visual variants:
+
+### Standard (Default)
+
+<Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+  <Tabs value={0}>
+    <Tab label="Standard" />
+    <Tab label="Tabs" />
+  </Tabs>
+</Box>
+
+### Scrollable Tabs
+
+When tabs don't fit in the available width, they become scrollable:
+
+<Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3, maxWidth: 400 }}>
+  <Tabs
+    value={0}
+    variant="scrollable"
+    scrollButtons="auto"
+  >
+    <Tab label="Item One" />
+    <Tab label="Item Two" />
+    <Tab label="Item Three" />
+    <Tab label="Item Four" />
+    <Tab label="Item Five" />
+    <Tab label="Item Six" />
+    <Tab label="Item Seven" />
+  </Tabs>
+</Box>
+
+```jsx
+<Tabs
+  value={value}
+  variant="scrollable"
+  scrollButtons="auto"
+  onChange={handleChange}
+>
+  <Tab label="Item One" />
+  <Tab label="Item Two" />
+  {/* More tabs */}
+</Tabs>
+```
+
+### Full Width Tabs
+
+Tabs that span the full width of their container:
+
+<Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+  <Tabs value={0} variant="fullWidth">
+    <Tab label="Full Width" />
+    <Tab label="Tab Two" />
+    <Tab label="Tab Three" />
+  </Tabs>
+</Box>
+
+```jsx
+<Tabs value={value} variant="fullWidth" onChange={handleChange}>
+  <Tab label="Item One" />
+  <Tab label="Item Two" />
+  <Tab label="Item Three" />
+</Tabs>
+```
+
+## Icons
+
+### Icon with Label
+
+Tabs can include icons along with labels:
+
+<IconTabs />
+
+```jsx
+<Tabs value={value} onChange={handleChange}>
+  <Tab icon={<PhoneIcon />} label="Recents" />
+  <Tab icon={<FavoriteIcon />} label="Favorites" />
+  <Tab icon={<PersonPinIcon />} label="Nearby" />
+</Tabs>
+```
+
+### Icon Only
+
+Tabs can display only icons:
+
+<IconOnlyTabs />
+
+```jsx
+<Tabs value={value} onChange={handleChange}>
+  <Tab icon={<PhoneIcon />} />
+  <Tab icon={<FavoriteIcon />} />
+  <Tab icon={<PersonPinIcon />} />
+</Tabs>
+```
+
+## Vertical Tabs
+
+Tabs can be displayed vertically:
+
+```jsx
+<Box sx={{ flexGrow: 1, bgcolor: "background.paper", display: "flex", height: 224 }}>
+  <Tabs
+    orientation="vertical"
+    value={value}
+    onChange={handleChange}
+    sx={{ borderRight: 1, borderColor: "divider" }}
+  >
+    <Tab label="Item One" />
+    <Tab label="Item Two" />
+    <Tab label="Item Three" />
+  </Tabs>
+  <TabPanel value={value} index={0}>
+    Content for Item One
+  </TabPanel>
+  <TabPanel value={value} index={1}>
+    Content for Item Two
+  </TabPanel>
+  <TabPanel value={value} index={2}>
+    Content for Item Three
+  </TabPanel>
+</Box>
+```
+
+## Disabled Tabs
+
+Individual tabs can be disabled:
+
+<Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+  <Tabs value={0}>
+    <Tab label="Active" />
+    <Tab label="Disabled" disabled />
+    <Tab label="Active" />
+  </Tabs>
+</Box>
+
+```jsx
+<Tabs value={value} onChange={handleChange}>
+  <Tab label="Active" />
+  <Tab label="Disabled" disabled />
+  <Tab label="Active" />
+</Tabs>
+```
+
+## Colored Tabs
+
+Tabs support different color schemes:
+
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
+  <Tabs value={0} textColor="primary" indicatorColor="primary">
+    <Tab label="Primary" />
+    <Tab label="Tabs" />
+  </Tabs>
+  <Tabs value={0} textColor="secondary" indicatorColor="secondary">
+    <Tab label="Secondary" />
+    <Tab label="Tabs" />
+  </Tabs>
+</Box>
+
+```jsx
+<Tabs
+  value={value}
+  textColor="primary"
+  indicatorColor="primary"
+  onChange={handleChange}
+>
+  <Tab label="Item One" />
+  <Tab label="Item Two" />
+</Tabs>
+```
+
+## Common Props
+
+The Tabs component accepts various props to customize its appearance and behavior:
+
+```jsx
+<Tabs
+  value={0} // number - index of selected tab
+  onChange={handleChange} // function - called when tab changes
+  variant="standard" // 'standard' | 'scrollable' | 'fullWidth'
+  orientation="horizontal" // 'horizontal' | 'vertical'
+  textColor="inherit" // 'inherit' | 'primary' | 'secondary'
+  indicatorColor="primary" // 'primary' | 'secondary'
+  scrollButtons="auto" // false | true | 'auto'
+  centered={false} // boolean - center tabs
+  sx={{}} // object - custom styles
+>
+  <Tab
+    label="Label" // string | ReactNode
+    icon={<Icon />} // ReactNode
+    disabled={false} // boolean
+    value={0} // number - tab index (if different from position)
+  />
+</Tabs>
+```
+
+## Accessibility
+
+Material UI Tabs are built with accessibility in mind:
+
+- **ARIA attributes**: Proper ARIA roles and attributes for screen readers
+- **Keyboard navigation**: Arrow keys can be used to navigate between tabs
+- **Focus management**: Proper focus handling when switching tabs
+- **Screen reader support**: Tab labels and content are properly announced
+- **Tab panels**: Use proper role="tabpanel" for tab content
+- **Active indicator**: Clear visual indication of the active tab
+
+## Best Practices
+
+1. **Keep tab labels concise** - Short, clear labels work best
+2. **Limit the number of tabs** - Too many tabs can be overwhelming
+3. **Use scrollable tabs for many items** - Enable scrolling when you have many tabs
+4. **Provide clear content** - Each tab panel should have distinct, relevant content
+5. **Consider mobile experience** - Scrollable tabs work well on mobile devices
+6. **Use icons appropriately** - Icons can enhance understanding but shouldn't replace clear labels
+7. **Maintain state properly** - Use controlled components for predictable behavior
+8. **Group related content** - Tabs should contain related information
+
+## Examples
+
+### Controlled Tabs
+
+```jsx
+const [value, setValue] = useState(0);
+
+const handleChange = (event, newValue) => {
+  setValue(newValue);
+};
+
+<Box sx={{ width: "100%" }}>
+  <Tabs value={value} onChange={handleChange}>
+    <Tab label="Overview" />
+    <Tab label="Details" />
+    <Tab label="Settings" />
+  </Tabs>
+  {/* Tab content */}
+</Box>
+```
+
+### Tabs with Navigation
+
+```jsx
+const [value, setValue] = useState(0);
+
+const handleChange = (event, newValue) => {
+  setValue(newValue);
+  // Navigate or update content based on tab
+};
+
+<Tabs value={value} onChange={handleChange}>
+  <Tab label="Home" />
+  <Tab label="Products" />
+  <Tab label="About" />
+  <Tab label="Contact" />
+</Tabs>
+```
+
+### Tabs with Badges
+
+```jsx
+import { Badge } from "@mui/material";
+
+<Tabs value={value} onChange={handleChange}>
+  <Tab
+    label={
+      <Badge badgeContent={4} color="primary">
+        Messages
+      </Badge>
+    }
+  />
+  <Tab label="Notifications" />
+</Tabs>
+```
+
+## Documentation
+
+- [Material UI - Tabs](https://mui.com/material-ui/react-tabs/)
+
