@@ -1,3 +1,3 @@
 export const site = {
-  name: "mdx-docs",
+  name: "MDX Docs",
 };
