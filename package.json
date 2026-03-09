@@ -20,6 +20,7 @@
     "build:lib": "vite build --config vite.lib.config.js",
     "lint": "eslint .",
     "preview": "vite preview",
+    "release": "yarn build:lib && npm publish",
     "serve": "vite preview --host",
     "test": "vitest run",
     "test:watch": "vitest",
