@@ -1,0 +1,21 @@
+# mdx-docs
+
+Welcome to the mdx-docs example. This is the default demo site for the package.
+
+## Getting Started
+
+Create a site repo and install the package:
+
+```sh
+npm install mdx-docs
+```
+
+Then in your `main.jsx`:
+
+```js
+import { createApp } from "mdx-docs";
+import { pages } from "./config/pages.js";
+import { site } from "./config/site.js";
+
+createApp({ pages, site });
+```

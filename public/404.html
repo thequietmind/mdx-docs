@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <script>
+      // Get the current path
+      const path = window.location.pathname;
+
+      // Redirect to the main app with the route as a URL parameter
+      if (path && path !== "/") {
+        window.location.href = "/?redirect=" + encodeURIComponent(path);
+      } else {
+        window.location.href = "/";
+      }
+    </script>
+    <p>Redirecting...</p>
+  </body>
+</html>
