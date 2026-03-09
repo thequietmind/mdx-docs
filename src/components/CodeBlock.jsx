@@ -9,6 +9,10 @@ import "prismjs/components/prism-shell-session";
 import "prismjs/components/prism-docker";
 import "prismjs/components/prism-yaml";
 import "prismjs/components/prism-toml";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-typescript";
+import "prismjs/components/prism-tsx";
 
 const LANGUAGE_ALIASES = {
   sh: "bash",
