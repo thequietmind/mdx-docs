@@ -11,9 +11,6 @@
     max-width: 1280px;
     padding: 2rem;
   }
-  h1 {
-    font-size: 2em;
-  }
 }
 
 @media (max-width: 378px) {
