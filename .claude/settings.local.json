@@ -1,19 +1,31 @@
 {
   "permissions": {
     "allow": [
-      "Bash(yarn add:*)",
-      "Bash(yarn test:*)",
-      "Bash(rm:*)",
-      "Bash(npm run test:coverage:*)",
       "Bash(ls:*)",
       "Bash(find:*)",
-      "Bash(npm test:*)",
-      "Bash(npm run coverage:*)",
+      "Bash(grep)",
       "Bash(yarn lint)",
-      "Bash(grep -v \"^\\\\.\\\\.$\")",
-      "Bash(grep -n \"^[A-Z][a-z ]\\\\{1,18\\\\}$\" /Volumes/External/code/mdx-docs/example/pages/*.mdx)",
-      "Bash(grep -rn \"^  [A-Z][^<{].\\\\{0,16\\\\}$\" /Volumes/External/code/mdx-docs/example/pages/*.mdx)"
+      "Bash(yarn test:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(npm run coverage:*)",
+      "Bash(rm:./tmp/*)",
+      "Bash(rm:./coverage/*)",
+      "Bash(rm:./dist/*)",
+      "Bash(rm:./build/*)"
     ],
-    "deny": []
+    "deny": [
+      "Bash(rm:-rf /)",
+      "Bash(rm:-rf ~)",
+      "Bash(rm:-rf .)",
+      "Bash(sudo:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(chmod:*)",
+      "Bash(chown:*)",
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(git clean:*)"
+    ]
   }
 }
