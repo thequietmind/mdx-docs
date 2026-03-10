@@ -40,6 +40,8 @@ my-site/
 ├── config/
 │   ├── pages.js
 │   └── site.js
+├── public/
+│   └── favicon.svg
 ├── index.html
 ├── main.jsx
 ├── vite.config.js
@@ -51,6 +53,7 @@ my-site/
 ```js
 export const site = {
   name: "My Site",
+  description: "My site description",
 };
 ```
 
@@ -87,9 +90,10 @@ createApp({ pages, site });
 ```js
 import { defineConfig } from "vite";
 import { createMdxDocsConfig } from "@quietmind/mdx-docs/vite";
+import { site } from "./config/site.js";
 
 export default defineConfig(
-  createMdxDocsConfig({ rootDir: import.meta.dirname })
+  createMdxDocsConfig({ rootDir: import.meta.dirname, site })
 );
 ```
 
@@ -101,7 +105,8 @@ export default defineConfig(
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Site</title>
+    <meta name="description" content="%SITE_DESCRIPTION%" />
+    <title>%SITE_NAME%</title>
   </head>
   <body>
     <div id="root"></div>

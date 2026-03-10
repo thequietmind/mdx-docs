@@ -11,7 +11,10 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     {
       name: "html-site-config",
-      transformIndexHtml: (html) => html.replace("%SITE_NAME%", site.name),
+      transformIndexHtml: (html) =>
+        html
+          .replace("%SITE_NAME%", site.name)
+          .replace("%SITE_DESCRIPTION%", site.description ?? ""),
     },
     react(),
     mdx({
