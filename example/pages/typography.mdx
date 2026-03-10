@@ -416,32 +416,16 @@ export const lightTheme = {
 
 Typography supports different color schemes that integrate with your Material UI theme:
 
-{" "}
-
-<Typography variant="h6" color="primary">
-  Primary Color Text
-</Typography>
-<Typography variant="h6" color="secondary">
-  Secondary Color Text
-</Typography>
-<Typography variant="h6" color="error">
-  Error Color Text
-</Typography>
-<Typography variant="h6" color="warning">
-  Warning Color Text
-</Typography>
-<Typography variant="h6" color="info">
-  Info Color Text
-</Typography>
-<Typography variant="h6" color="success">
-  Success Color Text
-</Typography>
-<Typography variant="h6" color="text.primary">
-  Text Primary
-</Typography>
-<Typography variant="h6" color="text.secondary">
-  Text Secondary
-</Typography>
+<Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+  <Typography variant="h6" color="primary">Primary Color Text</Typography>
+  <Typography variant="h6" color="secondary">Secondary Color Text</Typography>
+  <Typography variant="h6" color="error">Error Color Text</Typography>
+  <Typography variant="h6" color="warning">Warning Color Text</Typography>
+  <Typography variant="h6" color="info">Info Color Text</Typography>
+  <Typography variant="h6" color="success">Success Color Text</Typography>
+  <Typography variant="h6" color="text.primary">Text Primary</Typography>
+  <Typography variant="h6" color="text.secondary">Text Secondary</Typography>
+</Box>
 
 ```jsx
 <Typography variant="h6" color="primary">

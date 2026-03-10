@@ -97,35 +97,17 @@ const MDXContent = () => {
               typeof props.children === "string" &&
               props.children.length < 20;
 
-            // Check if this looks like component content (text that might be from a Typography component)
-            const isComponentContent =
-              props.children &&
-              typeof props.children === "string" &&
-              (props.children.includes("Color Text") ||
-                props.children.includes("Text"));
-
-            // Always remove spacing for React components, short text, or component content
-            const shouldRemoveSpacing =
-              hasReactComponents || isShortText || isComponentContent;
-
             // If this paragraph contains a React component, render it directly without the p wrapper
             if (hasReactComponents) {
               return <>{props.children}</>;
-            }
-
-            // If this is component content (like Typography text), render without p wrapper
-            if (isComponentContent) {
-              return (
-                <span style={{ margin: 0, padding: 0 }}>{props.children}</span>
-              );
             }
 
             return (
               <p
                 {...props}
                 style={{
-                  margin: shouldRemoveSpacing ? 0 : undefined,
-                  padding: shouldRemoveSpacing ? 0 : undefined,
+                  margin: isShortText ? 0 : undefined,
+                  padding: isShortText ? 0 : undefined,
                 }}
               />
             );
