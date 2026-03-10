@@ -8,21 +8,20 @@
       "Bash(yarn test:*)",
       "Bash(npm test:*)",
       "Bash(npm run test:coverage:*)",
-      "Bash(npm run coverage:*)",
-      "Bash(rm:./tmp/*)",
-      "Bash(rm:./coverage/*)",
-      "Bash(rm:./dist/*)",
-      "Bash(rm:./build/*)"
+      "Bash(npm run coverage:*)"
     ],
     "deny": [
+      "Bash(rm:*)",
       "Bash(rm:-rf /)",
       "Bash(rm:-rf ~)",
       "Bash(rm:-rf .)",
+      "Bash(yarn add:*)",
+      "Bash(yarn remove:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
       "Bash(sudo:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
-      "Bash(chmod:*)",
-      "Bash(chown:*)",
       "Bash(git push:*)",
       "Bash(git reset:*)",
       "Bash(git clean:*)"
