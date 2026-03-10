@@ -51,20 +51,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
           aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           sx={{
             ml: 1,
-            "&:focus": {
-              outline: "none",
-            },
-            "&:focus-visible": {
-              outline: "none",
-            },
-            "&:focus-within": {
-              outline: "none",
-            },
-            // Remove webkit focus ring
-            "&::-webkit-focus-inner": {
-              border: 0,
-            },
-            "&::-webkit-focus-ring-color": {
+            "&:focus:not(:focus-visible)": {
               outline: "none",
             },
           }}
