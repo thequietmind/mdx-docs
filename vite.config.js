@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 
 import { site } from "./example/config/site.js";
+import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -20,6 +21,7 @@ export default defineConfig(({ mode }) => ({
     mdx({
       jsxImportSource: "@emotion/react",
       providerImportSource: "@mdx-js/react",
+      rehypePlugins: [rehypeUnwrapJsxParagraphs],
     }),
   ],
   build: {

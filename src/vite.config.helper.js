@@ -3,6 +3,33 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "url";
 
 /**
+ * Rehype plugin that removes <p> wrappers MDX generates around text children
+ * of JSX flow elements. This happens because Prettier formats JSX text onto
+ * its own line, which MDX interprets as a paragraph. The unwrapping only
+ * applies to <p> elements whose children are all plain text nodes — explicit
+ * block content is left untouched.
+ */
+export function rehypeUnwrapJsxParagraphs() {
+  function processNode(node) {
+    if (!node.children) return;
+    node.children.forEach(processNode);
+    if (node.type === "mdxJsxFlowElement") {
+      node.children = node.children.flatMap((child) => {
+        if (
+          child.type === "element" &&
+          child.tagName === "p" &&
+          child.children.every((c) => c.type === "text")
+        ) {
+          return child.children;
+        }
+        return [child];
+      });
+    }
+  }
+  return processNode;
+}
+
+/**
  * Creates a base Vite config for an mdx-docs site.
  *
  * @param {object} options
@@ -37,6 +64,7 @@ export function createMdxDocsConfig({ rootDir, base = "/", site = {} } = {}) {
       mdx({
         jsxImportSource: "@emotion/react",
         providerImportSource: "@mdx-js/react",
+        rehypePlugins: [rehypeUnwrapJsxParagraphs],
       }),
     ],
     resolve: {
