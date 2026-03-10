@@ -92,25 +92,12 @@ const MDXContent = () => {
                   )
                 : typeof props.children === "object" && props.children.type);
 
-            const isShortText =
-              props.children &&
-              typeof props.children === "string" &&
-              props.children.length < 20;
-
             // If this paragraph contains a React component, render it directly without the p wrapper
             if (hasReactComponents) {
               return <>{props.children}</>;
             }
 
-            return (
-              <p
-                {...props}
-                style={{
-                  margin: isShortText ? 0 : undefined,
-                  padding: isShortText ? 0 : undefined,
-                }}
-              />
-            );
+            return <p {...props} />;
           },
         }}
       >

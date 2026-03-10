@@ -10,7 +10,9 @@
       "Bash(npm test:*)",
       "Bash(npm run coverage:*)",
       "Bash(yarn lint)",
-      "Bash(grep -v \"^\\\\.\\\\.$\")"
+      "Bash(grep -v \"^\\\\.\\\\.$\")",
+      "Bash(grep -n \"^[A-Z][a-z ]\\\\{1,18\\\\}$\" /Volumes/External/code/mdx-docs/example/pages/*.mdx)",
+      "Bash(grep -rn \"^  [A-Z][^<{].\\\\{0,16\\\\}$\" /Volumes/External/code/mdx-docs/example/pages/*.mdx)"
     ],
     "deny": []
   }
