@@ -141,6 +141,19 @@ export const pages = [
 
 Pages without `isDefault: true` appear in the sidebar navigation. The page with `isDefault: true` is the fallback/home route.
 
+## Favicon
+
+Place your favicon in the `public/` directory and add a `<link>` tag to `index.html`:
+
+```html
+<head>
+  <!-- ... -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+```
+
+Vite serves files in `public/` at the root path, so `public/favicon.svg` is accessible as `/favicon.svg`. Use `.ico`, `.png`, or `.svg` depending on your file.
+
 ## Tech Stack
 
 - React 19, Material-UI 7, Emotion
