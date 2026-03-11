@@ -1,6 +1,6 @@
 # @quietmind/mdx-docs
 
-> A lightweight React framework for MDX documentation sites.
+> ⚡ A lightweight React framework for building MDX documentation sites.
 
 MDX Docs turns MDX files into routed documentation pages with a built-in layout, sidebar, and navigation.
 
