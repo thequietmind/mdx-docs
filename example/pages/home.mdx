@@ -1,21 +1,115 @@
 # MDX Docs
 
-Welcome to the MDX Docs example site. This is the default demo site for the package.
+Welcome to the MDX Docs example site. This is the default demo site for the project.
 
-## Getting Started
+> A lightweight React framework for MDX documentation sites.
 
-Create a site repo and install the package:
+MDX Docs turns MDX files into routed documentation pages with a built-in layout, sidebar, and navigation.
+
+## Features
+
+- MDX pages — write Markdown with embedded React components
+- Syntax highlighting with copy-to-clipboard on code blocks
+- Dark/light mode with system preference detection
+- Responsive sidebar navigation
+- Built on React 19, Material-UI 7, and Vite 6
+
+## Quick Start
+
+Create a new documentation site:
 
 ```sh
-npm install mdx-docs
+npx create-mdx-docs@latest my-docs
 ```
 
-Then in your `main.jsx`:
+Create an MDX file in `pages/`:
+
+~~~mdx
+import { Button } from "@mui/material";
+
+# Button
+
+<Button variant="contained" color="primary">
+  Primary Action
+</Button>
+
+```jsx
+<Button variant="contained" color="primary">
+  Primary Action
+</Button>
+```
+~~~
+
+Register your page in `config/pages.js`:
 
 ```js
-import { createApp } from "mdx-docs";
-import { pages } from "./config/pages.js";
-import { site } from "./config/site.js";
+const GettingStartedMDX = lazy(() => import("@pages/getting-started.mdx"));
 
-createApp({ pages, site });
+export const pages = [
+  // ...existing pages
+  {
+    name: "Getting Started",
+    route: "/getting-started",
+    component: GettingStartedMDX,
+  },
+];
 ```
+
+Pages with `isDefault: true` do not appear in the sidebar navigation.
+
+Configure your site name and description in `config/site.js`.
+
+```js
+export const site = {
+  name: "My Site",
+  description: "My site description",
+};
+```
+
+## Favicon
+
+Place your favicon in the `public/` directory and add a `<link>` tag to `index.html`:
+
+```html
+<head>
+  <!-- ... -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+```
+
+Vite serves files in `public/` at the root path, so `public/favicon.svg` is accessible as `/favicon.svg`. Use `.ico`, `.png`, or `.svg` depending on your file.
+
+## Project Structure
+
+```none
+my-docs/
+├── pages/
+│   └── home.mdx
+├── config/
+│   ├── pages.js
+│   └── site.js
+├── public/
+│   └── favicon.svg
+├── index.html
+├── main.jsx
+├── vite.config.js
+└── package.json
+```
+
+## Contributing
+
+Contributions are welcome!
+
+1. Fork the repo
+2. Create a branch
+3. Submit a pull request
+
+[https://github.com/thequietmind/mdx-docs](https://github.com/thequietmind/mdx-docs)
+
+## Related Projects
+
+- [https://mdxjs.com/](https://mdxjs.com/)
+
+## License
+
+MIT
