@@ -1,6 +1,10 @@
 # @quietmind/mdx-docs
 
-A React + Vite framework for building MDX-powered documentation sites. Write pages in Markdown with embedded React components, and get a fully-featured site with syntax highlighting, dark/light mode, and responsive navigation out of the box.
+> A lightweight React framework for MDX documentation sites.
+
+MDX Docs turns MDX files into routed documentation pages with a built-in layout, sidebar, and navigation.
+
+MDX Docs is a React + Vite framework for building MDX-powered documentation sites. Write pages in Markdown with embedded React components, and get a fully-featured site with syntax highlighting, dark/light mode, and responsive navigation out of the box.
 
 **Demo:** https://mdxdocs.com/
 

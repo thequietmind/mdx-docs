@@ -4,6 +4,7 @@
       "Bash(ls:*)",
       "Bash(find:*)",
       "Bash(grep)",
+      "Bash(cat)",
       "Bash(yarn lint)",
       "Bash(yarn test:*)",
       "Bash(npm test:*)",
