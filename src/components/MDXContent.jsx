@@ -82,6 +82,24 @@ const MDXContent = () => {
               />
             );
           },
+          blockquote: (props) => (
+            <Box
+              component="blockquote"
+              sx={{
+                borderLeft: "4px solid",
+                borderColor: "primary.main",
+                pl: 2,
+                py: 0.5,
+                my: 2,
+                mx: 0,
+                color: "text.secondary",
+                fontStyle: "italic",
+                bgcolor: "action.hover",
+                borderRadius: "0 4px 4px 0",
+              }}
+              {...props}
+            />
+          ),
           p: (props) => {
             // Remove spacing for all paragraphs that contain React components
             const hasReactComponents =
