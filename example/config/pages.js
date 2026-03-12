@@ -2,6 +2,8 @@ import { lazy } from "react";
 
 const HomeMDX = lazy(() => import("@pages/home.mdx"));
 const ExamplesMDX = lazy(() => import("@pages/examples.mdx"));
+const CustomizationMDX = lazy(() => import("@pages/customization.mdx"));
+const AdvancedMDX = lazy(() => import("@pages/advanced.mdx"));
 
 const AlertMDX = lazy(() => import("@pages/alert.mdx"));
 const ButtonMDX = lazy(() => import("@pages/button.mdx"));
@@ -22,6 +24,16 @@ export const pages = [
     name: "Examples",
     route: "/examples",
     component: ExamplesMDX,
+  },
+  {
+    name: "Customization",
+    route: "/customization",
+    component: CustomizationMDX,
+  },
+  {
+    name: "Advanced",
+    route: "/advanced",
+    component: AdvancedMDX,
   },
   {
     name: "Alert",

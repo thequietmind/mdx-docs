@@ -86,9 +86,9 @@ function AppContent({ userTheme = {} }) {
   );
 }
 
-function App({ pages, site, theme = {} }) {
+function App({ pages, site, theme = {}, hideHomeFromNav = false }) {
   return (
-    <DocsProvider pages={pages} site={site}>
+    <DocsProvider pages={pages} site={site} hideHomeFromNav={hideHomeFromNav}>
       <Router basename={import.meta.env.BASE_URL}>
         <Wrapper>
           <AppContent userTheme={theme} />

@@ -17,8 +17,8 @@ export const drawerWidth = 240;
 
 const SideNavigation = ({ mobileOpen, handleDrawerToggle }) => {
   const location = useLocation();
-  const { pages } = useDocsContext();
-  const navPages = getNavigationPages(pages);
+  const { pages, hideHomeFromNav } = useDocsContext();
+  const navPages = getNavigationPages(pages, hideHomeFromNav);
 
   // Clean up body overflow when route changes
   useEffect(() => {

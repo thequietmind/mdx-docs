@@ -2,8 +2,8 @@ import { createContext, useContext } from "react";
 
 const DocsContext = createContext(null);
 
-export const DocsProvider = ({ pages, site, children }) => (
-  <DocsContext.Provider value={{ pages, site }}>
+export const DocsProvider = ({ pages, site, hideHomeFromNav = false, children }) => (
+  <DocsContext.Provider value={{ pages, site, hideHomeFromNav }}>
     {children}
   </DocsContext.Provider>
 );
