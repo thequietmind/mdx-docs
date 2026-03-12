@@ -40,6 +40,56 @@ describe("Theme configuration", () => {
       expect(theme.components).toBeDefined();
       expect(theme.components.MuiIconButton).toBeDefined();
     });
+
+    it("should apply shorthand primaryColor to light mode", () => {
+      const theme = createAppTheme("light", { primaryColor: "#6200ea" });
+      expect(theme.palette.primary.main).toBe("#6200ea");
+    });
+
+    it("should apply shorthand primaryColor to dark mode", () => {
+      const theme = createAppTheme("dark", { primaryColor: "#6200ea" });
+      expect(theme.palette.primary.main).toBe("#6200ea");
+    });
+
+    it("should apply shorthand fontFamily to typography", () => {
+      const theme = createAppTheme("light", { fontFamily: '"Inter", sans-serif' });
+      expect(theme.typography.fontFamily).toBe('"Inter", sans-serif');
+    });
+
+    it("should let mode-specific dark override win over shorthand in dark mode", () => {
+      const theme = createAppTheme("dark", {
+        primaryColor: "#6200ea",
+        dark: { palette: { primary: { main: "#bb86fc" } } },
+      });
+      expect(theme.palette.primary.main).toBe("#bb86fc");
+    });
+
+    it("should not apply light-mode override to dark mode", () => {
+      const theme = createAppTheme("dark", {
+        light: { palette: { background: { default: "#f0f4f8" } } },
+      });
+      expect(theme.palette.background.default).toBe(darkTheme.palette.background.default);
+    });
+
+    it("should preserve MuiIconButton override when user provides components", () => {
+      const theme = createAppTheme("light", {
+        light: {
+          components: {
+            MuiButton: { styleOverrides: { root: { borderRadius: 8 } } },
+          },
+        },
+      });
+      expect(theme.components.MuiIconButton).toBeDefined();
+      expect(theme.components.MuiButton).toBeDefined();
+    });
+
+    it("should produce the same result with empty userTheme as with no userTheme", () => {
+      const a = createAppTheme("light");
+      const b = createAppTheme("light", {});
+      expect(a.palette.primary.main).toBe(b.palette.primary.main);
+      expect(a.palette.mode).toBe(b.palette.mode);
+      expect(a.palette.background.default).toBe(b.palette.background.default);
+    });
   });
 
   describe("Light theme", () => {

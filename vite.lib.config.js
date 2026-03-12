@@ -16,7 +16,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, "src/createApp.jsx"),
+      entry: resolve(__dirname, "src/index.js"),
       formats: ["es"],
       fileName: "index",
     },

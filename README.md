@@ -188,6 +188,66 @@ export default defineConfig(
 </html>
 ```
 
+## Theming
+
+Pass a `theme` option to `createApp` to customize your site's colors and typography. All existing `createApp({ pages, site })` calls continue to work unchanged.
+
+### Simple
+
+Set a brand color and/or font family:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    primaryColor: "#6200ea",
+    fontFamily: '"Inter", sans-serif',
+  },
+});
+```
+
+### Presets
+
+Import a built-in color preset for a quick start:
+
+```js
+import { createApp, themes } from "@quietmind/mdx-docs";
+
+createApp({ pages, site, theme: themes.ocean });
+```
+
+Available presets: `themes.ocean`, `themes.forest`, `themes.rose`.
+
+Presets can be extended:
+
+```js
+createApp({ pages, site, theme: { ...themes.ocean, fontFamily: '"Inter", sans-serif' } });
+```
+
+### Advanced
+
+Use `light` and `dark` keys for full per-mode [MUI theme](https://mui.com/material-ui/customization/theming/) overrides. These are deep-merged into the built-in palette, so you only need to specify what you want to change:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    primaryColor: "#6200ea",
+    light: {
+      palette: { background: { default: "#f0f4f8" } },
+    },
+    dark: {
+      palette: { primary: { main: "#bb86fc" } },
+      typography: { fontFamily: '"Inter", sans-serif' },
+    },
+  },
+});
+```
+
+Mode-specific overrides take precedence over `primaryColor` and `fontFamily` shorthands.
+
 ## Tech Stack
 
 - React 19, Material-UI 7, Emotion

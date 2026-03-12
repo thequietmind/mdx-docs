@@ -42,13 +42,13 @@ const Wrapper = ({ children }) => {
   return children;
 };
 
-function AppContent() {
+function AppContent({ userTheme = {} }) {
   const { darkMode, setDarkMode } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const theme = useMemo(
-    () => createAppTheme(darkMode ? "dark" : "light"),
-    [darkMode]
+    () => createAppTheme(darkMode ? "dark" : "light", userTheme),
+    [darkMode, userTheme]
   );
 
   const handleDrawerToggle = () => {
@@ -86,12 +86,12 @@ function AppContent() {
   );
 }
 
-function App({ pages, site }) {
+function App({ pages, site, theme = {} }) {
   return (
     <DocsProvider pages={pages} site={site}>
       <Router basename={import.meta.env.BASE_URL}>
         <Wrapper>
-          <AppContent />
+          <AppContent userTheme={theme} />
         </Wrapper>
       </Router>
     </DocsProvider>
