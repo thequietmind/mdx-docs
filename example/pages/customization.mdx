@@ -1,2 +1,150 @@
 # Customization
 
+MDX Docs uses [Material-UI](https://mui.com/) under the hood, giving you a flexible theming system with support for light/dark modes, preset themes, and deep component-level overrides.
+
+The `theme` option can optionally be passed to `createApp()`:
+
+```js
+import { createApp } from 'mdx-docs'
+
+createApp({ pages, site, theme: { /* ... */ } })
+```
+
+## Shorthand properties
+
+The simplest way to customize your docs is with the top-level shorthand properties:
+
+| Property | Type | Description |
+|---|---|---|
+| `primaryColor` | `string` | Primary brand color (hex, rgb, etc.) |
+| `fontFamily` | `string` | CSS font-family string |
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    primaryColor: '#6200ea',
+    fontFamily: '"Inter", sans-serif',
+  },
+})
+```
+
+These apply to both light and dark mode automatically.
+
+## Built-in presets
+
+mdx-docs ships with four presets you can use as a starting point:
+
+```js
+import { createApp, themes } from 'mdx-docs'
+
+createApp({ pages, site, theme: themes.ocean })
+```
+
+| Preset | Description |
+|---|---|
+| `themes.default` | The default blue/pink palette |
+| `themes.ocean` | Ocean blues — calm and professional |
+| `themes.forest` | Forest greens — natural and subdued |
+| `themes.rose` | Rose reds — warm and bold |
+
+Presets are plain objects, so you can extend them with spread syntax:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    ...themes.forest,
+    fontFamily: '"Merriweather", serif',
+  },
+})
+```
+
+## Mode-specific overrides
+
+For full control, use the `light` and `dark` keys to provide MUI theme overrides that only apply in the respective mode. These are deep-merged on top of the base theme.
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    primaryColor: '#6200ea',
+    light: {
+      palette: {
+        background: {
+          default: '#f0f4f8',
+          paper: '#ffffff',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        primary: {
+          main: '#bb86fc',
+        },
+        background: {
+          default: '#0d0d0d',
+        },
+      },
+    },
+  },
+})
+```
+
+Any valid [MUI theme object](https://mui.com/material-ui/customization/theming/) is accepted under `light` and `dark`, including `palette`, `typography`, `spacing`, and `components`.
+
+## Component overrides
+
+To restyle individual MUI components, use the `components` key inside `light` or `dark`:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    light: {
+      components: {
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              borderRadius: 8,
+              textTransform: 'none',
+            },
+          },
+        },
+        MuiLink: {
+          styleOverrides: {
+            root: {
+              textDecoration: 'none',
+            },
+          },
+        },
+      },
+    },
+  },
+})
+```
+
+## Typography
+
+Override the font for headings and body text independently using the MUI `typography` key:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    fontFamily: '"Inter", sans-serif',
+    light: {
+      typography: {
+        h1: { fontWeight: 800 },
+        h2: { fontWeight: 700 },
+        body1: { lineHeight: 1.75 },
+      },
+    },
+  },
+})
+```
