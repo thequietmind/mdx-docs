@@ -1,15 +1,38 @@
+import { existsSync } from "fs";
 import mdx from "@mdx-js/rollup";
 import react from "@vitejs/plugin-react";
+import { resolve } from "path";
 import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 
 import { site } from "./example/config/site.js";
 import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
 
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const VIRTUAL_404_ID = "virtual:mdx-docs/404";
+const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
+const custom404Path = resolve(__dirname, "example/pages/404.mdx");
+const hasCustom404 = existsSync(custom404Path);
+const builtInNotFoundPath = resolve(__dirname, "src/components/NotFound.jsx");
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   base: mode === "production" ? "/" : "/",
   plugins: [
+    {
+      name: "mdx-docs-404",
+      resolveId(id) {
+        if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
+      },
+      load(id) {
+        if (id === RESOLVED_VIRTUAL_404_ID) {
+          if (hasCustom404) {
+            return `export { default } from "@pages/404.mdx";`;
+          }
+          return `export { default } from ${JSON.stringify(builtInNotFoundPath)};`;
+        }
+      },
+    },
     {
       name: "html-site-config",
       transformIndexHtml: (html) =>

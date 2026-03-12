@@ -1,12 +1,13 @@
 import { MDXProvider } from "@mdx-js/react";
 import { Box, CircularProgress } from "@mui/material";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import CodeBlock from "./CodeBlock";
 import InlineCode from "./InlineCode";
+import NotFound from "virtual:mdx-docs/404";
 import { useDocsContext } from "../context/DocsContext";
-import { getDefaultPage, isExternalLink } from "../utils/navigation";
+import { isExternalLink } from "../utils/navigation";
 
 const MDXContent = () => {
   const { pages } = useDocsContext();
@@ -144,10 +145,7 @@ const MDXContent = () => {
                 />
               );
             })}
-            <Route
-              path="*"
-              element={React.createElement(getDefaultPage(pages).component)}
-            />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </MDXProvider>

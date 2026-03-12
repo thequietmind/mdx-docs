@@ -1,13 +1,13 @@
 // Navigation utility functions
 
-// Helper function to get navigation pages (excluding home page)
+// Helper function to get navigation pages (excluding home and hidden pages)
 export const getNavigationPages = (pages) => {
-  return pages.filter((page) => !page.isDefault);
+  return pages.filter((page) => page.route !== "/" && !page.isHidden);
 };
 
-// Helper function to get the default page
+// Helper function to get the home page (the page at route "/")
 export const getDefaultPage = (pages) => {
-  return pages.find((page) => page.isDefault);
+  return pages.find((page) => page.route === "/");
 };
 
 // Helper function to detect if a link is external

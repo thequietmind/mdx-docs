@@ -1,5 +1,7 @@
+import { existsSync } from "fs";
 import mdx from "@mdx-js/rollup";
 import react from "@vitejs/plugin-react";
+import { resolve } from "path";
 import { fileURLToPath } from "url";
 
 /**
@@ -49,10 +51,30 @@ export function rehypeUnwrapJsxParagraphs() {
  *   createMdxDocsConfig({ rootDir: import.meta.dirname })
  * );
  */
+const VIRTUAL_404_ID = "virtual:mdx-docs/404";
+const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
+
 export function createMdxDocsConfig({ rootDir, base = "/", site = {} } = {}) {
+  const custom404Path = resolve(rootDir, "pages/404.mdx");
+  const hasCustom404 = existsSync(custom404Path);
+
   return {
     base,
     plugins: [
+      {
+        name: "mdx-docs-404",
+        resolveId(id) {
+          if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
+        },
+        load(id) {
+          if (id === RESOLVED_VIRTUAL_404_ID) {
+            if (hasCustom404) {
+              return `export { default } from "@pages/404.mdx";`;
+            }
+            return `export { NotFound as default } from "@quietmind/mdx-docs";`;
+          }
+        },
+      },
       {
         name: "html-site-config",
         transformIndexHtml: (html) =>

@@ -7,27 +7,42 @@ import {
 } from "../navigation";
 
 const mockPages = [
-  { name: "Home", route: "/", isDefault: true },
+  { name: "Home", route: "/" },
   { name: "Button", route: "/button" },
   { name: "Colors", route: "/colors" },
+  { name: "Button Detail", route: "/button/detail", isHidden: true },
 ];
 
 describe("Navigation utilities", () => {
   describe("getNavigationPages", () => {
-    it("should return pages without default page", () => {
+    it("should exclude the home page (route '/')", () => {
       const navigationPages = getNavigationPages(mockPages);
-      expect(navigationPages.length).toBeGreaterThan(0);
-      expect(navigationPages.every((page) => !page.isDefault)).toBe(true);
+      expect(navigationPages.every((page) => page.route !== "/")).toBe(true);
+    });
+
+    it("should exclude isHidden pages", () => {
+      const navigationPages = getNavigationPages(mockPages);
+      expect(navigationPages.every((page) => !page.isHidden)).toBe(true);
+    });
+
+    it("isHidden pages are still present in the full pages array", () => {
+      const hiddenPage = mockPages.find((page) => page.isHidden);
+      expect(hiddenPage).toBeDefined();
+      expect(hiddenPage.route).toBe("/button/detail");
     });
   });
 
   describe("getDefaultPage", () => {
-    it("should return the default page", () => {
+    it("should return the page at route '/'", () => {
       const defaultPage = getDefaultPage(mockPages);
       expect(defaultPage).toBeDefined();
-      expect(defaultPage.isDefault).toBe(true);
-      expect(defaultPage.name).toBe("Home");
       expect(defaultPage.route).toBe("/");
+      expect(defaultPage.name).toBe("Home");
+    });
+
+    it("should return undefined when no page has route '/'", () => {
+      const pages = [{ name: "Button", route: "/button" }];
+      expect(getDefaultPage(pages)).toBeUndefined();
     });
   });
 
