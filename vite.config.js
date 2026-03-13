@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 
 import { site } from "./example/config/site.js";
+import remarkGfm from "remark-gfm";
 import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -44,6 +45,7 @@ export default defineConfig(({ mode }) => ({
     mdx({
       jsxImportSource: "@emotion/react",
       providerImportSource: "@mdx-js/react",
+      remarkPlugins: [remarkGfm],
       rehypePlugins: [rehypeUnwrapJsxParagraphs],
     }),
   ],

@@ -3,6 +3,7 @@ import mdx from "@mdx-js/rollup";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
+import remarkGfm from "remark-gfm";
 
 /**
  * Rehype plugin that removes <p> wrappers MDX generates around text children
@@ -86,6 +87,7 @@ export function createMdxDocsConfig({ rootDir, base = "/", site = {} } = {}) {
       mdx({
         jsxImportSource: "@emotion/react",
         providerImportSource: "@mdx-js/react",
+        remarkPlugins: [remarkGfm],
         rehypePlugins: [rehypeUnwrapJsxParagraphs],
       }),
     ],

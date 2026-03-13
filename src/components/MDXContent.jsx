@@ -1,5 +1,15 @@
 import { MDXProvider } from "@mdx-js/react";
-import { Box, CircularProgress } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -101,6 +111,16 @@ const MDXContent = () => {
               {...props}
             />
           ),
+          table: (props) => (
+            <TableContainer component={Paper} variant="outlined" sx={{ my: 2 }}>
+              <Table size="small" {...props} />
+            </TableContainer>
+          ),
+          thead: TableHead,
+          tbody: TableBody,
+          tr: TableRow,
+          th: (props) => <TableCell component="th" {...props} />,
+          td: TableCell,
           p: (props) => {
             // Remove spacing for all paragraphs that contain React components
             const hasReactComponents =
