@@ -1,3 +1,56 @@
 # Advanced
 
-Coming soon.
+By default, `createApp()` renders a full docs site with a top bar and side navigation. For cases where you want to bring your own shell — or embed the content area inside an existing layout — you can use `DocsProvider` and `MDXContent` directly.
+
+## DocsProvider
+
+`DocsProvider` is the React context provider that makes your pages and site config available to all mdx-docs components. It must wrap anything that uses `MDXContent`.
+
+```jsx
+import { DocsProvider } from '@quietmind/mdx-docs'
+```
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `pages` | `Page[]` | Yes | Array of page objects (same shape as `createApp`) |
+| `site` | `object` | Yes | Site config with `name` and `description` |
+| `hideHomeFromNav` | `boolean` | No | Hide the home route from navigation (default: `false`) |
+
+## MDXContent
+
+`MDXContent` renders the routed MDX content area. It reads `pages` from the nearest `DocsProvider` and sets up React Router `<Routes>` for each page. It must be rendered inside both a `DocsProvider` and a React Router context.
+
+```jsx
+import { MDXContent } from '@quietmind/mdx-docs'
+```
+
+`MDXContent` takes no props.
+
+## Custom layout example
+
+Use these two components together to render just the content area inside your own layout:
+
+```jsx
+import { BrowserRouter } from 'react-router-dom'
+import { DocsProvider, MDXContent } from '@quietmind/mdx-docs'
+import '@quietmind/mdx-docs/index.css'
+
+import pages from './config/pages'
+import site from './config/site'
+
+export default function App() {
+  return (
+    <DocsProvider pages={pages} site={site}>
+      <BrowserRouter>
+        <MyTopBar />
+        <MySideNav />
+        <main>
+          <MDXContent />
+        </main>
+      </BrowserRouter>
+    </DocsProvider>
+  )
+}
+```
+
+> `MDXContent` does not include any MUI `ThemeProvider`. If you are using MUI components in your own layout or MDX pages, wrap the tree in a `ThemeProvider` before rendering `MDXContent`.

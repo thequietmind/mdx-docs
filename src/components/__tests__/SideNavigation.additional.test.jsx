@@ -2,7 +2,7 @@ import { render, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
-import { DocsProvider } from "../../context/DocsContext";
+import { DocsProvider } from "../../context/DocsProvider";
 import SideNavigation from "../SideNavigation";
 
 const mockSite = { name: "Test Site" };

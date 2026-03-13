@@ -9,7 +9,7 @@ import {
 import AppBar from "./components/AppBar";
 import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
-import { DocsProvider } from "./context/DocsContext";
+import { DocsProvider } from "./context/DocsProvider";
 import { useTheme } from "./hooks/useTheme";
 import { createAppTheme } from "./themes";
 
