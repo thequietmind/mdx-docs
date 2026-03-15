@@ -6,8 +6,23 @@ import { defineConfig } from "vite";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
+const VIRTUAL_404_ID = "virtual:mdx-docs/404";
+const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
+
 export default defineConfig({
   plugins: [
+    {
+      name: "mdx-docs-404",
+      resolveId(id) {
+        if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
+      },
+      load(id) {
+        if (id === RESOLVED_VIRTUAL_404_ID) {
+          const notFoundPath = resolve(__dirname, "src/components/NotFound.jsx");
+          return `export { default } from ${JSON.stringify(notFoundPath)};`;
+        }
+      },
+    },
     react(),
     mdx({
       jsxImportSource: "@emotion/react",
