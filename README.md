@@ -1,5 +1,9 @@
 # @quietmind/mdx-docs
 
+<a href="https://www.producthunt.com/posts/mdx-docs">
+  <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1095911&theme=dark" height="28">
+</a>
+
 > ⚡ A lightweight React framework for building MDX documentation sites.
 
 MDX Docs turns MDX files into routed documentation pages with a built-in layout, sidebar, and navigation.
