@@ -74,6 +74,14 @@ export const site = {
 };
 ```
 
+## Writing MDX
+
+MDX files are JSX, not HTML. A few things to keep in mind:
+
+- **Inline styles must be objects**, not strings — `style={{ marginRight: '0.5rem' }}` not `style="margin-right: 0.5rem"`. A CSS string will cause a runtime error due to Emotion's JSX transform.
+- Use `className` instead of `class`.
+- Self-close void elements: `<img />`, `<br />`, `<hr />`.
+
 ## Favicon
 
 Place your favicon in the `public/` directory and add a `<link>` tag to `index.html`:
