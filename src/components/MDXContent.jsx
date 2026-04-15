@@ -2,6 +2,7 @@ import { MDXProvider } from "@mdx-js/react";
 import {
   Box,
   CircularProgress,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -86,7 +87,7 @@ const MDXContent = () => {
           a: (props) => {
             const isExternal = isExternalLink(props.href);
             return (
-              <a
+              <Link
                 {...props}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
