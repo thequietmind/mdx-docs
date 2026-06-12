@@ -65,6 +65,23 @@ export const pages = [
 
 Pages with `isDefault: true` do not appear in the sidebar navigation.
 
+Each page can optionally define its own SEO metadata:
+
+```js
+{
+  name: "Getting Started",
+  route: "/getting-started",
+  component: GettingStartedMDX,
+  title: "Getting Started — My Site",
+  description: "How to install and configure My Site.",
+}
+```
+
+- `title` sets the browser/document title for that page, falling back to `site.name` when omitted.
+- `description` sets the page's meta description, falling back to `site.description` when omitted.
+
+Both fields update automatically during client-side navigation.
+
 Configure your site name and description in `config/site.js`.
 
 ```js
