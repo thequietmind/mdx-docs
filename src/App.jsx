@@ -10,12 +10,14 @@ import AppBar from "./components/AppBar";
 import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
 import { DocsProvider } from "./context/DocsProvider";
+import { usePageMetadata } from "./hooks/usePageMetadata";
 import { useTheme } from "./hooks/useTheme";
 import { createAppTheme } from "./themes";
 
 const Wrapper = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  usePageMetadata();
 
   // Check for redirect route when component mounts
   useEffect(() => {

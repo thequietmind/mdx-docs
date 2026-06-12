@@ -15,8 +15,13 @@ const mockPages = [
 
 describe("Navigation utilities", () => {
   describe("getNavigationPages", () => {
-    it("should exclude the home page (route '/')", () => {
+    it("should include the home page (route '/') by default", () => {
       const navigationPages = getNavigationPages(mockPages);
+      expect(navigationPages.some((page) => page.route === "/")).toBe(true);
+    });
+
+    it("should exclude the home page when hideHomeFromNav is true", () => {
+      const navigationPages = getNavigationPages(mockPages, true);
       expect(navigationPages.every((page) => page.route !== "/")).toBe(true);
     });
 

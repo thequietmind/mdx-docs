@@ -19,21 +19,30 @@ export const pages = [
     name: "MDX Docs",
     route: "/",
     component: HomeMDX,
+    title: "MDX Docs — MDX-powered documentation",
+    description:
+      "Create beautiful, interactive documentation sites with MDX and React",
   },
   {
     name: "Examples",
     route: "/examples",
     component: ExamplesMDX,
+    title: "Examples — MDX Docs",
+    description: "Explore examples of Material-UI components in MDX Docs",
   },
   {
     name: "Customization",
     route: "/customization",
     component: CustomizationMDX,
+    title: "Customization — MDX Docs",
+    description: "Learn how to customize the theme and styling of MDX Docs",
   },
   {
     name: "Advanced",
     route: "/advanced",
     component: AdvancedMDX,
+    title: "Advanced — MDX Docs",
+    description: "Dive deeper into advanced features and customization options",
   },
   {
     name: "Alert",
