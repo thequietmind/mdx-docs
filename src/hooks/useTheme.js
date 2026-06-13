@@ -10,6 +10,13 @@ const getSystemPreference = () => {
 
 // Get stored preference or fall back to system preference
 const getInitialDarkMode = () => {
+  if (
+    typeof document !== "undefined" &&
+    document.getElementById("root")?.dataset.mdxDocsTheme === "dark"
+  ) {
+    return true;
+  }
+
   if (typeof window !== "undefined") {
     const stored = localStorage.getItem("darkMode");
     if (stored !== null) {
@@ -21,6 +28,14 @@ const getInitialDarkMode = () => {
 
 export const useTheme = () => {
   const [darkMode, setDarkMode] = useState(getInitialDarkMode);
+
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (root?.dataset.mdxDocsTheme === "dark") {
+      delete root.dataset.mdxDocsTheme;
+      setDarkMode(getInitialDarkMode());
+    }
+  }, []);
 
   // Save preference to localStorage whenever it changes
   useEffect(() => {

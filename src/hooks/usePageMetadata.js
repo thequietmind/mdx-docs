@@ -1,7 +1,10 @@
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useDocsContext } from "../context/DocsProvider";
+
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const normalizeRoute = (route) =>
   route.length > 1 ? route.replace(/\/+$/, "") : route;
@@ -10,7 +13,7 @@ export const usePageMetadata = () => {
   const location = useLocation();
   const { pages, site } = useDocsContext();
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const pathname = normalizeRoute(location.pathname);
     const currentPage = pages.find(
       (page) => normalizeRoute(page.route) === pathname

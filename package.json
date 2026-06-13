@@ -1,6 +1,6 @@
 {
   "name": "@quietmind/mdx-docs",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "homepage": "https://mdxdocs.com",
   "exports": {
@@ -8,10 +8,14 @@
       "import": "./dist/index.js"
     },
     "./index.css": "./dist/index.css",
+    "./server": {
+      "import": "./dist/server.js"
+    },
     "./vite": "./src/vite.config.helper.js"
   },
   "files": [
     "dist",
+    "src/prerenderHtml.js",
     "src/vite.config.helper.js"
   ],
   "scripts": {

@@ -1,7 +1,8 @@
-import mdx from "@mdx-js/rollup";
-import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
+
+import mdx from "@mdx-js/rollup";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -31,9 +32,13 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.js"),
+      entry: {
+        index: resolve(__dirname, "src/index.js"),
+        server: resolve(__dirname, "src/server.jsx"),
+      },
+      cssFileName: "index",
       formats: ["es"],
-      fileName: "index",
+      fileName: (_format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
       external: [
@@ -45,6 +50,7 @@ export default defineConfig({
         "react-router-dom",
         "prism-react-renderer",
         "prismjs",
+        /^node:/,
       ],
     },
     outDir: "dist",

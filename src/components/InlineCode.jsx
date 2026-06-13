@@ -89,13 +89,13 @@ const InlineCode = ({ children, ...props }) => {
             const lineProps = getLineProps({ line, key: i });
             const { key: lineKey, ...restLineProps } = lineProps;
             return (
-              <div key={lineKey} {...restLineProps}>
+              <span key={lineKey} {...restLineProps}>
                 {line.map((token, tokenIndex) => {
                   const tokenProps = getTokenProps({ token, key: tokenIndex });
-                  const { key: tokenKey, ...restTokenProps } = tokenProps;
+                  const { key: _tokenKey, ...restTokenProps } = tokenProps;
                   return <span key={`${i}-${tokenIndex}`} {...restTokenProps} />;
                 })}
-              </div>
+              </span>
             );
           })}
         </code>
