@@ -20,6 +20,7 @@ describe("useTheme hook", () => {
   });
 
   afterEach(() => {
+    document.getElementById("root")?.remove();
     vi.clearAllMocks();
   });
 
@@ -92,5 +93,16 @@ describe("useTheme hook", () => {
 
     // Should still be false because user preference exists
     expect(result.current.darkMode).toBe(false);
+  });
+
+  it("should hydrate with the prerendered theme before applying preferences", () => {
+    localStorage.setItem("darkMode", "false");
+    document.body.innerHTML =
+      '<div id="root" data-mdx-docs-theme="dark"></div>';
+
+    const { result } = renderHook(() => useTheme());
+
+    expect(result.current.darkMode).toBe(false);
+    expect(document.getElementById("root")?.dataset.mdxDocsTheme).toBeUndefined();
   });
 });

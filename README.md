@@ -80,7 +80,37 @@ Each page can optionally define its own SEO metadata:
 - `title` sets the browser/document title for that page, falling back to `site.name` when omitted.
 - `description` sets the page's meta description, falling back to `site.description` when omitted.
 
-Both fields update automatically during client-side navigation.
+Both fields update automatically during client-side navigation and are written
+into each page's generated HTML during production builds.
+
+## Static Site Generation
+
+Production builds automatically prerender every configured page route:
+
+```text
+dist/index.html
+dist/getting-started/index.html
+dist/examples/index.html
+```
+
+Each file contains the rendered MDX content, page title, meta description,
+Open Graph metadata, and Twitter metadata before JavaScript runs. React then
+hydrates that HTML in the browser, so embedded React and Material UI components
+remain interactive.
+
+Prerendering requires static routes such as `/getting-started`. Dynamic route
+patterns containing parameters or wildcards are not supported.
+
+To disable prerendering or use non-default entry and output paths:
+
+```js
+createMdxDocsConfig({
+  rootDir: import.meta.dirname,
+  entry: "src/main.jsx",
+  outDir: "build",
+  prerender: false,
+});
+```
 
 Configure your site name and description in `config/site.js`.
 

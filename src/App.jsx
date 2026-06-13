@@ -1,7 +1,7 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { useMemo, useState, useLayoutEffect, useEffect } from "react";
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   useLocation,
   useNavigate,
 } from "react-router-dom";
@@ -13,6 +13,9 @@ import { DocsProvider } from "./context/DocsProvider";
 import { usePageMetadata } from "./hooks/usePageMetadata";
 import { useTheme } from "./hooks/useTheme";
 import { createAppTheme } from "./themes";
+
+const useIsomorphicLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const Wrapper = ({ children }) => {
   const location = useLocation();
@@ -36,7 +39,7 @@ const Wrapper = ({ children }) => {
     }
   }, [navigate]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     // Scroll to the top of the page when the route changes
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [location.pathname]);
@@ -88,14 +91,23 @@ function AppContent({ userTheme = {} }) {
   );
 }
 
-function App({ pages, site, theme = {}, hideHomeFromNav = false }) {
+function App({
+  pages,
+  site,
+  theme = {},
+  hideHomeFromNav = false,
+  RouterComponent = BrowserRouter,
+  routerProps = { basename: import.meta.env.BASE_URL },
+}) {
+  const AppRouter = RouterComponent;
+
   return (
     <DocsProvider pages={pages} site={site} hideHomeFromNav={hideHomeFromNav}>
-      <Router basename={import.meta.env.BASE_URL}>
+      <AppRouter {...routerProps}>
         <Wrapper>
           <AppContent userTheme={theme} />
         </Wrapper>
-      </Router>
+      </AppRouter>
     </DocsProvider>
   );
 }

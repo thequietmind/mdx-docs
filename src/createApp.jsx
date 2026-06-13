@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 
 import App from "./App.jsx";
+import { registerAppOptions } from "./appOptions.js";
 import "./main.css";
 
 export function createApp({ pages, site, theme, hideHomeFromNav }) {
@@ -17,9 +18,24 @@ export function createApp({ pages, site, theme, hideHomeFromNav }) {
     );
   }
 
-  createRoot(document.getElementById("root")).render(
+  const options = { pages, site, theme, hideHomeFromNav };
+  registerAppOptions(options);
+
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  const root = document.getElementById("root");
+  const app = (
     <StrictMode>
-      <App pages={pages} site={site} theme={theme} hideHomeFromNav={hideHomeFromNav} />
+      <App {...options} />
     </StrictMode>
   );
+
+  if (root.hasChildNodes()) {
+    hydrateRoot(root, app);
+    return;
+  }
+
+  createRoot(root).render(app);
 }
