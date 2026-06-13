@@ -44,7 +44,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
-    "vite": "^6.4.1"
+    "vite": "^6.4.2"
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
@@ -76,8 +76,8 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "remark-gfm": "^4.0.1",
-    "vite": "^6.4.1",
-    "vitest": "^3.2.4"
+    "vite": "^6.4.2",
+    "vitest": "^3.2.6"
   },
   "publishConfig": {
     "access": "public"
