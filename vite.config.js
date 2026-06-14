@@ -1,12 +1,19 @@
 import { existsSync } from "fs";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "fs/promises";
+import { dirname, join, resolve } from "path";
+import { fileURLToPath, pathToFileURL } from "url";
+
 import mdx from "@mdx-js/rollup";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path";
-import { fileURLToPath } from "url";
-import { defineConfig } from "vite";
+import remarkGfm from "remark-gfm";
+import { build, defineConfig } from "vite";
 
 import { site } from "./example/config/site.js";
-import remarkGfm from "remark-gfm";
+import {
+  applyPageMetadata,
+  getRouteOutputPath,
+  injectPrerenderedApp,
+} from "./src/prerenderHtml.js";
 import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -15,25 +22,107 @@ const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
 const custom404Path = resolve(__dirname, "example/pages/404.mdx");
 const hasCustom404 = existsSync(custom404Path);
 const builtInNotFoundPath = resolve(__dirname, "src/components/NotFound.jsx");
+const pagesDir = resolve(__dirname, "example/pages");
+
+const create404Plugin = () => ({
+  name: "mdx-docs-404",
+  resolveId(id) {
+    if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
+  },
+  load(id) {
+    if (id === RESOLVED_VIRTUAL_404_ID) {
+      if (hasCustom404) {
+        return `export { default } from "@pages/404.mdx";`;
+      }
+      return `export { default } from ${JSON.stringify(builtInNotFoundPath)};`;
+    }
+  },
+});
+
+const createMdxPlugin = () =>
+  mdx({
+    jsxImportSource: "@emotion/react",
+    providerImportSource: "@mdx-js/react",
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [rehypeUnwrapJsxParagraphs],
+  });
+
+const createSitePrerenderPlugin = () => ({
+  name: "mdxdocs-site-prerender",
+  apply: "build",
+  async closeBundle() {
+    const temporaryDirectory = await mkdtemp(
+      join(__dirname, ".mdx-docs-prerender-")
+    );
+
+    try {
+      const prerenderEntry = join(temporaryDirectory, "entry.mjs");
+      const serverOutput = join(temporaryDirectory, "server");
+
+      await writeFile(
+        prerenderEntry,
+        `
+          import ${JSON.stringify(resolve(__dirname, "src/main.jsx"))};
+          export {
+            getPrerenderPages,
+            renderPage
+          } from ${JSON.stringify(resolve(__dirname, "src/server.jsx"))};
+        `
+      );
+
+      await build({
+        configFile: false,
+        root: __dirname,
+        base: "/",
+        logLevel: "warn",
+        plugins: [create404Plugin(), react(), createMdxPlugin()],
+        resolve: {
+          alias: { "@pages": pagesDir },
+        },
+        build: {
+          ssr: prerenderEntry,
+          outDir: serverOutput,
+          emptyOutDir: true,
+          rollupOptions: {
+            output: {
+              entryFileNames: "entry.mjs",
+            },
+          },
+        },
+      });
+
+      const serverModuleUrl = `${pathToFileURL(
+        join(serverOutput, "entry.mjs")
+      ).href}?t=${Date.now()}`;
+      const { getPrerenderPages, renderPage } = await import(serverModuleUrl);
+      const outputDirectory = resolve(__dirname, "dist");
+      const template = await readFile(
+        join(outputDirectory, "index.html"),
+        "utf8"
+      );
+
+      for (const page of getPrerenderPages()) {
+        const appHtml = await renderPage(page.route, "/");
+        const pageHtml = injectPrerenderedApp(
+          applyPageMetadata(template, page),
+          appHtml
+        );
+        const outputPath = getRouteOutputPath(outputDirectory, page.route);
+
+        await mkdir(dirname(outputPath), { recursive: true });
+        await writeFile(outputPath, pageHtml);
+      }
+    } finally {
+      await rm(temporaryDirectory, { force: true, recursive: true });
+    }
+  },
+});
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   base: mode === "production" ? "/" : "/",
   plugins: [
-    {
-      name: "mdx-docs-404",
-      resolveId(id) {
-        if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
-      },
-      load(id) {
-        if (id === RESOLVED_VIRTUAL_404_ID) {
-          if (hasCustom404) {
-            return `export { default } from "@pages/404.mdx";`;
-          }
-          return `export { default } from ${JSON.stringify(builtInNotFoundPath)};`;
-        }
-      },
-    },
+    create404Plugin(),
     {
       name: "html-site-config",
       transformIndexHtml: (html) =>
@@ -42,12 +131,8 @@ export default defineConfig(({ mode }) => ({
           .replace("%SITE_DESCRIPTION%", site.description ?? ""),
     },
     react(),
-    mdx({
-      jsxImportSource: "@emotion/react",
-      providerImportSource: "@mdx-js/react",
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [rehypeUnwrapJsxParagraphs],
-    }),
+    createMdxPlugin(),
+    createSitePrerenderPlugin(),
   ],
   build: {
     rollupOptions: {

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   applyPageMetadata,
+  getRouteOutputPath,
   injectPrerenderedApp,
 } from "../prerenderHtml.js";
 
@@ -79,5 +80,26 @@ describe("prerender HTML helpers", () => {
         "<main>New content</main>"
       )
     ).toThrow(/empty <div id="root">/);
+  });
+});
+
+describe("getRouteOutputPath", () => {
+  it("maps the home route to the output root index.html", () => {
+    expect(getRouteOutputPath("dist", "/")).toBe("dist/index.html");
+  });
+
+  it("nests a route under its own directory", () => {
+    expect(getRouteOutputPath("dist", "/examples")).toBe(
+      "dist/examples/index.html"
+    );
+  });
+
+  it("rejects dynamic routes", () => {
+    expect(() => getRouteOutputPath("dist", "/posts/:id")).toThrow(
+      /Cannot prerender dynamic route/
+    );
+    expect(() => getRouteOutputPath("dist", "/files/*")).toThrow(
+      /Cannot prerender dynamic route/
+    );
   });
 });

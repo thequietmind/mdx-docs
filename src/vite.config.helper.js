@@ -16,6 +16,7 @@ import { build } from "vite";
 
 import {
   applyPageMetadata,
+  getRouteOutputPath,
   injectPrerenderedApp,
 } from "./prerenderHtml.js";
 
@@ -71,23 +72,6 @@ export function rehypeUnwrapJsxParagraphs() {
  */
 const VIRTUAL_404_ID = "virtual:mdx-docs/404";
 const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
-
-const getRouteOutputPath = (outDir, route) => {
-  if (!route.startsWith("/") || route.includes("*") || route.includes(":")) {
-    throw new Error(
-      `[mdx-docs] Cannot prerender dynamic route "${route}". Routes must be static paths beginning with "/".`
-    );
-  }
-
-  const segments = route.split("/").filter(Boolean);
-  if (segments.some((segment) => segment === "." || segment === "..")) {
-    throw new Error(`[mdx-docs] Invalid page route "${route}".`);
-  }
-
-  return segments.length === 0
-    ? join(outDir, "index.html")
-    : join(outDir, ...segments, "index.html");
-};
 
 const create404Plugin = ({ hasCustom404 }) => ({
   name: "mdx-docs-404",
