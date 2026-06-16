@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-15
+
+### Added
+
+- Optional `url` field in `config/site.js`. When set, production builds emit a `sitemap.xml` for every prerendered route and inject per-page `<link rel="canonical">` and `og:url` tags (the canonical tag is no longer required in `index.html`)
+- A `robots.txt` pointing at the sitemap is generated for root-deployed sites, unless one already exists in `public/`
+- Per-page `excludeFromSitemap` flag to omit a route from the generated sitemap
+
+### Notes
+
+- Backward compatible — sites without `site.url` build exactly as before, with the sitemap and canonical injection skipped
+
 ## [1.2.0] - 2026-06-13
 
 ### Added

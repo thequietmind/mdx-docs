@@ -11,8 +11,12 @@ import { build, defineConfig } from "vite";
 import { site } from "./example/config/site.js";
 import {
   applyPageMetadata,
+  generateRobotsTxt,
+  generateSitemap,
+  getCanonicalBaseUrl,
   getRouteOutputPath,
   injectPrerenderedApp,
+  injectSiteUrlTags,
 } from "./src/prerenderHtml.js";
 import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
 
@@ -101,7 +105,8 @@ const createSitePrerenderPlugin = () => ({
         "utf8"
       );
 
-      for (const page of getPrerenderPages()) {
+      const pages = getPrerenderPages();
+      for (const page of pages) {
         const appHtml = await renderPage(page.route, "/");
         const pageHtml = injectPrerenderedApp(
           applyPageMetadata(template, page),
@@ -111,6 +116,22 @@ const createSitePrerenderPlugin = () => ({
 
         await mkdir(dirname(outputPath), { recursive: true });
         await writeFile(outputPath, pageHtml);
+      }
+
+      const baseUrl = getCanonicalBaseUrl(template);
+      if (baseUrl) {
+        const routes = pages
+          .filter((page) => !page.excludeFromSitemap)
+          .map((page) => page.route);
+        await writeFile(
+          join(outputDirectory, "sitemap.xml"),
+          generateSitemap(routes, baseUrl)
+        );
+
+        const robotsPath = join(outputDirectory, "robots.txt");
+        if (!existsSync(robotsPath)) {
+          await writeFile(robotsPath, generateRobotsTxt(baseUrl));
+        }
       }
     } finally {
       await rm(temporaryDirectory, { force: true, recursive: true });
@@ -126,9 +147,12 @@ export default defineConfig(({ mode }) => ({
     {
       name: "html-site-config",
       transformIndexHtml: (html) =>
-        html
-          .replace("%SITE_NAME%", site.name)
-          .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+        injectSiteUrlTags(
+          html
+            .replace("%SITE_NAME%", site.name)
+            .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+          site.url
+        ),
     },
     react(),
     createMdxPlugin(),

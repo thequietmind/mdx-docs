@@ -16,8 +16,12 @@ import { build } from "vite";
 
 import {
   applyPageMetadata,
+  generateRobotsTxt,
+  generateSitemap,
+  getCanonicalBaseUrl,
   getRouteOutputPath,
   injectPrerenderedApp,
+  injectSiteUrlTags,
 } from "./prerenderHtml.js";
 
 /**
@@ -56,6 +60,7 @@ export function rehypeUnwrapJsxParagraphs() {
  * @param {object} [options.site] - The site config object (from `config/site.js`)
  * @param {string} [options.site.name] - Site name, replaces `%SITE_NAME%` in index.html
  * @param {string} [options.site.description] - Site description, replaces `%SITE_DESCRIPTION%` in index.html
+ * @param {string} [options.site.url] - Absolute site URL (e.g. `https://example.com`). Enables per-route canonical tags and a generated `sitemap.xml`.
  * @param {string} [options.entry="main.jsx"] - Browser entry that calls `createApp`
  * @param {string} [options.outDir="dist"] - Vite build output directory
  * @param {boolean} [options.prerender=true] - Generate static HTML for every page route
@@ -179,11 +184,37 @@ const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
         await mkdir(dirname(outputPath), { recursive: true });
         await writeFile(outputPath, pageHtml);
       }
+
+      await writeSiteFiles({ pages, template, base, outputDirectory });
     } finally {
       await rm(temporaryDirectory, { force: true, recursive: true });
     }
   },
 });
+
+const writeSiteFiles = async ({ pages, template, base, outputDirectory }) => {
+  const baseUrl = getCanonicalBaseUrl(template);
+  if (!baseUrl) {
+    console.warn(
+      '[mdx-docs] Skipping sitemap.xml — set "url" in config/site.js to enable it.'
+    );
+    return;
+  }
+
+  const routes = pages
+    .filter((page) => !page.excludeFromSitemap)
+    .map((page) => page.route);
+  await writeFile(
+    join(outputDirectory, "sitemap.xml"),
+    generateSitemap(routes, baseUrl)
+  );
+
+  if (base !== "/") return;
+  const robotsPath = join(outputDirectory, "robots.txt");
+  if (!existsSync(robotsPath)) {
+    await writeFile(robotsPath, generateRobotsTxt(baseUrl));
+  }
+};
 
 export function createMdxDocsConfig({
   rootDir,
@@ -203,9 +234,12 @@ export function createMdxDocsConfig({
       {
         name: "html-site-config",
         transformIndexHtml: (html) =>
-          html
-            .replace("%SITE_NAME%", site.name ?? "")
-            .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+          injectSiteUrlTags(
+            html
+              .replace("%SITE_NAME%", site.name ?? "")
+              .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+            site.url
+          ),
       },
       react(),
       createMdxPlugin(),

@@ -118,8 +118,17 @@ Configure your site name and description in `config/site.js`.
 export const site = {
   name: "My Site",
   description: "My site description",
+  url: "https://docs.example.com",
 };
 ```
+
+Setting `url` to your site's absolute URL enables two SEO features during
+production builds: per-page `<link rel="canonical">` and `og:url` tags, and a
+generated `sitemap.xml` listing every prerendered route. When the site is
+deployed at the domain root, a `robots.txt` pointing at the sitemap is written
+too (an existing `public/robots.txt` is never overwritten). Pages can opt out of
+the sitemap with `excludeFromSitemap: true` in `config/pages.js`. Without `url`,
+both features are skipped.
 
 ## Writing MDX
 
@@ -197,6 +206,7 @@ createApp({ pages, site });
 export const site = {
   name: "My Site",
   description: "My site description",
+  url: "https://docs.example.com",
 };
 ```
 

@@ -28,6 +28,7 @@ export const getPrerenderPages = () => {
     route: page.route,
     title: page.title ?? site?.name,
     description: page.description ?? site?.description,
+    excludeFromSitemap: page.excludeFromSitemap ?? false,
   }));
 };
 

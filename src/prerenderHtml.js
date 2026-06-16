@@ -24,6 +24,17 @@ const escapeHtml = (value) =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 
+const escapeXml = (value) =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+
+const CANONICAL_TAG_PATTERN =
+  /<link\b(?=[^>]*\brel=(["'])canonical\1)[^>]*>/i;
+
 const escapeRegExp = (value) =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -63,17 +74,24 @@ const replaceMetaContent = (html, attribute, value, content) => {
   return html.replace(existingTag, updatedTag);
 };
 
-const applyPageUrl = (html, route) => {
-  const canonicalPattern =
-    /<link\b(?=[^>]*\brel=(["'])canonical\1)[^>]*>/i;
-  const canonicalTag = html.match(canonicalPattern)?.[0];
-  const canonicalHref = canonicalTag?.match(/\bhref=(["'])(.*?)\1/i)?.[2];
-  if (!canonicalTag || !canonicalHref) return html;
+export const getCanonicalBaseUrl = (html) => {
+  const canonicalHref = html
+    .match(CANONICAL_TAG_PATTERN)?.[0]
+    ?.match(/\bhref=(["'])(.*?)\1/i)?.[2];
+  if (!canonicalHref) return null;
 
-  const baseUrl = canonicalHref.endsWith("/")
-    ? canonicalHref
-    : `${canonicalHref}/`;
-  const pageUrl = new URL(route === "/" ? "." : route.slice(1), baseUrl).href;
+  return canonicalHref.endsWith("/") ? canonicalHref : `${canonicalHref}/`;
+};
+
+export const buildPageUrl = (route, baseUrl) =>
+  new URL(route === "/" ? "." : route.slice(1), baseUrl).href;
+
+const applyPageUrl = (html, route) => {
+  const canonicalTag = html.match(CANONICAL_TAG_PATTERN)?.[0];
+  const baseUrl = getCanonicalBaseUrl(html);
+  if (!canonicalTag || !baseUrl) return html;
+
+  const pageUrl = buildPageUrl(route, baseUrl);
   const updatedCanonical = canonicalTag.replace(
     /\bhref=(["'])[\s\S]*?\1/i,
     `href="${escapeHtml(pageUrl)}"`
@@ -108,6 +126,33 @@ export const applyPageMetadata = (html, page) => {
   output = applyPageUrl(output, page.route);
   return output;
 };
+
+export const injectSiteUrlTags = (html, siteUrl) => {
+  if (!siteUrl) return html;
+
+  const baseHref = siteUrl.endsWith("/") ? siteUrl : `${siteUrl}/`;
+  let output = html;
+  if (!CANONICAL_TAG_PATTERN.test(output)) {
+    output = output.replace(
+      "</head>",
+      `  <link rel="canonical" href="${escapeHtml(baseHref)}" />\n</head>`
+    );
+  }
+
+  return replaceMetaContent(output, "property", "og:url", baseHref);
+};
+
+export const generateSitemap = (routes, baseUrl) => {
+  const entries = routes
+    .map((route) => buildPageUrl(route, baseUrl))
+    .map((url) => `  <url>\n    <loc>${escapeXml(url)}</loc>\n  </url>`)
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`;
+};
+
+export const generateRobotsTxt = (baseUrl) =>
+  `User-agent: *\nAllow: /\nSitemap: ${baseUrl}sitemap.xml\n`;
 
 export const injectPrerenderedApp = (html, appHtml) => {
   const rootPattern =
