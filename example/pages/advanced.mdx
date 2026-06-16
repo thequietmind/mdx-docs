@@ -54,3 +54,59 @@ export default function App() {
 ```
 
 > `MDXContent` does not include any MUI `ThemeProvider`. If you are using MUI components in your own layout or MDX pages, wrap the tree in a `ThemeProvider` before rendering `MDXContent`.
+
+## Sitemap generation
+
+MDX Docs can generate a `sitemap.xml` during production builds. Add an
+absolute `url` to `config/site.js` to enable sitemap output and per-page
+canonical metadata:
+
+```js
+export const site = {
+  name: "My Site",
+  description: "My site description",
+  url: "https://docs.example.com",
+};
+```
+
+When `url` is set, `yarn build` writes a `sitemap.xml` that includes every
+prerendered route:
+
+```none
+dist/sitemap.xml
+```
+
+Each page URL is built from the site URL and the page route. For example, a
+page registered at `/getting-started` appears as:
+
+```xml
+<url>
+  <loc>https://docs.example.com/getting-started</loc>
+</url>
+```
+
+Pages can opt out of the generated sitemap with `excludeFromSitemap`:
+
+```js
+export const pages = [
+  {
+    name: "Internal Notes",
+    route: "/internal-notes",
+    component: InternalNotesMDX,
+    excludeFromSitemap: true,
+  },
+];
+```
+
+For sites deployed at the domain root, MDX Docs also writes a `robots.txt`
+pointing to the generated sitemap:
+
+```none
+User-agent: *
+Allow: /
+Sitemap: https://docs.example.com/sitemap.xml
+```
+
+If `public/robots.txt` already exists, MDX Docs leaves it unchanged. Sites
+without `site.url` build normally, but sitemap, canonical URL, and `og:url`
+generation are skipped.
