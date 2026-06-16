@@ -11,6 +11,7 @@ const VIRTUAL_404_ID = "virtual:mdx-docs/404";
 const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
 
 export default defineConfig({
+  publicDir: false,
   plugins: [
     {
       name: "mdx-docs-404",
