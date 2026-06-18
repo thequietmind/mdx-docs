@@ -1,0 +1,32 @@
+# Links
+
+All links should look identical regardless of how they are written. Both
+markdown-syntax links and literal HTML anchors are underlined at rest and lose
+the underline on hover. This holds in both light and dark mode.
+
+## Markdown link
+
+This is a [markdown-syntax link](https://mui.com/material-ui/react-link/) that is
+routed through the MDX `components.a` mapping and renders as a MUI Link.
+
+```md
+[markdown-syntax link](https://mui.com/material-ui/react-link/)
+```
+
+## Bare HTML link
+
+This is a <a href="https://mui.com/material-ui/react-link/">literal HTML anchor</a>
+written directly in the .mdx file, which is not routed through the components
+mapping.
+
+```html
+<a href="https://mui.com/material-ui/react-link/">literal HTML anchor</a>
+```
+
+## Internal markdown link
+
+This is an [internal markdown link](/typography) to another docs page.
+
+```md
+[internal markdown link](/typography)
+```

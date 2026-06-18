@@ -10,6 +10,7 @@ const ButtonMDX = lazy(() => import("@pages/button.mdx"));
 const CardMDX = lazy(() => import("@pages/card.mdx"));
 const ChipMDX = lazy(() => import("@pages/chip.mdx"));
 const ColorsMDX = lazy(() => import("@pages/colors.mdx"));
+const LinksMDX = lazy(() => import("@pages/links.mdx"));
 const TabsMDX = lazy(() => import("@pages/tabs.mdx"));
 const TextFieldMDX = lazy(() => import("@pages/textfield.mdx"));
 const TypographyMDX = lazy(() => import("@pages/typography.mdx"));
@@ -72,6 +73,12 @@ export const pages = [
     name: "Colors",
     route: "/colors",
     component: ColorsMDX,
+    isHidden: true,
+  },
+  {
+    name: "Links",
+    route: "/links",
+    component: LinksMDX,
     isHidden: true,
   },
   {

@@ -41,6 +41,44 @@ describe("Theme configuration", () => {
       expect(theme.components.MuiIconButton).toBeDefined();
     });
 
+    it.each(["light", "dark"])(
+      "should underline bare HTML anchors at rest and remove it on hover in %s mode",
+      (mode) => {
+        const theme = createAppTheme(mode);
+        const anchor = theme.components.MuiCssBaseline.styleOverrides.a;
+
+        expect(anchor.textDecoration).toBe("underline");
+        expect(anchor["&:hover"].textDecoration).toBe("none");
+      }
+    );
+
+    it.each(["light", "dark"])(
+      "should underline markdown links at rest and remove it on hover in %s mode",
+      (mode) => {
+        const theme = createAppTheme(mode);
+        const link = theme.components.MuiLink;
+
+        expect(link.defaultProps.underline).toBe("none");
+        expect(link.styleOverrides.root.textDecoration).toBe("underline");
+        expect(link.styleOverrides.root["&:hover"].textDecoration).toBe("none");
+      }
+    );
+
+    it("should preserve link overrides when user provides components", () => {
+      const theme = createAppTheme("light", {
+        light: {
+          components: {
+            MuiLink: { styleOverrides: { root: { color: "red" } } },
+          },
+        },
+      });
+
+      expect(theme.components.MuiLink.defaultProps.underline).toBe("none");
+      expect(theme.components.MuiLink.styleOverrides.root.textDecoration).toBe(
+        "underline"
+      );
+    });
+
     it("should apply shorthand primaryColor to light mode", () => {
       const theme = createAppTheme("light", { primaryColor: "#6200ea" });
       expect(theme.palette.primary.main).toBe("#6200ea");

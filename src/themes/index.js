@@ -8,6 +8,34 @@ export { darkTheme } from "./darkTheme";
 
 const componentOverrides = {
   components: {
+    // Style ALL bare HTML anchors (e.g. literal <a> written in .mdx, which is
+    // not routed through the MDX components mapping). CssBaseline is enabled.
+    MuiCssBaseline: {
+      styleOverrides: {
+        a: {
+          textDecoration: "underline",
+          "&:hover": {
+            textDecoration: "none",
+          },
+        },
+      },
+    },
+    // Style markdown-syntax links, which render as MUI Link via the MDX
+    // components.a mapping. underline: "none" defaults out MUI's own underline
+    // classes so they don't fight the root override on specificity.
+    MuiLink: {
+      defaultProps: {
+        underline: "none",
+      },
+      styleOverrides: {
+        root: {
+          textDecoration: "underline",
+          "&:hover": {
+            textDecoration: "none",
+          },
+        },
+      },
+    },
     MuiIconButton: {
       styleOverrides: {
         root: {
