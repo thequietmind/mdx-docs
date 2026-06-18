@@ -11,14 +11,16 @@ const componentOverrides = {
     // Style ALL bare HTML anchors (e.g. literal <a> written in .mdx, which is
     // not routed through the MDX components mapping). CssBaseline is enabled.
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
         a: {
+          // Match the markdown-link color (MUI Link defaults to color="primary")
+          color: theme.palette.primary.main,
           textDecoration: "underline",
           "&:hover": {
             textDecoration: "none",
           },
         },
-      },
+      }),
     },
     // Style markdown-syntax links, which render as MUI Link via the MDX
     // components.a mapping. underline: "none" defaults out MUI's own underline

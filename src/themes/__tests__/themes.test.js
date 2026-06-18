@@ -45,12 +45,29 @@ describe("Theme configuration", () => {
       "should underline bare HTML anchors at rest and remove it on hover in %s mode",
       (mode) => {
         const theme = createAppTheme(mode);
-        const anchor = theme.components.MuiCssBaseline.styleOverrides.a;
+        const anchor = theme.components.MuiCssBaseline.styleOverrides(theme).a;
 
         expect(anchor.textDecoration).toBe("underline");
         expect(anchor["&:hover"].textDecoration).toBe("none");
       }
     );
+
+    it.each(["light", "dark"])(
+      "should color bare HTML anchors to match markdown links in %s mode",
+      (mode) => {
+        const theme = createAppTheme(mode);
+        const anchor = theme.components.MuiCssBaseline.styleOverrides(theme).a;
+
+        expect(anchor.color).toBe(theme.palette.primary.main);
+      }
+    );
+
+    it("should color bare HTML anchors using a custom primaryColor", () => {
+      const theme = createAppTheme("light", { primaryColor: "#6200ea" });
+      const anchor = theme.components.MuiCssBaseline.styleOverrides(theme).a;
+
+      expect(anchor.color).toBe("#6200ea");
+    });
 
     it.each(["light", "dark"])(
       "should underline markdown links at rest and remove it on hover in %s mode",
