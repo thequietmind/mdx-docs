@@ -127,6 +127,9 @@ export const applyPageMetadata = (html, page) => {
   return output;
 };
 
+export const injectGeneratorTag = (html) =>
+  replaceMetaContent(html, "name", "generator", "@quietmind/mdx-docs");
+
 export const injectSiteUrlTags = (html, siteUrl) => {
   if (!siteUrl) return html;
 

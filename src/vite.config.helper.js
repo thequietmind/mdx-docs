@@ -20,6 +20,7 @@ import {
   generateSitemap,
   getCanonicalBaseUrl,
   getRouteOutputPath,
+  injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
 } from "./prerenderHtml.js";
@@ -234,11 +235,13 @@ export function createMdxDocsConfig({
       {
         name: "html-site-config",
         transformIndexHtml: (html) =>
-          injectSiteUrlTags(
-            html
-              .replace("%SITE_NAME%", site.name ?? "")
-              .replace("%SITE_DESCRIPTION%", site.description ?? ""),
-            site.url
+          injectGeneratorTag(
+            injectSiteUrlTags(
+              html
+                .replace("%SITE_NAME%", site.name ?? "")
+                .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+              site.url
+            )
           ),
       },
       react(),

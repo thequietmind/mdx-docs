@@ -15,6 +15,7 @@ import {
   generateSitemap,
   getCanonicalBaseUrl,
   getRouteOutputPath,
+  injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
 } from "./src/prerenderHtml.js";
@@ -147,11 +148,13 @@ export default defineConfig(({ mode }) => ({
     {
       name: "html-site-config",
       transformIndexHtml: (html) =>
-        injectSiteUrlTags(
-          html
-            .replace("%SITE_NAME%", site.name)
-            .replace("%SITE_DESCRIPTION%", site.description ?? ""),
-          site.url
+        injectGeneratorTag(
+          injectSiteUrlTags(
+            html
+              .replace("%SITE_NAME%", site.name)
+              .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+            site.url
+          )
         ),
     },
     react(),

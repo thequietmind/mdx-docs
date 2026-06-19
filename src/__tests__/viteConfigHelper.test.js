@@ -6,6 +6,7 @@ import {
   generateSitemap,
   getCanonicalBaseUrl,
   getRouteOutputPath,
+  injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
 } from "../prerenderHtml.js";
@@ -151,6 +152,24 @@ describe("injectSiteUrlTags", () => {
   it("returns the html unchanged when no url is provided", () => {
     const input = "<html><head></head></html>";
     expect(injectSiteUrlTags(input, undefined)).toBe(input);
+  });
+});
+
+describe("injectGeneratorTag", () => {
+  it("adds the generator meta tag before the closing head", () => {
+    const html = injectGeneratorTag("<html><head></head><body></body></html>");
+
+    expect(html).toContain(
+      '<meta name="generator" content="@quietmind/mdx-docs" />'
+    );
+  });
+
+  it("does not add a second generator tag when one already exists", () => {
+    const html = injectGeneratorTag(
+      injectGeneratorTag("<html><head></head><body></body></html>")
+    );
+
+    expect(html.match(/name=("|')generator\1/g)).toHaveLength(1);
   });
 });
 
