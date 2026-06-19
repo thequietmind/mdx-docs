@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "fs/promises";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -18,10 +18,14 @@ import {
   injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
+  injectVersionAttribute,
 } from "./src/prerenderHtml.js";
 import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const packageVersion = JSON.parse(
+  readFileSync(new URL("./package.json", import.meta.url), "utf8")
+).version;
 const VIRTUAL_404_ID = "virtual:mdx-docs/404";
 const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
 const custom404Path = resolve(__dirname, "example/pages/404.mdx");
@@ -148,13 +152,16 @@ export default defineConfig(({ mode }) => ({
     {
       name: "html-site-config",
       transformIndexHtml: (html) =>
-        injectGeneratorTag(
-          injectSiteUrlTags(
-            html
-              .replace("%SITE_NAME%", site.name)
-              .replace("%SITE_DESCRIPTION%", site.description ?? ""),
-            site.url
-          )
+        injectVersionAttribute(
+          injectGeneratorTag(
+            injectSiteUrlTags(
+              html
+                .replace("%SITE_NAME%", site.name)
+                .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+              site.url
+            )
+          ),
+          packageVersion
         ),
     },
     react(),

@@ -130,6 +130,23 @@ export const applyPageMetadata = (html, page) => {
 export const injectGeneratorTag = (html) =>
   replaceMetaContent(html, "name", "generator", "@quietmind/mdx-docs");
 
+export const injectVersionAttribute = (html, version) => {
+  if (!version) return html;
+
+  const htmlTagPattern = /<html\b([^>]*)>/i;
+  const match = html.match(htmlTagPattern);
+  if (!match) return html;
+
+  const versionAttributePattern =
+    /\s+data-mdx-docs-version=(["'])[\s\S]*?\1/i;
+  const attribute = ` data-mdx-docs-version="${escapeHtml(version)}"`;
+  const attributes = versionAttributePattern.test(match[1])
+    ? match[1].replace(versionAttributePattern, attribute)
+    : `${match[1]}${attribute}`;
+
+  return html.replace(htmlTagPattern, () => `<html${attributes}>`);
+};
+
 export const injectSiteUrlTags = (html, siteUrl) => {
   if (!siteUrl) return html;
 

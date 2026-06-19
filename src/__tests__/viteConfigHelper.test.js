@@ -9,6 +9,7 @@ import {
   injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
+  injectVersionAttribute,
 } from "../prerenderHtml.js";
 
 const template = `<!doctype html>
@@ -170,6 +171,34 @@ describe("injectGeneratorTag", () => {
     );
 
     expect(html.match(/name=("|')generator\1/g)).toHaveLength(1);
+  });
+});
+
+describe("injectVersionAttribute", () => {
+  it("adds the version attribute while preserving existing ones", () => {
+    const html = injectVersionAttribute(
+      '<html lang="en"><head></head></html>',
+      "1.3.3"
+    );
+
+    expect(html).toContain(
+      '<html lang="en" data-mdx-docs-version="1.3.3">'
+    );
+  });
+
+  it("replaces an existing version attribute instead of duplicating it", () => {
+    const html = injectVersionAttribute(
+      '<html lang="en" data-mdx-docs-version="1.0.0"><head></head></html>',
+      "1.3.3"
+    );
+
+    expect(html).toContain('data-mdx-docs-version="1.3.3"');
+    expect(html.match(/data-mdx-docs-version=/g)).toHaveLength(1);
+  });
+
+  it("returns the html unchanged when no version is provided", () => {
+    const input = '<html lang="en"><head></head></html>';
+    expect(injectVersionAttribute(input, undefined)).toBe(input);
   });
 });
 

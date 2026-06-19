@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import {
   mkdir,
   mkdtemp,
@@ -23,7 +23,12 @@ import {
   injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
+  injectVersionAttribute,
 } from "./prerenderHtml.js";
+
+const packageVersion = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8")
+).version;
 
 /**
  * Rehype plugin that removes <p> wrappers MDX generates around text children
@@ -235,13 +240,16 @@ export function createMdxDocsConfig({
       {
         name: "html-site-config",
         transformIndexHtml: (html) =>
-          injectGeneratorTag(
-            injectSiteUrlTags(
-              html
-                .replace("%SITE_NAME%", site.name ?? "")
-                .replace("%SITE_DESCRIPTION%", site.description ?? ""),
-              site.url
-            )
+          injectVersionAttribute(
+            injectGeneratorTag(
+              injectSiteUrlTags(
+                html
+                  .replace("%SITE_NAME%", site.name ?? "")
+                  .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+                site.url
+              )
+            ),
+            packageVersion
           ),
       },
       react(),
