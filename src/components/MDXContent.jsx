@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 import { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import NotFound from "virtual:mdx-docs/404";
 
 import CodeBlock from "./CodeBlock";
 import InlineCode from "./InlineCode";
-import NotFound from "virtual:mdx-docs/404";
 import { useDocsContext } from "../context/DocsProvider";
 import { isExternalLink } from "../utils/navigation";
 

@@ -33,6 +33,12 @@ export const useTheme = () => {
     const root = document.getElementById("root");
     if (root?.dataset.mdxDocsTheme === "dark") {
       delete root.dataset.mdxDocsTheme;
+      // The prerenderer stamps data-mdx-docs-theme="dark" so the hydration
+      // render matches the static dark HTML and avoids a mismatch. Once mounted
+      // we drop that hint and settle to the user's real preference (localStorage
+      // or system), which can only be resolved post-hydration — so this setState
+      // is intentional and cannot run during render.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDarkMode(getInitialDarkMode());
     }
   }, []);

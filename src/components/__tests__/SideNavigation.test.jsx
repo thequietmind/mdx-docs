@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 import { DocsProvider } from "../../context/DocsProvider";
+
 import SideNavigation from "../SideNavigation";
 
 // These pages have no isDefault flag, so all appear in the nav

@@ -1,9 +1,9 @@
-import { useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, IconButton, Tooltip, useTheme } from "@mui/material";
 import { Highlight } from "prism-react-renderer";
 import Prism from "prismjs";
+import { useState } from "react";
 import "prismjs/components/prism-bash";
 import "prismjs/components/prism-shell-session";
 import "prismjs/components/prism-docker";
@@ -182,7 +182,7 @@ const CodeBlock = ({ children, className = "", ...props }) => {
                   <div key={lineKey} {...restLineProps}>
                     {line.map((token, tokenIndex) => {
                       const tokenProps = getTokenProps({ token, key: tokenIndex });
-                      const { key: tokenKey, ...restTokenProps } = tokenProps;
+                      const { key: _tokenKey, ...restTokenProps } = tokenProps;
                       return <span key={`${i}-${tokenIndex}`} {...restTokenProps} />;
                     })}
                   </div>

@@ -10,8 +10,8 @@ import {
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { getNavigationPages } from "../utils/navigation";
 import { useDocsContext } from "../context/DocsProvider";
+import { getNavigationPages } from "../utils/navigation";
 
 export const drawerWidth = 240;
 

@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 import { DocsProvider } from "../../context/DocsProvider";
+
 import AppBar from "../AppBar";
 
 const mockSite = { name: "Design System" };
