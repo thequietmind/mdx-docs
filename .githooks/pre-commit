@@ -1,0 +1,8 @@
+#!/bin/sh
+# Pre-commit hook: block the commit when ESLint reports errors.
+#
+# Enabled repo-wide via `core.hooksPath=.githooks`, which the package.json
+# "prepare" script sets on `yarn install`. Bypass in an emergency with:
+#   git commit --no-verify
+echo "› yarn lint (pre-commit)"
+yarn lint
