@@ -82,7 +82,7 @@
     "react-router-dom": "^7.6.2",
     "remark-gfm": "^4.0.1",
     "vite": "^7.3.5",
-    "vitest": "^3.2.6"
+    "vitest": "^4.1.9"
   },
   "publishConfig": {
     "access": "public"
