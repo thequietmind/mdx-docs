@@ -27,18 +27,18 @@ export const pages = [
       "Create beautiful, interactive documentation sites with MDX and React",
   },
   {
-    name: "Getting Started",
-    route: "/getting-started",
-    component: GettingStarted,
-    title: "Getting Started — MDX Docs",
-    description: "Install MDX Docs and create your first MDX documentation page",
-  },
-  {
     name: "Examples",
     route: "/examples",
     component: ExamplesMDX,
     title: "Examples — MDX Docs",
     description: "Explore examples of Material-UI components in MDX Docs",
+  },
+  {
+    name: "Getting Started",
+    route: "/getting-started",
+    component: GettingStarted,
+    title: "Getting Started — MDX Docs",
+    description: "Install MDX Docs and create your first MDX documentation page",
   },
   {
     name: "Customization",
