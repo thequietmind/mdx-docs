@@ -1,6 +1,6 @@
 {
   "name": "@quietmind/mdx-docs",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "homepage": "https://mdxdocs.com",
   "exports": {
@@ -19,6 +19,7 @@
     "src/vite.config.helper.js"
   ],
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "dev": "vite",
     "build": "vite build",
     "build:lib": "vite build --config vite.lib.config.js",
