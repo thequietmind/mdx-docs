@@ -17,7 +17,7 @@ import NotFound from "virtual:mdx-docs/404";
 
 import CodeBlock from "./CodeBlock";
 import InlineCode from "./InlineCode";
-import { useDocsContext } from "../context/DocsProvider";
+import { useDocsContext } from "../context/DocsContext";
 import { isExternalLink } from "../utils/navigation";
 
 const MDXContent = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useDocsContext } from "../context/DocsProvider";
+import { useDocsContext } from "../context/DocsContext";
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;

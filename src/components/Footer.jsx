@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from "@mui/material";
 
-import { useDocsContext } from "../context/DocsProvider";
+import { useDocsContext } from "../context/DocsContext";
 
 function Footer() {
   const { footer } = useDocsContext();

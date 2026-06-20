@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import { useDocsContext } from "../context/DocsProvider";
+import { useDocsContext } from "../context/DocsContext";
 
 function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
   const { site } = useDocsContext();
