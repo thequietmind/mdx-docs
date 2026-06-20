@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import { registerAppOptions } from "./appOptions.js";
 import "./main.css";
 
-export function createApp({ pages, site, theme, hideHomeFromNav }) {
+export function createApp({ pages, site, theme, hideHomeFromNav, footer }) {
   const homePages = pages.filter((page) => page.route === "/");
   if (homePages.length === 0) {
     throw new Error(
@@ -18,7 +18,7 @@ export function createApp({ pages, site, theme, hideHomeFromNav }) {
     );
   }
 
-  const options = { pages, site, theme, hideHomeFromNav };
+  const options = { pages, site, theme, hideHomeFromNav, footer };
   registerAppOptions(options);
 
   if (typeof document === "undefined") {

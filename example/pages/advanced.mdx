@@ -15,6 +15,21 @@ import { DocsProvider } from '@quietmind/mdx-docs'
 | `pages` | `Page[]` | Yes | Array of page objects (same shape as `createApp`) |
 | `site` | `object` | Yes | Site config with `name` and `description` |
 | `hideHomeFromNav` | `boolean` | No | Hide the home route from navigation (default: `false`) |
+| `footer` | `object` | No | Footer config: `{ enabled, attribution }` (both default to `true`) |
+
+## Footer
+
+Every site renders a minimal "Built with MDX Docs" footer below the content. It is enabled by default. To hide the attribution, pass a `footer` option to `createApp`:
+
+```jsx
+createApp({
+  pages,
+  site,
+  footer: { attribution: false },
+})
+```
+
+Set `footer: { enabled: false }` to remove the footer entirely.
 
 ## MDXContent
 

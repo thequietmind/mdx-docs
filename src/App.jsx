@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import AppBar from "./components/AppBar";
+import Footer from "./components/Footer";
 import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
 import { DocsProvider } from "./context/DocsProvider";
@@ -82,9 +83,17 @@ function AppContent({ userTheme = {} }) {
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             // Prevent horizontal overflow on very small screens
             overflowX: "hidden",
+            // Flex column so the footer sticks to the bottom of the viewport
+            // on short pages and flows after content on long pages
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
           }}
         >
-          <MDXContent />
+          <Box sx={{ flexGrow: 1, width: "100%" }}>
+            <MDXContent />
+          </Box>
+          <Footer />
         </Box>
       </Box>
     </ThemeProvider>
@@ -96,13 +105,19 @@ function App({
   site,
   theme = {},
   hideHomeFromNav = false,
+  footer,
   RouterComponent = BrowserRouter,
   routerProps = { basename: import.meta.env.BASE_URL },
 }) {
   const AppRouter = RouterComponent;
 
   return (
-    <DocsProvider pages={pages} site={site} hideHomeFromNav={hideHomeFromNav}>
+    <DocsProvider
+      pages={pages}
+      site={site}
+      hideHomeFromNav={hideHomeFromNav}
+      footer={footer}
+    >
       <AppRouter {...routerProps}>
         <Wrapper>
           <AppContent userTheme={theme} />
