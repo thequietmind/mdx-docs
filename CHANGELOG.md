@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-06-19
+
+### Added
+
+- Footer support. `createApp` and `DocsProvider` accept a `footer` option of the
+  shape `{ enabled, content }`. Every site now renders a minimal "Built with MDX
+  Docs" attribution footer by default; pass `footer.content` to render your own
+  footer node instead, or `footer: { enabled: false }` to remove it entirely
+- Generator and version metadata in prerendered pages. Production builds inject a
+  `<meta name="generator" content="@quietmind/mdx-docs">` tag and a
+  `data-mdx-docs-version` attribute on the `<html>` element
+
+### Notes
+
+- The default "Built with MDX Docs" footer is new and appears on every site
+  after upgrading. Set `footer: { enabled: false }` to opt out, or pass
+  `footer.content` to customize it
+
 ## [1.3.3] - 2026-06-17
 
 ### Fixed

@@ -25,7 +25,7 @@ describe("Footer component", () => {
     const link = screen.getByRole("link", { name: "MDX Docs" });
     expect(link).toHaveAttribute("href", "https://mdxdocs.com");
     expect(link).toHaveAttribute("target", "_blank");
-    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link).toHaveAttribute("rel", "noopener");
   });
 
   it("does not render when the footer is disabled", () => {
