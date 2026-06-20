@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 
 import {
@@ -11,6 +12,7 @@ import {
   injectSiteUrlTags,
   injectVersionAttribute,
 } from "../prerenderHtml.js";
+import { createMdxDocsConfig } from "../vite.config.helper.js";
 
 const template = `<!doctype html>
 <html>
@@ -225,5 +227,51 @@ describe("generateRobotsTxt", () => {
     expect(generateRobotsTxt("https://example.com/")).toBe(
       "User-agent: *\nAllow: /\nSitemap: https://example.com/sitemap.xml\n"
     );
+  });
+});
+
+describe("createMdxDocsConfig html-site-config plugin", () => {
+  const getTransform = (config) =>
+    config.plugins
+      .flat()
+      .find((entry) => entry && entry.name === "html-site-config")
+      .transformIndexHtml;
+
+  it("replaces every occurrence of the site name and description placeholders", () => {
+    const transformIndexHtml = getTransform(
+      createMdxDocsConfig({
+        rootDir: "/tmp/mdx-docs-test",
+        site: { name: "My Docs", description: "All about docs" },
+      })
+    );
+
+    const html = transformIndexHtml(`<html lang="en"><head>
+  <title>%SITE_NAME%</title>
+  <meta name="description" content="%SITE_DESCRIPTION%" />
+  <meta property="og:title" content="%SITE_NAME%" />
+  <meta property="og:description" content="%SITE_DESCRIPTION%" />
+  <meta name="twitter:title" content="%SITE_NAME%" />
+  <meta name="twitter:description" content="%SITE_DESCRIPTION%" />
+</head><body><div id="root"></div></body></html>`);
+
+    expect(html).not.toContain("%SITE_NAME%");
+    expect(html).not.toContain("%SITE_DESCRIPTION%");
+    expect(html.match(/My Docs/g)).toHaveLength(3);
+    expect(html.match(/All about docs/g)).toHaveLength(3);
+  });
+
+  it("falls back to empty strings when site fields are missing", () => {
+    const transformIndexHtml = getTransform(
+      createMdxDocsConfig({ rootDir: "/tmp/mdx-docs-test" })
+    );
+
+    const html = transformIndexHtml(
+      '<html><head><title>%SITE_NAME%</title>' +
+        '<meta name="description" content="%SITE_DESCRIPTION%" />' +
+        '</head><body><div id="root"></div></body></html>'
+    );
+
+    expect(html).not.toContain("%SITE_NAME%");
+    expect(html).not.toContain("%SITE_DESCRIPTION%");
   });
 });

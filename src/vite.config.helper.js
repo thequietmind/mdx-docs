@@ -244,8 +244,8 @@ export function createMdxDocsConfig({
             injectGeneratorTag(
               injectSiteUrlTags(
                 html
-                  .replace("%SITE_NAME%", site.name ?? "")
-                  .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+                  .replaceAll("%SITE_NAME%", site.name ?? "")
+                  .replaceAll("%SITE_DESCRIPTION%", site.description ?? ""),
                 site.url
               )
             ),

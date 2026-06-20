@@ -12,17 +12,20 @@ const localStorageMock = (() => {
     clear: () => { store = {}; },
   };
 })();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock, writable: true });
+// jsdom-only globals — skipped when a test file opts into the node environment
+if (typeof window !== "undefined") {
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock, writable: true });
 
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+  // Mock window.matchMedia
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+}
