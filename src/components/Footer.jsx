@@ -5,7 +5,26 @@ import { useDocsContext } from "../context/DocsProvider";
 function Footer() {
   const { footer } = useDocsContext();
 
-  if (!footer?.enabled || !footer?.attribution) {
+  if (!footer?.enabled) {
+    return null;
+  }
+
+  const content =
+    footer.content ??
+    (footer.attribution ? (
+      <Typography variant="body2" color="text.secondary">
+        Built with{" "}
+        <Link
+          href="https://mdxdocs.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          MDX Docs
+        </Link>
+      </Typography>
+    ) : null);
+
+  if (!content) {
     return null;
   }
 
@@ -20,16 +39,7 @@ function Footer() {
         textAlign: "center",
       }}
     >
-      <Typography variant="body2" color="text.secondary">
-        Built with{" "}
-        <Link
-          href="https://mdxdocs.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          MDX Docs
-        </Link>
-      </Typography>
+      {content}
     </Box>
   );
 }

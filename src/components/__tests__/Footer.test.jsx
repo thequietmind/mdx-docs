@@ -39,4 +39,17 @@ describe("Footer component", () => {
 
     expect(screen.queryByText(/Built with/i)).not.toBeInTheDocument();
   });
+
+  it("renders custom content instead of the default attribution", () => {
+    renderWithProvider({ content: <p>Made with care</p> });
+
+    expect(screen.getByText(/Made with care/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Built with/i)).not.toBeInTheDocument();
+  });
+
+  it("does not render custom content when the footer is disabled", () => {
+    renderWithProvider({ enabled: false, content: <p>Made with care</p> });
+
+    expect(screen.queryByText(/Made with care/i)).not.toBeInTheDocument();
+  });
 });

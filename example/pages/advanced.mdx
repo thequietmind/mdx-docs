@@ -15,7 +15,7 @@ import { DocsProvider } from '@quietmind/mdx-docs'
 | `pages` | `Page[]` | Yes | Array of page objects (same shape as `createApp`) |
 | `site` | `object` | Yes | Site config with `name` and `description` |
 | `hideHomeFromNav` | `boolean` | No | Hide the home route from navigation (default: `false`) |
-| `footer` | `object` | No | Footer config: `{ enabled, attribution }` (both default to `true`) |
+| `footer` | `object` | No | Footer config: `{ enabled, attribution, content }` (`enabled` and `attribution` default to `true`) |
 
 ## Footer
 
@@ -30,6 +30,16 @@ createApp({
 ```
 
 Set `footer: { enabled: false }` to remove the footer entirely.
+
+To render your own footer instead of the default attribution, pass a `content` node:
+
+```jsx
+createApp({
+  pages,
+  site,
+  footer: { content: <p>Made with care by Your Team.</p> },
+})
+```
 
 ## MDXContent
 
