@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 const DocsContext = createContext(null);
 
-const DEFAULT_FOOTER = { enabled: true, attribution: true };
+const DEFAULT_FOOTER = { enabled: true };
 
 export const DocsProvider = ({
   pages,

@@ -1,0 +1,91 @@
+# Getting Started
+
+## Quick Start
+
+Create a new documentation site:
+
+```sh
+npx create-mdx-docs@latest my-docs
+```
+
+Create an MDX file in `pages/`:
+
+~~~mdx
+import { Button } from "@mui/material";
+
+# Button
+
+<Button variant="contained" color="primary">
+  Primary Action
+</Button>
+
+```jsx
+<Button variant="contained" color="primary">
+  Primary Action
+</Button>
+```
+~~~
+
+Register your page in `config/pages.js`:
+
+```js
+const GettingStartedMDX = lazy(() => import("@pages/getting-started.mdx"));
+
+export const pages = [
+  // ...existing pages
+  {
+    name: "Getting Started",
+    route: "/getting-started",
+    component: GettingStartedMDX,
+  },
+];
+```
+
+Pages with `isDefault: true` do not appear in the sidebar navigation.
+
+Configure your site name and description in `config/site.js`.
+
+```js
+export const site = {
+  name: "My Site",
+  description: "My site description",
+};
+```
+
+## Writing MDX
+
+MDX files are JSX, not HTML. A few things to keep in mind:
+
+- **Inline styles must be objects**, not strings — `style={{ marginRight: '0.5rem' }}` not `style="margin-right: 0.5rem"`. A CSS string will cause a runtime error due to Emotion's JSX transform.
+- Use `className` instead of `class`.
+- Self-close void elements: `<img />`, `<br />`, `<hr />`.
+
+## Favicon
+
+Place your favicon in the `public/` directory and add a `<link>` tag to `index.html`:
+
+```html
+<head>
+  <!-- ... -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+```
+
+Vite serves files in `public/` at the root path, so `public/favicon.svg` is accessible as `/favicon.svg`. Use `.ico`, `.png`, or `.svg` depending on your file.
+
+## Project Structure
+
+```none
+my-docs/
+├── pages/
+│   └── home.mdx
+├── config/
+│   ├── pages.js
+│   └── site.js
+├── public/
+│   └── favicon.svg
+├── index.html
+├── main.jsx
+├── vite.config.js
+└── package.json
+```

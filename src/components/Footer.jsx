@@ -9,24 +9,14 @@ function Footer() {
     return null;
   }
 
-  const content =
-    footer.content ??
-    (footer.attribution ? (
-      <Typography variant="body2" color="text.secondary">
-        Built with{" "}
-        <Link
-          href="https://mdxdocs.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          MDX Docs
-        </Link>
-      </Typography>
-    ) : null);
-
-  if (!content) {
-    return null;
-  }
+  const content = footer.content ?? (
+    <Typography variant="body2" color="text.secondary">
+      Built with{" "}
+      <Link href="https://mdxdocs.com" target="_blank" rel="noopener">
+        MDX Docs
+      </Link>
+    </Typography>
+  );
 
   return (
     <Box

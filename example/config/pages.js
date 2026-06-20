@@ -1,9 +1,11 @@
 import { lazy } from "react";
 
 const HomeMDX = lazy(() => import("@pages/home.mdx"));
+const GettingStarted = lazy(() => import("@pages/getting-started.mdx"));
 const ExamplesMDX = lazy(() => import("@pages/examples.mdx"));
 const CustomizationMDX = lazy(() => import("@pages/customization.mdx"));
 const AdvancedMDX = lazy(() => import("@pages/advanced.mdx"));
+const Contributing = lazy(() => import("@pages/contributing.mdx"));
 
 const AlertMDX = lazy(() => import("@pages/alert.mdx"));
 const ButtonMDX = lazy(() => import("@pages/button.mdx"));
@@ -25,6 +27,13 @@ export const pages = [
       "Create beautiful, interactive documentation sites with MDX and React",
   },
   {
+    name: "Getting Started",
+    route: "/getting-started",
+    component: GettingStarted,
+    title: "Getting Started — MDX Docs",
+    description: "Install MDX Docs and create your first MDX documentation page",
+  },
+  {
     name: "Examples",
     route: "/examples",
     component: ExamplesMDX,
@@ -43,6 +52,13 @@ export const pages = [
     route: "/advanced",
     component: AdvancedMDX,
     title: "Advanced — MDX Docs",
+    description: "Dive deeper into advanced features and customization options",
+  },
+  {
+    name: "Contributing",
+    route: "/contributing",
+    component: Contributing,
+    title: "Contributing — MDX Docs",
     description: "Dive deeper into advanced features and customization options",
   },
   {

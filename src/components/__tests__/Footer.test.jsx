@@ -34,12 +34,6 @@ describe("Footer component", () => {
     expect(screen.queryByText(/Built with/i)).not.toBeInTheDocument();
   });
 
-  it("does not render when attribution is disabled", () => {
-    renderWithProvider({ attribution: false });
-
-    expect(screen.queryByText(/Built with/i)).not.toBeInTheDocument();
-  });
-
   it("renders custom content instead of the default attribution", () => {
     renderWithProvider({ content: <p>Made with care</p> });
 
