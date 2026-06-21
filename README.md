@@ -326,11 +326,9 @@ Mode-specific overrides take precedence over `primaryColor` and `fontFamily` sho
 
 ## Contributing
 
-Contributions are welcome!
-
-1. Fork the repo
-2. Create a branch
-3. Submit a pull request
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for branch and
+pull request steps plus local development setup, including the optional weave
+merge driver.
 
 ## Related Projects
 
