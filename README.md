@@ -2,10 +2,6 @@
 
 MDX Docs turns MDX files into routed documentation pages with a built-in layout, sidebar, and navigation.
 
-<a href="https://www.producthunt.com/posts/mdx-docs">
-  <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1095911&theme=dark" height="32" />
-</a>
-
 > ⚡ A lightweight React framework for building MDX documentation sites.
 
 MDX Docs is a React + Vite framework for building MDX-powered documentation sites. Write pages in Markdown with embedded React components, and get a fully-featured site with syntax highlighting, dark/light mode, and responsive navigation out of the box.
