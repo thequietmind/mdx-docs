@@ -9,3 +9,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Update vite, vitest, and the @vitest/* packages together so a partial
+    # bump can't leave the versions out of sync (which breaks the lockfile).
+    groups:
+      vite-vitest:
+        patterns:
+          - "vite"
+          - "vitest"
+          - "@vitest/*"
