@@ -17,6 +17,7 @@ const LinksMDX = lazy(() => import("@pages/links.mdx"));
 const TabsMDX = lazy(() => import("@pages/tabs.mdx"));
 const TextFieldMDX = lazy(() => import("@pages/textfield.mdx"));
 const TypographyMDX = lazy(() => import("@pages/typography.mdx"));
+const FullWidthMDX = lazy(() => import("@pages/full-width.mdx"));
 
 export const pages = [
   {
@@ -121,6 +122,14 @@ export const pages = [
     name: "Typography",
     route: "/typography",
     component: TypographyMDX,
+    isHidden: true,
+  },
+  {
+    name: "Full Width",
+    route: "/full-width",
+    component: FullWidthMDX,
+    title: "Full Width — MDX Docs",
+    description: "Example page with the docs sidebar hidden via frontmatter.",
     isHidden: true,
   },
 ];

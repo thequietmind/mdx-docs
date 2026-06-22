@@ -78,6 +78,29 @@ export default function App() {
 
 > `MDXContent` does not include any MUI `ThemeProvider`. If you are using MUI components in your own layout or MDX pages, wrap the tree in a `ThemeProvider` before rendering `MDXContent`.
 
+## Hiding the sidebar per page
+
+Any page can opt out of the docs sidebar by setting `sidebar: false` in its MDX
+frontmatter. The page then renders full-width — useful for home pages, privacy
+policies, changelogs, or other content that does not need the docs navigation.
+
+```mdx
+---
+title: Custom Page
+sidebar: false
+---
+
+# Custom Page
+
+Your full-width content here.
+```
+
+The sidebar is shown by default, so existing pages are unaffected. Omitting
+`sidebar` (or setting `sidebar: true`) keeps the sidebar; only `sidebar: false`
+hides it, and only for that page. The top-bar title still links back to the home
+page. Only the `sidebar` field changes the layout — page `title` and
+`description` are configured in `config/pages.js`.
+
 ## Sitemap generation
 
 MDX Docs can generate a `sitemap.xml` during production builds. Add an
