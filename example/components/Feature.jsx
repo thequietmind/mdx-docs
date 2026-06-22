@@ -4,21 +4,22 @@ function Feature({ title, description, icon }) {
   return (
     <Card variant="outlined" sx={{ height: "100%" }}>
       <CardContent>
-        {icon && (
-          <Box
-            sx={{
-              color: "primary.main",
-              mb: 1,
-              display: "flex",
-              "& svg": { fontSize: 32 },
-            }}
-          >
-            {icon}
-          </Box>
-        )}
-        <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
-          {title}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+          {icon && (
+            <Box
+              sx={{
+                color: "primary.main",
+                display: "flex",
+                "& svg": { fontSize: 28 },
+              }}
+            >
+              {icon}
+            </Box>
+          )}
+          <Typography variant="h6" component="h3">
+            {title}
+          </Typography>
+        </Box>
         <Typography variant="body2" color="text.secondary">
           {description}
         </Typography>
