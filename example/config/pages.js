@@ -3,20 +3,15 @@ import { lazy } from "react";
 const HomeMDX = lazy(() => import("@pages/home.mdx"));
 const GettingStarted = lazy(() => import("@pages/getting-started.mdx"));
 const ExamplesMDX = lazy(() => import("@pages/examples.mdx"));
-const ComponentsMDX = lazy(() => import("@pages/components.mdx"));
 const CustomizationMDX = lazy(() => import("@pages/customization.mdx"));
 const AdvancedMDX = lazy(() => import("@pages/advanced.mdx"));
 const Contributing = lazy(() => import("@pages/contributing.mdx"));
 
-const AlertMDX = lazy(() => import("@pages/alert.mdx"));
-const ButtonMDX = lazy(() => import("@pages/button.mdx"));
-const CardMDX = lazy(() => import("@pages/card.mdx"));
-const ChipMDX = lazy(() => import("@pages/chip.mdx"));
-const ColorsMDX = lazy(() => import("@pages/colors.mdx"));
-const LinksMDX = lazy(() => import("@pages/links.mdx"));
-const TabsMDX = lazy(() => import("@pages/tabs.mdx"));
-const TextFieldMDX = lazy(() => import("@pages/textfield.mdx"));
+const DesignSystemMDX = lazy(() => import("@pages/design-system.mdx"));
 const TypographyMDX = lazy(() => import("@pages/typography.mdx"));
+const ComponentsMDX = lazy(() => import("@pages/components.mdx"));
+const EmbeddingReactMDX = lazy(() => import("@pages/embedding-react.mdx"));
+const FullWidthMDX = lazy(() => import("@pages/full-width.mdx"));
 
 export const pages = [
   {
@@ -28,25 +23,19 @@ export const pages = [
       "Create beautiful, interactive documentation sites with MDX and React",
   },
   {
-    name: "Examples",
-    route: "/examples",
-    component: ExamplesMDX,
-    title: "Examples — MDX Docs",
-    description: "Explore examples of Material-UI components in MDX Docs",
-  },
-  {
-    name: "Components",
-    route: "/components",
-    component: ComponentsMDX,
-    title: "Components — MDX Docs",
-    description: "Reusable MDX components included with MDX Docs.",
-  },
-  {
     name: "Getting Started",
     route: "/getting-started",
     component: GettingStarted,
     title: "Getting Started — MDX Docs",
     description: "Install MDX Docs and create your first MDX documentation page",
+  },
+  {
+    name: "Examples",
+    route: "/examples",
+    component: ExamplesMDX,
+    title: "Examples — MDX Docs",
+    description:
+      "Real documentation patterns built with MDX, React, and Material UI",
   },
   {
     name: "Customization",
@@ -70,57 +59,43 @@ export const pages = [
     description: "Dive deeper into advanced features and customization options",
   },
   {
-    name: "Alert",
-    route: "/alert",
-    component: AlertMDX,
-    isHidden: true,
-  },
-  {
-    name: "Button",
-    route: "/button",
-    component: ButtonMDX,
-    isHidden: true,
-  },
-  {
-    name: "Card",
-    route: "/card",
-    component: CardMDX,
-    isHidden: true,
-  },
-  {
-    name: "Chip",
-    route: "/chip",
-    component: ChipMDX,
-    isHidden: true,
-  },
-  {
-    name: "Colors",
-    route: "/colors",
-    component: ColorsMDX,
-    isHidden: true,
-  },
-  {
-    name: "Links",
-    route: "/links",
-    component: LinksMDX,
-    isHidden: true,
-  },
-  {
-    name: "Tabs",
-    route: "/tabs",
-    component: TabsMDX,
-    isHidden: true,
-  },
-  {
-    name: "TextField",
-    route: "/textfield",
-    component: TextFieldMDX,
+    name: "Design System",
+    route: "/design-system",
+    component: DesignSystemMDX,
+    title: "Design System — MDX Docs",
+    description: "Document your color tokens from your live theme",
     isHidden: true,
   },
   {
     name: "Typography",
     route: "/typography",
     component: TypographyMDX,
+    title: "Typography — MDX Docs",
+    description: "Document your type scale from your live theme",
+    isHidden: true,
+  },
+  {
+    name: "Documentation Components",
+    route: "/components",
+    component: ComponentsMDX,
+    title: "Documentation Components — MDX Docs",
+    description: "Reusable documentation components with copy-paste source",
+    isHidden: true,
+  },
+  {
+    name: "Embedding React in MDX",
+    route: "/embedding-react",
+    component: EmbeddingReactMDX,
+    title: "Embedding React in MDX — MDX Docs",
+    description: "Render React and Material UI components directly inside MDX",
+    isHidden: true,
+  },
+  {
+    name: "Full Width",
+    route: "/full-width",
+    component: FullWidthMDX,
+    title: "Full Width — MDX Docs",
+    description: "Example page with the docs sidebar hidden via frontmatter.",
     isHidden: true,
   },
 ];

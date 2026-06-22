@@ -1,31 +1,36 @@
-import { Button } from "@mui/material";
+import Banner from "../components/Banner.jsx";
+import Lead from "../components/Lead.jsx";
 
 # Examples
 
-The following are some example pages that demonstrate showing React components from Material UI in MDX extended markdown pages.
+<Lead>
+  Real documentation patterns you can learn from and adapt — each built with MDX,
+  React, and Material UI.
+</Lead>
 
-<Button variant="contained" color="primary" sx={{ mr: 0.5, mb: 1 }} href="/alert">
-  Alert
-</Button>
-<Button variant="contained" color="primary" sx={{ mr: 0.5, mb: 1 }} href="/button">
-  Button
-</Button>
-<Button variant="contained" color="primary" sx={{ mr: 0.5, mb: 1 }} href="/card">
-  Card
-</Button>
-<Button variant="contained" color="primary" sx={{ mb: 1 }} href="/chip">
-  Chip
-</Button>
-<br />
-<Button variant="contained" color="primary" sx={{ mr: 0.5, mb: 1 }} href="/colors">
-  Colors
-</Button>
-<Button variant="contained" color="primary" sx={{ mr: 0.5, mb: 1 }} href="/tabs">
-  Tabs
-</Button>
-<Button variant="contained" color="primary" sx={{ mr: 0.5, mb: 1 }} href="/textfield">
-  TextField
-</Button>
-<Button variant="contained" color="primary" sx={{ mb: 1 }} href="/typography">
-  Typography
-</Button>
+<Banner severity="info">
+  Nothing in this section ships with the <code>@quietmind/mdx-docs</code> package.
+  These are patterns and components you can copy into your own documentation site.
+</Banner>
+
+## Patterns
+
+### [Design System](/design-system)
+
+Document your color tokens straight from your live theme — the swatches update
+automatically when the theme changes, and the source is included to copy.
+
+### [Typography](/typography)
+
+Document your type scale from `theme.typography`, with the component source to
+build the same page yourself.
+
+### [Documentation Components](/components)
+
+Reusable building blocks — lead text, banners, hero sections, and feature grids —
+each shown with a live preview and copy-paste source.
+
+### [Embedding React in MDX](/embedding-react)
+
+Drop any React or Material UI component straight into your Markdown — the
+foundation everything else here builds on.

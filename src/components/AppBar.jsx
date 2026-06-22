@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 import { useDocsContext } from "../context/DocsContext";
 
-function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
+function AppBar({ darkMode, setDarkMode, handleDrawerToggle, showSidebar = true }) {
   const { site } = useDocsContext();
   return (
     <MuiAppBar
@@ -20,15 +20,17 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle }) {
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
       <Toolbar>
-        <IconButton
-          color="inherit"
-          edge="start"
-          onClick={handleDrawerToggle}
-          aria-label="Toggle navigation menu"
-          sx={{ mr: 2, display: { sm: "none" } }}
-        >
-          <MenuIcon />
-        </IconButton>
+        {showSidebar && (
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={handleDrawerToggle}
+            aria-label="Toggle navigation menu"
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         <Typography
           variant="h6"
           noWrap

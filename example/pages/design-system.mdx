@@ -1,0 +1,170 @@
+import ThemeColors from "../components/ThemeColors.jsx";
+
+# Design System
+
+A living reference for your color tokens. The swatches below read straight from
+the **active theme**, so the palette always matches reality — in both light and
+dark mode. Documenting tokens this way keeps color decisions visible and copyable
+for everyone building on them. For the type scale, see [Typography](/typography).
+
+## Color tokens
+
+<ThemeColors />
+
+Each swatch reads a value from `theme.palette`. Use the copy button to grab a
+token name and apply it anywhere via the `sx` prop or `useTheme()`.
+
+## How this page is built
+
+This page is just two small components dropped into MDX. Copy them into your own
+`components/` folder and they will reflect _your_ theme automatically — no need to
+hardcode hex values.
+
+`ColorSwatch` renders a single token; save it as `components/ColorSwatch.jsx`:
+
+```jsx
+import CheckIcon from "@mui/icons-material/Check";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { Box, IconButton, Paper, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
+
+function ColorSwatch({ color, variable, displayVariable }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(variable);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy variable:", err);
+    }
+  };
+
+  return (
+    <Paper
+      elevation={1}
+      sx={{
+        p: 2,
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        width: "100%",
+        minWidth: 0,
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          width: 50,
+          height: 50,
+          backgroundColor: color,
+          borderRadius: 1,
+          border: "1px solid rgba(0,0,0,0.12)",
+          flexShrink: 0,
+        }}
+      />
+      <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+        >
+          <strong>{displayVariable || variable}</strong>
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+        >
+          {color}
+        </Typography>
+      </Box>
+      <Tooltip title={copied ? "Copied!" : "Copy variable name"}>
+        <IconButton
+          onClick={handleCopy}
+          size="small"
+          sx={{
+            color: copied ? "success.main" : "text.secondary",
+            flexShrink: 0,
+            "&:hover": { color: copied ? "success.main" : "text.primary" },
+          }}
+        >
+          {copied ? <CheckIcon /> : <ContentCopyIcon />}
+        </IconButton>
+      </Tooltip>
+    </Paper>
+  );
+}
+
+export default ColorSwatch;
+```
+
+`ThemeColors` maps over the palette and renders a `ColorSwatch` for each token;
+save it as `components/ThemeColors.jsx`:
+
+```jsx
+import { Box, Typography, useTheme } from "@mui/material";
+
+import ColorSwatch from "./ColorSwatch.jsx";
+
+const colorGroups = [
+  { name: "Primary", path: "primary", keys: ["light", "main", "dark", "contrastText"] },
+  { name: "Secondary", path: "secondary", keys: ["light", "main", "dark", "contrastText"] },
+  { name: "Background", path: "background", keys: ["default", "paper"] },
+  { name: "Text", path: "text", keys: ["primary", "secondary", "disabled"] },
+  { name: "Error", path: "error", keys: ["light", "main", "dark", "contrastText"] },
+  { name: "Warning", path: "warning", keys: ["light", "main", "dark", "contrastText"] },
+  { name: "Info", path: "info", keys: ["light", "main", "dark", "contrastText"] },
+  { name: "Success", path: "success", keys: ["light", "main", "dark", "contrastText"] },
+];
+
+const gridStyle = {
+  display: "grid",
+  gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
+  gap: 2,
+  mb: 3,
+};
+
+function ThemeColors() {
+  const theme = useTheme();
+
+  return (
+    <Box>
+      {colorGroups.map((group) => (
+        <Box key={group.name}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            {group.name}
+          </Typography>
+          <Box sx={gridStyle}>
+            {group.keys.map((key) => (
+              <ColorSwatch
+                key={key}
+                color={theme.palette[group.path][key]}
+                variable={`theme.palette.${group.path}.${key}`}
+                displayVariable={`palette.${group.path}.${key}`}
+              />
+            ))}
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+export default ThemeColors;
+```
+
+Then render it on any MDX page:
+
+```mdx
+import ThemeColors from "../components/ThemeColors.jsx";
+
+## Color tokens
+
+<ThemeColors />
+```
+
+## Learn more
+
+- [Material Design — Color tool](https://m2.material.io/inline-tools/color/)

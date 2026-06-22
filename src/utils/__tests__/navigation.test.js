@@ -4,6 +4,7 @@ import {
   getNavigationPages,
   getDefaultPage,
   isExternalLink,
+  normalizeRoute,
 } from "../navigation";
 
 const mockPages = [
@@ -48,6 +49,26 @@ describe("Navigation utilities", () => {
     it("should return undefined when no page has route '/'", () => {
       const pages = [{ name: "Button", route: "/button" }];
       expect(getDefaultPage(pages)).toBeUndefined();
+    });
+  });
+
+  describe("normalizeRoute", () => {
+    it("leaves the root route unchanged", () => {
+      expect(normalizeRoute("/")).toBe("/");
+    });
+
+    it("strips a single trailing slash", () => {
+      expect(normalizeRoute("/about/")).toBe("/about");
+    });
+
+    it("leaves routes without a trailing slash unchanged", () => {
+      expect(normalizeRoute("/about")).toBe("/about");
+    });
+
+    it("strips many trailing slashes in linear time (no ReDoS)", () => {
+      expect(normalizeRoute("/about///")).toBe("/about");
+      const manySlashes = "/".repeat(100000);
+      expect(normalizeRoute(manySlashes)).toBe("");
     });
   });
 

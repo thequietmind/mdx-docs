@@ -1,5 +1,5 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
-import { useMemo, useState, useLayoutEffect, useEffect } from "react";
+import { Suspense, useMemo, useState, useLayoutEffect, useEffect } from "react";
 import {
   BrowserRouter,
   useLocation,
@@ -12,6 +12,7 @@ import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
 import { DocsProvider } from "./context/DocsProvider";
 import { usePageMetadata } from "./hooks/usePageMetadata";
+import { useShowSidebar } from "./hooks/useShowSidebar";
 import { useTheme } from "./hooks/useTheme";
 import { createAppTheme } from "./themes";
 
@@ -48,6 +49,60 @@ const Wrapper = ({ children }) => {
   return children;
 };
 
+function AppShell({
+  showSidebar,
+  darkMode,
+  setDarkMode,
+  mobileOpen,
+  handleDrawerToggle,
+}) {
+  return (
+    <Box sx={{ display: "flex" }}>
+      <AppBar
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        handleDrawerToggle={handleDrawerToggle}
+        showSidebar={showSidebar}
+      />
+      {showSidebar && (
+        <SideNavigation
+          mobileOpen={mobileOpen}
+          handleDrawerToggle={handleDrawerToggle}
+        />
+      )}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          pt: 8, // Add top padding to account for AppBar
+          px: { xs: 0.5, sm: 3 }, // Reduce padding even more on very small screens
+          width: showSidebar ? { sm: `calc(100% - ${drawerWidth}px)` } : "100%",
+          // Prevent horizontal overflow on very small screens
+          overflowX: "hidden",
+          // Flex column so the footer sticks to the bottom of the viewport
+          // on short pages and flows after content on long pages
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+      >
+        <Box sx={{ flexGrow: 1, width: "100%" }}>
+          <MDXContent />
+        </Box>
+        <Footer />
+      </Box>
+    </Box>
+  );
+}
+
+// Reads the current page's `sidebar` frontmatter, suspending until the route
+// module loads. Kept separate from AppShell so the Suspense fallback can render
+// the shell (with the sidebar) without suspending.
+function CurrentAppShell(props) {
+  const showSidebar = useShowSidebar();
+  return <AppShell showSidebar={showSidebar} {...props} />;
+}
+
 function AppContent({ userTheme = {} }) {
   const { darkMode, setDarkMode } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,41 +116,14 @@ function AppContent({ userTheme = {} }) {
     setMobileOpen(!mobileOpen);
   };
 
+  const shellProps = { darkMode, setDarkMode, mobileOpen, handleDrawerToggle };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex" }}>
-        <AppBar
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          handleDrawerToggle={handleDrawerToggle}
-        />
-        <SideNavigation
-          mobileOpen={mobileOpen}
-          handleDrawerToggle={handleDrawerToggle}
-        />
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            pt: 8, // Add top padding to account for AppBar
-            px: { xs: 0.5, sm: 3 }, // Reduce padding even more on very small screens
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            // Prevent horizontal overflow on very small screens
-            overflowX: "hidden",
-            // Flex column so the footer sticks to the bottom of the viewport
-            // on short pages and flows after content on long pages
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh",
-          }}
-        >
-          <Box sx={{ flexGrow: 1, width: "100%" }}>
-            <MDXContent />
-          </Box>
-          <Footer />
-        </Box>
-      </Box>
+      <Suspense fallback={<AppShell showSidebar {...shellProps} />}>
+        <CurrentAppShell {...shellProps} />
+      </Suspense>
     </ThemeProvider>
   );
 }

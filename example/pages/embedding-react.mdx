@@ -1,0 +1,25 @@
+import Alert from "@mui/material/Alert";
+
+# Embedding React in MDX
+
+Every page in MDX Docs is an `.mdx` file, so you can import and render any React or
+Material UI component right inside your Markdown — no special configuration
+required. This is the foundation the other examples build on.
+
+## Example
+
+<Alert severity="success">
+  This Alert is a live React component rendered inside Markdown.
+</Alert>
+
+```mdx
+import Alert from "@mui/material/Alert";
+
+<Alert severity="success">
+  This Alert is a live React component rendered inside Markdown.
+</Alert>
+```
+
+Import the component at the top of the page, then use it anywhere in your content.
+The same approach works for your own components — see
+[Documentation Components](/components) for reusable examples you can copy.

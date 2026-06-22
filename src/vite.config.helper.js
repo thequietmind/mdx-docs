@@ -11,7 +11,9 @@ import { pathToFileURL, fileURLToPath } from "url";
 
 import mdx from "@mdx-js/rollup";
 import react from "@vitejs/plugin-react";
+import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { build } from "vite";
 
 import {
@@ -103,7 +105,7 @@ const createMdxPlugin = () =>
   mdx({
     jsxImportSource: "@emotion/react",
     providerImportSource: "@mdx-js/react",
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter],
     rehypePlugins: [rehypeUnwrapJsxParagraphs],
   });
 
