@@ -59,7 +59,9 @@ const createMdxPlugin = () =>
 const createSitePrerenderPlugin = () => ({
   name: "mdxdocs-site-prerender",
   apply: "build",
-  async closeBundle() {
+  // Use writeBundle (not closeBundle): Vite 8/Rolldown flushes the client
+  // bundle to disk after closeBundle, so dist/index.html only exists here.
+  async writeBundle() {
     const temporaryDirectory = await mkdtemp(
       join(__dirname, ".mdx-docs-prerender-")
     );
@@ -196,8 +198,8 @@ export default defineConfig(({ mode }) => ({
     },
     // Optimize chunk size
     chunkSizeWarningLimit: 1000,
-    // Enable minification
-    minify: "esbuild",
+    // Enable minification (Oxc is Vite 8's default minifier; esbuild is no longer bundled)
+    minify: "oxc",
     // Optimize for production
     cssCodeSplit: true,
     sourcemap: false,
