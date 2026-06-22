@@ -1,23 +1,36 @@
-import GitHubBadge from "../components/GitHubBadge.jsx";
+import ArticleIcon from "@mui/icons-material/Article";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import BoltIcon from "@mui/icons-material/Bolt";
+import CodeIcon from "@mui/icons-material/Code";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
+
+import Banner from "../components/Banner.jsx";
+import Feature from "../components/Feature.jsx";
+import FeatureGrid from "../components/FeatureGrid.jsx";
+import Hero from "../components/Hero.jsx";
 import Lead from "../components/Lead.jsx";
 
-# MDX Docs
-
-<Lead>
-  A lightweight React framework for building MDX documentation sites.
-</Lead>
-
-<GitHubBadge
-  href="https://github.com/thequietmind/mdx-docs"
-  src="https://img.shields.io/badge/GitHub-mdx--docs-black?logo=github"
-  lightSrc="https://img.shields.io/badge/GitHub-mdx--docs-white?logo=github&logoColor=24292f&labelColor=white"
+<Hero
+  title="MDX Docs"
+  subtitle="A lightweight React framework for building MDX documentation sites."
+  primaryAction={{ label: "Get Started", href: "/getting-started" }}
+  secondaryAction={{
+    label: "GitHub",
+    href: "https://github.com/thequietmind/mdx-docs",
+  }}
 />
 
-Welcome to the MDX Docs example site. This is the default demo site for the project. This site was built with MDX Docs.
+<Lead>
+  MDX Docs turns MDX files into routed documentation pages with a built-in layout,
+  sidebar, and navigation.
+</Lead>
 
-MDX Docs turns MDX files into routed documentation pages with a built-in layout, sidebar, and navigation.
-
-Check the [Examples page](/examples) to see some example pages that display React components alongside the documentation.
+<Banner severity="info">
+  This homepage is itself an MDX page — every section below is a React component
+  embedded directly in Markdown. See the <a href="/components">Components</a> page
+  for the source.
+</Banner>
 
 Create a new documentation site with:
 
@@ -25,12 +38,40 @@ Create a new documentation site with:
 npx create-mdx-docs@latest my-docs
 ```
 
-See the [Getting Started](/getting-started) page for more details.
-
 ## Features
 
-- MDX pages — write Markdown with embedded React components
-- Syntax highlighting with copy-to-clipboard on code blocks
-- Dark/light mode with system preference detection
-- Responsive sidebar navigation
-- Built on React 19, Material-UI 7, and Vite 6
+<FeatureGrid>
+  <Feature
+    icon={<ArticleIcon />}
+    title="MDX pages"
+    description="Write Markdown with embedded React components."
+  />
+  <Feature
+    icon={<CodeIcon />}
+    title="Syntax highlighting"
+    description="Code blocks with copy-to-clipboard built in."
+  />
+  <Feature
+    icon={<DarkModeIcon />}
+    title="Dark / light mode"
+    description="System preference detection out of the box."
+  />
+  <Feature
+    icon={<ViewSidebarIcon />}
+    title="Responsive sidebar"
+    description="Navigation generated automatically from your pages."
+  />
+  <Feature
+    icon={<BoltIcon />}
+    title="Modern stack"
+    description="Built on React 19, Material UI 7, and Vite."
+  />
+  <Feature
+    icon={<AutoAwesomeIcon />}
+    title="Zero config"
+    description="Drop in MDX files and they become routes."
+  />
+</FeatureGrid>
+
+See the [Getting Started](/getting-started) page for more details, or browse the
+[Examples](/examples) to see Material UI components rendered inside MDX.

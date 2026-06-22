@@ -3,6 +3,7 @@ import { lazy } from "react";
 const HomeMDX = lazy(() => import("@pages/home.mdx"));
 const GettingStarted = lazy(() => import("@pages/getting-started.mdx"));
 const ExamplesMDX = lazy(() => import("@pages/examples.mdx"));
+const ComponentsMDX = lazy(() => import("@pages/components.mdx"));
 const CustomizationMDX = lazy(() => import("@pages/customization.mdx"));
 const AdvancedMDX = lazy(() => import("@pages/advanced.mdx"));
 const Contributing = lazy(() => import("@pages/contributing.mdx"));
@@ -32,6 +33,13 @@ export const pages = [
     component: ExamplesMDX,
     title: "Examples — MDX Docs",
     description: "Explore examples of Material-UI components in MDX Docs",
+  },
+  {
+    name: "Components",
+    route: "/components",
+    component: ComponentsMDX,
+    title: "Components — MDX Docs",
+    description: "Reusable MDX components included with MDX Docs.",
   },
   {
     name: "Getting Started",

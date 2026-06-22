@@ -1,0 +1,301 @@
+import BoltIcon from "@mui/icons-material/Bolt";
+import CodeIcon from "@mui/icons-material/Code";
+import ExtensionIcon from "@mui/icons-material/Extension";
+
+import Banner from "../components/Banner.jsx";
+import Feature from "../components/Feature.jsx";
+import FeatureGrid from "../components/FeatureGrid.jsx";
+import Hero from "../components/Hero.jsx";
+import Lead from "../components/Lead.jsx";
+
+# Components
+
+A set of small, reusable components that ship with this example site. They are built
+on Material UI and styled with theme tokens, so they work in both light and dark mode.
+
+These components are **not** part of the `@quietmind/mdx-docs` package — they live in
+this site's own `components/` directory. To use one, copy its source (shown under each
+example) into a `components/` folder in your project and import it at the top of an MDX
+page.
+
+## Lead
+
+Introductory text shown under a heading — larger, lighter, and responsive.
+
+<Lead>
+  Build beautiful documentation sites with MDX, React, and Material UI.
+</Lead>
+
+Usage:
+
+```jsx
+import Lead from "../components/Lead.jsx";
+
+<Lead>
+  Build beautiful documentation sites with MDX, React, and Material UI.
+</Lead>
+```
+
+Source — save as `components/Lead.jsx`:
+
+```jsx
+import { Typography } from "@mui/material";
+
+function Lead({ children }) {
+  return (
+    <Typography
+      component="p"
+      sx={{
+        mt: 1,
+        mb: 3,
+        color: "text.secondary",
+        fontSize: { xs: "1.125rem", sm: "1.25rem" },
+        lineHeight: 1.6,
+      }}
+    >
+      {children}
+    </Typography>
+  );
+}
+
+export default Lead;
+```
+
+## Banner
+
+A callout built on Material UI's `Alert`. Pass a `severity` (`info`, `success`,
+`warning`, or `error`) and an optional `title`.
+
+<Banner severity="info">
+  MDX Docs supports custom React components out of the box.
+</Banner>
+
+<Banner severity="success" title="Modern stack">
+  Built with React 19 and Material UI 7.
+</Banner>
+
+Usage:
+
+```jsx
+import Banner from "../components/Banner.jsx";
+
+<Banner severity="info">
+  MDX Docs supports custom React components out of the box.
+</Banner>
+
+<Banner severity="success" title="Modern stack">
+  Built with React 19 and Material UI 7.
+</Banner>
+```
+
+Source — save as `components/Banner.jsx`:
+
+```jsx
+import { Alert, AlertTitle } from "@mui/material";
+
+function Banner({ severity = "info", title, children }) {
+  return (
+    <Alert severity={severity} sx={{ my: 2 }}>
+      {title && <AlertTitle>{title}</AlertTitle>}
+      {children}
+    </Alert>
+  );
+}
+
+export default Banner;
+```
+
+## Hero
+
+A page header with a title, subtitle, and up to two actions. Internal links navigate
+within the app; external links open in a new tab. Because the title renders as the
+page's main heading, use one `Hero` at the top of a page.
+
+<Hero
+  title="MDX Docs"
+  subtitle="A lightweight React framework for building MDX documentation sites."
+  primaryAction={{ label: "Get Started", href: "/getting-started" }}
+  secondaryAction={{
+    label: "GitHub",
+    href: "https://github.com/thequietmind/mdx-docs",
+  }}
+/>
+
+Usage:
+
+```jsx
+import Hero from "../components/Hero.jsx";
+
+<Hero
+  title="MDX Docs"
+  subtitle="A lightweight React framework for building MDX documentation sites."
+  primaryAction={{ label: "Get Started", href: "/getting-started" }}
+  secondaryAction={{
+    label: "GitHub",
+    href: "https://github.com/thequietmind/mdx-docs",
+  }}
+/>
+```
+
+Source — save as `components/Hero.jsx`:
+
+```jsx
+import { Box, Button, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+
+const isExternal = (href) => /^(https?:|mailto:|tel:)/.test(href ?? "");
+
+function renderAction(action, variant) {
+  if (!action) {
+    return null;
+  }
+
+  const linkProps = isExternal(action.href)
+    ? { href: action.href, target: "_blank", rel: "noopener noreferrer" }
+    : { component: RouterLink, to: action.href };
+
+  return (
+    <Button variant={variant} {...linkProps}>
+      {action.label}
+    </Button>
+  );
+}
+
+function Hero({ title, subtitle, primaryAction, secondaryAction }) {
+  return (
+    <Box sx={{ my: 4, py: { xs: 3, sm: 5 }, borderBottom: 1, borderColor: "divider" }}>
+      <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1.5 }}>
+        {title}
+      </Typography>
+      {subtitle && (
+        <Typography
+          variant="h6"
+          component="p"
+          sx={{ color: "text.secondary", fontWeight: 400, mb: 3, maxWidth: 640 }}
+        >
+          {subtitle}
+        </Typography>
+      )}
+      {(primaryAction || secondaryAction) && (
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
+          {renderAction(primaryAction, "contained")}
+          {renderAction(secondaryAction, "outlined")}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+export default Hero;
+```
+
+## FeatureGrid and Feature
+
+A responsive grid of cards. `FeatureGrid` lays out its `Feature` children in one, two,
+or three columns depending on screen width. Each `Feature` takes a `title`, a
+`description`, and an optional `icon`.
+
+<FeatureGrid>
+  <Feature
+    icon={<CodeIcon />}
+    title="MDX + React"
+    description="Embed React components directly in your documentation."
+  />
+  <Feature
+    icon={<ExtensionIcon />}
+    title="Material UI"
+    description="Built on Material UI for a modern developer experience."
+  />
+  <Feature
+    icon={<BoltIcon />}
+    title="Fast Setup"
+    description="Create a new documentation site in seconds."
+  />
+</FeatureGrid>
+
+Usage:
+
+```jsx
+import BoltIcon from "@mui/icons-material/Bolt";
+import CodeIcon from "@mui/icons-material/Code";
+import ExtensionIcon from "@mui/icons-material/Extension";
+
+import Feature from "../components/Feature.jsx";
+import FeatureGrid from "../components/FeatureGrid.jsx";
+
+<FeatureGrid>
+  <Feature
+    icon={<CodeIcon />}
+    title="MDX + React"
+    description="Embed React components directly in your documentation."
+  />
+  <Feature
+    icon={<ExtensionIcon />}
+    title="Material UI"
+    description="Built on Material UI for a modern developer experience."
+  />
+  <Feature
+    icon={<BoltIcon />}
+    title="Fast Setup"
+    description="Create a new documentation site in seconds."
+  />
+</FeatureGrid>
+```
+
+Source — save as `components/FeatureGrid.jsx`:
+
+```jsx
+import { Box } from "@mui/material";
+
+function FeatureGrid({ children }) {
+  return (
+    <Box
+      sx={{
+        display: "grid",
+        gap: 2,
+        gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
+        my: 3,
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+export default FeatureGrid;
+```
+
+Source — save as `components/Feature.jsx`:
+
+```jsx
+import { Box, Card, CardContent, Typography } from "@mui/material";
+
+function Feature({ title, description, icon }) {
+  return (
+    <Card variant="outlined" sx={{ height: "100%" }}>
+      <CardContent>
+        {icon && (
+          <Box
+            sx={{
+              color: "primary.main",
+              mb: 1,
+              display: "flex",
+              "& svg": { fontSize: 32 },
+            }}
+          >
+            {icon}
+          </Box>
+        )}
+        <Typography variant="h6" component="h3" sx={{ mb: 1 }}>
+          {title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {description}
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default Feature;
+```
