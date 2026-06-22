@@ -1,9 +1,7 @@
 import { useLocation } from "react-router-dom";
 
 import { useDocsContext } from "../context/DocsContext";
-
-const normalizeRoute = (route) =>
-  route.length > 1 ? route.replace(/\/+$/, "") : route;
+import { normalizeRoute } from "../utils/navigation";
 
 // Reads the `frontmatter` named export from a lazy MDX route component. This
 // reuses React.lazy's internal payload, the same shape server.jsx relies on to

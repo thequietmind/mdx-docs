@@ -28,3 +28,15 @@ export const isExternalLink = (href) => {
 
   return false;
 };
+
+// Removes trailing slashes from a route. Implemented without a regex so it
+// cannot exhibit polynomial backtracking on attacker-controlled paths
+// (for example, a URL with many trailing slashes).
+export const normalizeRoute = (route) => {
+  if (route.length <= 1) return route;
+  let end = route.length;
+  while (end > 0 && route[end - 1] === "/") {
+    end -= 1;
+  }
+  return route.slice(0, end);
+};

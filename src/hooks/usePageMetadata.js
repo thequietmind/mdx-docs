@@ -2,12 +2,10 @@ import { useEffect, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useDocsContext } from "../context/DocsContext";
+import { normalizeRoute } from "../utils/navigation";
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
-
-const normalizeRoute = (route) =>
-  route.length > 1 ? route.replace(/\/+$/, "") : route;
 
 export const usePageMetadata = () => {
   const location = useLocation();
