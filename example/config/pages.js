@@ -8,6 +8,7 @@ const AdvancedMDX = lazy(() => import("@pages/advanced.mdx"));
 const Contributing = lazy(() => import("@pages/contributing.mdx"));
 
 const DesignSystemMDX = lazy(() => import("@pages/design-system.mdx"));
+const TypographyMDX = lazy(() => import("@pages/typography.mdx"));
 const ComponentsMDX = lazy(() => import("@pages/components.mdx"));
 const FullWidthMDX = lazy(() => import("@pages/full-width.mdx"));
 
@@ -60,8 +61,16 @@ export const pages = [
     name: "Design System",
     route: "/design-system",
     component: DesignSystemMDX,
-    title: "Design System & Theme — MDX Docs",
-    description: "Document your color tokens and type scale from your live theme",
+    title: "Design System — MDX Docs",
+    description: "Document your color tokens from your live theme",
+    isHidden: true,
+  },
+  {
+    name: "Typography",
+    route: "/typography",
+    component: TypographyMDX,
+    title: "Typography — MDX Docs",
+    description: "Document your type scale from your live theme",
     isHidden: true,
   },
   {
