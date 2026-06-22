@@ -1,0 +1,250 @@
+import { useTheme as useMuiTheme } from "@mui/material";
+import { Box, Typography, Paper, IconButton, Tooltip } from "@mui/material";
+import { useState } from "react";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CheckIcon from "@mui/icons-material/Check";
+
+export const ColorSwatch = ({ color, variable, displayVariable }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(variable);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy variable:", err);
+    }
+  };
+
+  return (
+    <Paper
+      elevation={1}
+      sx={{
+        p: 2,
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        width: "100%",
+        minWidth: 0,
+        overflow: "hidden",
+      }}
+    >
+      <Box
+        sx={{
+          width: 50,
+          height: 50,
+          backgroundColor: color,
+          borderRadius: 1,
+          border: "1px solid rgba(0,0,0,0.12)",
+          flexShrink: 0,
+        }}
+      />
+      <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <strong>{displayVariable || variable}</strong>
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {color}
+        </Typography>
+      </Box>
+      <Tooltip title={copied ? "Copied!" : "Copy variable name"}>
+        <IconButton
+          onClick={handleCopy}
+          size="small"
+          sx={{
+            color: copied ? "success.main" : "text.secondary",
+            flexShrink: 0,
+            "&:hover": {
+              color: copied ? "success.main" : "text.primary",
+            },
+          }}
+        >
+          {copied ? <CheckIcon /> : <ContentCopyIcon />}
+        </IconButton>
+      </Tooltip>
+    </Paper>
+  );
+};
+
+export const colorGroups = [
+  { name: "Primary", keys: ["light", "main", "dark", "contrastText"], path: "primary" },
+  { name: "Secondary", keys: ["light", "main", "dark", "contrastText"], path: "secondary" },
+  { name: "Background", keys: ["default", "paper"], path: "background" },
+  { name: "Text", keys: ["primary", "secondary", "disabled"], path: "text" },
+  { name: "Error", keys: ["light", "main", "dark", "contrastText"], path: "error" },
+  { name: "Warning", keys: ["light", "main", "dark", "contrastText"], path: "warning" },
+  { name: "Info", keys: ["light", "main", "dark", "contrastText"], path: "info" },
+  { name: "Success", keys: ["light", "main", "dark", "contrastText"], path: "success" },
+];
+
+export const ThemeColors = () => {
+  const theme = useMuiTheme();
+
+  const gridStyle = {
+    display: "grid",
+    gridTemplateColumns: {
+      xs: "1fr",
+      md: "repeat(2, 1fr)",
+      lg: "repeat(3, 1fr)",
+    },
+    gap: 2,
+    mb: 3,
+  };
+
+  return (
+    <Box>
+      {colorGroups.map((group) => (
+        <Box key={group.name}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            {group.name}
+          </Typography>
+          <Box sx={gridStyle}>
+            {group.keys.map((key) => (
+              <ColorSwatch
+                key={key}
+                color={theme.palette[group.path][key]}
+                variable={`theme.palette.${group.path}.${key}`}
+                displayVariable={`palette.${group.path}.${key}`}
+              />
+            ))}
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  );
+};
+
+export const typeTokens = [
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "subtitle1",
+  "subtitle2",
+  "body1",
+  "body2",
+  "button",
+  "caption",
+  "overline",
+];
+
+export const TypeScale = () => {
+  const theme = useMuiTheme();
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, my: 3 }}>
+      {typeTokens.map((variant) => {
+        const token = theme.typography[variant] || {};
+        return (
+          <Paper
+            key={variant}
+            variant="outlined"
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { sm: "baseline" },
+              justifyContent: "space-between",
+              gap: 1,
+            }}
+          >
+            <Typography variant={variant} sx={{ m: 0 }}>
+              {variant}
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ flexShrink: 0, fontFamily: "monospace" }}
+            >
+              typography.{variant} · {token.fontSize || "—"} /{" "}
+              {token.fontWeight || "—"}
+            </Typography>
+          </Paper>
+        );
+      })}
+    </Box>
+  );
+};
+
+# Design System & Theme
+
+A living reference for your design tokens. Everything below reads from the
+**active theme**, so when you change your theme these docs update themselves. A
+documented design system keeps color and type decisions visible, consistent, and
+easy to reuse for everyone building on them.
+
+## Color tokens
+
+<ThemeColors />
+
+Each swatch reads a value straight from `theme.palette`, so the palette always
+matches your real theme — in both light and dark mode. Use the copy button to
+grab a token name and apply it anywhere via the `sx` prop or `useTheme()`.
+
+## Type scale
+
+<TypeScale />
+
+The scale above is read from `theme.typography`. Documenting it once lets
+contributors see every variant — its token name, size, and weight — at a glance.
+
+### Configuring the scale
+
+Define the scale in your theme so every page inherits it:
+
+```jsx
+import { createTheme } from "@mui/material/styles";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontSize: "2.5rem", fontWeight: 700, lineHeight: 1.2 },
+    h2: { fontSize: "2rem", fontWeight: 600, lineHeight: 1.3 },
+    body1: { fontSize: "1rem", fontWeight: 400, lineHeight: 1.5 },
+    caption: { fontSize: "0.75rem", lineHeight: 1.66 },
+  },
+});
+```
+
+Each variant accepts `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`,
+`fontFamily`, `textTransform`, and `fontStyle`.
+
+### Responsive type
+
+Scale type across breakpoints by nesting media queries inside a variant:
+
+```jsx
+const theme = createTheme({
+  typography: {
+    h1: {
+      fontSize: "2rem",
+      "@media (min-width:600px)": { fontSize: "2.5rem" },
+      "@media (min-width:900px)": { fontSize: "3rem" },
+    },
+  },
+});
+```
+
+## Learn more
+
+- [Material UI — Theme customization](https://mui.com/material-ui/customization/theming/)
+- [Material Design — Color tool](https://m2.material.io/inline-tools/color/)
