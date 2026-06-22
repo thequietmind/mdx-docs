@@ -10,6 +10,7 @@ const Contributing = lazy(() => import("@pages/contributing.mdx"));
 const DesignSystemMDX = lazy(() => import("@pages/design-system.mdx"));
 const TypographyMDX = lazy(() => import("@pages/typography.mdx"));
 const ComponentsMDX = lazy(() => import("@pages/components.mdx"));
+const EmbeddingReactMDX = lazy(() => import("@pages/embedding-react.mdx"));
 const FullWidthMDX = lazy(() => import("@pages/full-width.mdx"));
 
 export const pages = [
@@ -79,6 +80,14 @@ export const pages = [
     component: ComponentsMDX,
     title: "Documentation Components — MDX Docs",
     description: "Reusable documentation components with copy-paste source",
+    isHidden: true,
+  },
+  {
+    name: "Embedding React in MDX",
+    route: "/embedding-react",
+    component: EmbeddingReactMDX,
+    title: "Embedding React in MDX — MDX Docs",
+    description: "Render React and Material UI components directly inside MDX",
     isHidden: true,
   },
   {

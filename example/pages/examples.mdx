@@ -1,5 +1,3 @@
-import Alert from "@mui/material/Alert";
-
 import Banner from "../components/Banner.jsx";
 import Lead from "../components/Lead.jsx";
 
@@ -10,7 +8,7 @@ import Lead from "../components/Lead.jsx";
   React, and Material UI.
 </Lead>
 
-<Banner severity="info" title="Examples, not features">
+<Banner severity="info">
   Nothing in this section ships with the <code>@quietmind/mdx-docs</code> package.
   These are patterns and components you can copy into your own documentation site.
 </Banner>
@@ -32,19 +30,7 @@ build the same page yourself.
 Reusable building blocks — lead text, banners, hero sections, and feature grids —
 each shown with a live preview and copy-paste source.
 
-## Embedding React in MDX
+### [Embedding React in MDX](/embedding-react)
 
-Because every page is MDX, you can drop any React or Material UI component
-straight into your content:
-
-<Alert severity="success">
-  This Alert is a live React component rendered inside Markdown.
-</Alert>
-
-```mdx
-import Alert from "@mui/material/Alert";
-
-<Alert severity="success">
-  This Alert is a live React component rendered inside Markdown.
-</Alert>
-```
+Drop any React or Material UI component straight into your Markdown — the
+foundation everything else here builds on.
