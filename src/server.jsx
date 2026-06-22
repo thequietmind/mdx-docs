@@ -4,6 +4,7 @@ import { StaticRouter } from "react-router-dom";
 
 import App from "./App.jsx";
 import { getAppOptions } from "./appOptions.js";
+import { normalizeRoute } from "./utils/navigation.js";
 
 const preloadComponent = async (page) => {
   if (page.load) {
@@ -40,7 +41,7 @@ export const renderPage = async (route, base = "/") => {
   }
 
   await preloadComponent(page);
-  const normalizedBase = base === "/" ? "" : base.replace(/\/+$/, "");
+  const normalizedBase = base === "/" ? "" : normalizeRoute(base);
   const location = `${normalizedBase}${route}`;
 
   return renderToString(
