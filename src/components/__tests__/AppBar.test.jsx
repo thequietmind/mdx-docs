@@ -3,42 +3,51 @@ import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
+import { ColorModeContext } from "../../context/ColorModeContext";
 import { DocsProvider } from "../../context/DocsProvider";
 
 import AppBar from "../AppBar";
 
 const mockSite = { name: "Design System" };
 
-const renderWithRouter = (component) => {
-  return render(
-    <DocsProvider pages={[]} site={mockSite}>
-      <BrowserRouter>{component}</BrowserRouter>
-    </DocsProvider>
-  );
-};
-
 describe("AppBar component", () => {
+  const mockToggleColorMode = vi.fn();
   const mockSetDarkMode = vi.fn();
   const mockHandleDrawerToggle = vi.fn();
 
-  const defaultProps = {
-    darkMode: false,
-    setDarkMode: mockSetDarkMode,
-    handleDrawerToggle: mockHandleDrawerToggle,
-  };
+  const renderAppBar = (props = {}, { darkMode = false } = {}) =>
+    render(
+      <DocsProvider pages={[]} site={mockSite}>
+        <ColorModeContext.Provider
+          value={{
+            darkMode,
+            setDarkMode: mockSetDarkMode,
+            toggleColorMode: mockToggleColorMode,
+          }}
+        >
+          <BrowserRouter>
+            <AppBar
+              handleDrawerToggle={mockHandleDrawerToggle}
+              showSidebar
+              {...props}
+            />
+          </BrowserRouter>
+        </ColorModeContext.Provider>
+      </DocsProvider>
+    );
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("should render the app title", () => {
-    renderWithRouter(<AppBar {...defaultProps} />);
+    renderAppBar();
 
     expect(screen.getByText("Design System")).toBeInTheDocument();
   });
 
   it("should render the menu button on mobile", () => {
-    renderWithRouter(<AppBar {...defaultProps} />);
+    renderAppBar();
 
     const menuButton = screen.getByTestId("MenuIcon").closest("button");
     expect(menuButton).toBeInTheDocument();
@@ -47,7 +56,7 @@ describe("AppBar component", () => {
 
   it("should call handleDrawerToggle when menu button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<AppBar {...defaultProps} />);
+    renderAppBar();
 
     const menuButton = screen.getByTestId("MenuIcon").closest("button");
     await user.click(menuButton);
@@ -56,29 +65,29 @@ describe("AppBar component", () => {
   });
 
   it("should render dark mode icon when in light mode", () => {
-    renderWithRouter(<AppBar {...defaultProps} darkMode={false} />);
+    renderAppBar({}, { darkMode: false });
 
     expect(screen.getByTestId("DarkModeIcon")).toBeInTheDocument();
   });
 
   it("should render light mode icon when in dark mode", () => {
-    renderWithRouter(<AppBar {...defaultProps} darkMode={true} />);
+    renderAppBar({}, { darkMode: true });
 
     expect(screen.getByTestId("LightModeIcon")).toBeInTheDocument();
   });
 
-  it("should toggle dark mode when theme button is clicked", async () => {
+  it("should toggle color mode when theme button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<AppBar {...defaultProps} />);
+    renderAppBar();
 
     const themeButton = screen.getByTestId("DarkModeIcon").closest("button");
     await user.click(themeButton);
 
-    expect(mockSetDarkMode).toHaveBeenCalledWith(true);
+    expect(mockToggleColorMode).toHaveBeenCalledTimes(1);
   });
 
   it("should link title to home page", () => {
-    renderWithRouter(<AppBar {...defaultProps} />);
+    renderAppBar();
 
     const titleLink = screen.getByRole("link", { name: "Design System" });
     expect(titleLink).toHaveAttribute("href", "/");

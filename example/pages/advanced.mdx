@@ -144,8 +144,18 @@ A bare canvas — no sidebar, toolbar, or footer.
 These combine with the other layout fields, which is useful for landing or
 marketing pages that supply their own chrome. Note that the toolbar holds the
 site title link and the dark-mode toggle, so removing it drops those controls
-from that page. `footer: false` overrides the page only; the site-wide footer
-configuration in `config/site.js` still controls every other page.
+from that page. To keep light/dark switching on a toolbar-less page, drop the
+standalone `ColorModeToggle` anywhere in your content and position it however
+you like:
+
+```jsx
+import { ColorModeToggle } from '@quietmind/mdx-docs'
+
+;<ColorModeToggle sx={{ position: "fixed", top: 16, right: 16 }} />
+```
+
+`footer: false` overrides the page only; the site-wide footer configuration in
+`config/site.js` still controls every other page.
 
 ## Sitemap generation
 
