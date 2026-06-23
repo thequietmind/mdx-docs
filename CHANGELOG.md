@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-06-23
+
+### Added
+
+- Per-page layout control via MDX frontmatter, applied consistently across
+  prerendered HTML and client hydration:
+  - `sidebar: false` hides the navigation sidebar on that page
+  - `toolbar: false` hides the top toolbar (AppBar) on that page
+  - `footer: false` hides the footer on that page (independent of the global
+    `footer` config)
+  - `maxWidth` sets the content width cap — a number (px) for a custom cap, or
+    `false` to remove the cap and let content fill the available width
+
+### Fixed
+
+- Button text now renders vertically centered in Firefox. The bundled global
+  stylesheet carried leftover defaults — a global `button` reset and
+  `text-rendering: optimizeLegibility` — that interfered with MUI's button
+  rendering; these are removed and the base font stack is now owned by the MUI
+  theme
+- Removed regular expressions vulnerable to catastrophic backtracking (ReDoS)
+  from route normalization and server-side route handling
+
+### Changed
+
+- Added `remark-frontmatter` and `remark-mdx-frontmatter` as dependencies to
+  power per-page frontmatter
+- Bumped peer dependencies: `vite` to `^8.0.16`, `@vitejs/plugin-react` to
+  `^6.0.2`, and `react-router-dom` to `^7.18.0`. Consumers should upgrade Vite
+  to v8 and `@vitejs/plugin-react` to v6 when updating
+
+### Notes
+
+- Backward compatible — pages without the new frontmatter fields render exactly
+  as before (sidebar, toolbar, and footer shown; content capped at 960px)
+
 ## [1.4.1] - 2026-06-19
 
 ### Fixed

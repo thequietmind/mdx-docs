@@ -1,6 +1,6 @@
 {
   "name": "@quietmind/mdx-docs",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "type": "module",
   "homepage": "https://mdxdocs.com",
   "exports": {
