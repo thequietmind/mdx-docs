@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-06-23
+
+### Added
+
+- `ColorModeToggle` component and `useColorMode` hook, both exported from the
+  package. `ColorModeToggle` is the toolbar's light/dark switch as a standalone
+  component you can render anywhere and position via `sx` (other props pass
+  through to the underlying MUI `IconButton`). `useColorMode` exposes
+  `{ darkMode, setDarkMode, toggleColorMode }` for building a custom control.
+  Together these let full-bleed pages that hide the toolbar with `toolbar: false`
+  keep light/dark switching
+
+### Notes
+
+- Backward compatible — the toolbar's built-in toggle is unchanged and the new
+  exports are purely additive. `ColorModeToggle` and `useColorMode` read the
+  color-mode context provided by the default `createApp` shell; in a custom
+  layout built from `DocsProvider` and `MDXContent`, continue to manage theme
+  state yourself
+
 ## [1.5.0] - 2026-06-23
 
 ### Added
