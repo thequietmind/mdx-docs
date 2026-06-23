@@ -13,6 +13,8 @@ const ComponentsMDX = lazy(() => import("@pages/components.mdx"));
 const EmbeddingReactMDX = lazy(() => import("@pages/embedding-react.mdx"));
 const FullWidthMDX = lazy(() => import("@pages/full-width.mdx"));
 
+const MarketingPage = lazy(() => import("@pages/marketing-page.mdx"));
+
 export const pages = [
   {
     name: "MDX Docs",
@@ -95,6 +97,14 @@ export const pages = [
     route: "/full-width",
     component: FullWidthMDX,
     title: "Full Width — MDX Docs",
+    description: "Example page with the docs sidebar hidden via frontmatter.",
+    isHidden: true,
+  },
+  {
+    name: "Marketing Page",
+    route: "/marketing-page",
+    component: MarketingPage,
+    title: "Marketing Page — MDX Docs",
     description: "Example page with the docs sidebar hidden via frontmatter.",
     isHidden: true,
   },
