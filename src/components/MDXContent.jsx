@@ -18,16 +18,18 @@ import NotFound from "virtual:mdx-docs/404";
 import CodeBlock from "./CodeBlock";
 import InlineCode from "./InlineCode";
 import { useDocsContext } from "../context/DocsContext";
+import { usePageMaxWidth } from "../hooks/usePageMaxWidth";
 import { isExternalLink } from "../utils/navigation";
 
 const MDXContent = () => {
   const { pages } = useDocsContext();
+  const maxWidth = usePageMaxWidth();
 
   return (
     <Box
       sx={{
         width: "100%",
-        maxWidth: 960,
+        maxWidth,
         mx: "auto",
         pb: 4,
         // Add mobile-specific styles to prevent text overflow

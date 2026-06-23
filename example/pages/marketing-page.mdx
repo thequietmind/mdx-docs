@@ -1,0 +1,44 @@
+---
+sidebar: false
+maxWidth: 960
+toolbar: false
+footer: false
+---
+
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+
+import FullBleedHero from '../components/FullBleedHero.jsx';
+
+export function TabsDemo() {
+  const [value, setValue] = React.useState(0);
+  return (
+    <Tabs
+      value={value}
+      onChange={(event, newValue) => setValue(newValue)}
+      aria-label="Tabs where each tab needs to be selected manually"
+    >
+      <Tab label="Item One" />
+      <Tab label="Item Two" />
+      <Tab label="Item Three" />
+    </Tabs>
+  );
+}
+
+<FullBleedHero
+  title="Build docs that don't look like docs"
+  subtitle="A full-bleed hero that spans edge to edge, sitting above your normal page content."
+  primaryAction={{ label: "Get Started", href: "/getting-started" }}
+  secondaryAction={{
+    label: "View on GitHub",
+    href: "https://github.com/thequietmind/mdx-docs",
+  }}
+/>
+
+<TabsDemo />
+
+# Marketing Page
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus a luctus erat, vel volutpat tellus. Morbi congue mi in lorem ornare, ut pellentesque ante fermentum. Pellentesque eu justo id est placerat tincidunt. Quisque massa enim, eleifend nec odio ut, fermentum finibus urna. Aliquam cursus bibendum ex in fermentum. Aliquam varius congue ex, sed ultrices nulla pretium ut. Praesent mollis eros mauris, quis dignissim diam efficitur eget. Phasellus ut orci maximus, interdum diam eu, suscipit dui. Nullam erat orci, convallis et viverra ac, ultricies non tortor. Pellentesque et lacus tristique urna scelerisque posuere. Nam faucibus neque sed risus tempor, a eleifend tortor pretium. Curabitur interdum arcu quis arcu pellentesque, a maximus lorem mattis. Duis sed neque ipsum. Vestibulum eget semper odio, vel aliquam nulla.

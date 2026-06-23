@@ -6,6 +6,11 @@ import { lightTheme } from "./lightTheme";
 export { lightTheme } from "./lightTheme";
 export { darkTheme } from "./darkTheme";
 
+// Base font stack, owned by the theme so CssBaseline applies it to <body> and
+// it cascades app-wide. Previously set on :root in main.css; moved here so
+// removing that global rule doesn't fall back to MUI's default Roboto stack.
+const DEFAULT_FONT_FAMILY = "system-ui, Avenir, Helvetica, Arial, sans-serif";
+
 const componentOverrides = {
   components: {
     // Style ALL bare HTML anchors (e.g. literal <a> written in .mdx, which is
@@ -77,8 +82,13 @@ export const createAppTheme = (mode = "light", userTheme = {}) => {
   }
 
   // Merge order: base → shorthand → mode-specific → component overrides (always last)
+  // fontFamily lives in the base layer so userTheme.fontFamily (shorthand) can override it.
   const args = [
-    { ...baseConfig, palette: { ...baseConfig.palette, mode } },
+    {
+      ...baseConfig,
+      palette: { ...baseConfig.palette, mode },
+      typography: { fontFamily: DEFAULT_FONT_FAMILY, ...baseConfig.typography },
+    },
     shorthandLayer,
   ];
   if (modeSpecific) args.push(modeSpecific);

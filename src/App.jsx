@@ -12,7 +12,9 @@ import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
 import { DocsProvider } from "./context/DocsProvider";
 import { usePageMetadata } from "./hooks/usePageMetadata";
+import { useShowFooter } from "./hooks/useShowFooter";
 import { useShowSidebar } from "./hooks/useShowSidebar";
+import { useShowToolbar } from "./hooks/useShowToolbar";
 import { useTheme } from "./hooks/useTheme";
 import { createAppTheme } from "./themes";
 
@@ -51,6 +53,8 @@ const Wrapper = ({ children }) => {
 
 function AppShell({
   showSidebar,
+  showToolbar = true,
+  showFooter = true,
   darkMode,
   setDarkMode,
   mobileOpen,
@@ -58,12 +62,14 @@ function AppShell({
 }) {
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        handleDrawerToggle={handleDrawerToggle}
-        showSidebar={showSidebar}
-      />
+      {showToolbar && (
+        <AppBar
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          handleDrawerToggle={handleDrawerToggle}
+          showSidebar={showSidebar}
+        />
+      )}
       {showSidebar && (
         <SideNavigation
           mobileOpen={mobileOpen}
@@ -74,7 +80,7 @@ function AppShell({
         component="main"
         sx={{
           flexGrow: 1,
-          pt: 8, // Add top padding to account for AppBar
+          pt: showToolbar ? 8 : 0, // Top padding accounts for the fixed AppBar
           px: { xs: 0.5, sm: 3 }, // Reduce padding even more on very small screens
           width: showSidebar ? { sm: `calc(100% - ${drawerWidth}px)` } : "100%",
           // Prevent horizontal overflow on very small screens
@@ -89,7 +95,7 @@ function AppShell({
         <Box sx={{ flexGrow: 1, width: "100%" }}>
           <MDXContent />
         </Box>
-        <Footer />
+        {showFooter && <Footer />}
       </Box>
     </Box>
   );
@@ -100,7 +106,16 @@ function AppShell({
 // the shell (with the sidebar) without suspending.
 function CurrentAppShell(props) {
   const showSidebar = useShowSidebar();
-  return <AppShell showSidebar={showSidebar} {...props} />;
+  const showToolbar = useShowToolbar();
+  const showFooter = useShowFooter();
+  return (
+    <AppShell
+      showSidebar={showSidebar}
+      showToolbar={showToolbar}
+      showFooter={showFooter}
+      {...props}
+    />
+  );
 }
 
 function AppContent({ userTheme = {} }) {
