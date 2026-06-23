@@ -122,6 +122,31 @@ This page spans the full content area.
 Omitting `maxWidth` keeps the 960px default, so existing pages are unaffected.
 On small screens the content always fills the width regardless of this setting.
 
+## Hiding the toolbar or footer per page
+
+A page can also drop the top toolbar or the footer from its frontmatter. Set
+`toolbar: false` to remove the top app bar, and `footer: false` to remove the
+footer. Both are shown by default, so existing pages are unaffected.
+
+```mdx
+---
+sidebar: false
+maxWidth: false
+toolbar: false
+footer: false
+---
+
+# Landing Page
+
+A bare canvas — no sidebar, toolbar, or footer.
+```
+
+These combine with the other layout fields, which is useful for landing or
+marketing pages that supply their own chrome. Note that the toolbar holds the
+site title link and the dark-mode toggle, so removing it drops those controls
+from that page. `footer: false` overrides the page only; the site-wide footer
+configuration in `config/site.js` still controls every other page.
+
 ## Sitemap generation
 
 MDX Docs can generate a `sitemap.xml` during production builds. Add an
