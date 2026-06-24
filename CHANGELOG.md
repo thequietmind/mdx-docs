@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-06-23
+
+### Fixed
+
+- README screenshot now renders on the npmjs.com package page. It previously
+  used a relative path (`./docs/screenshot.png`) that only resolves on GitHub;
+  npm could not rewrite it because `docs/` is not in the published tarball and
+  no `repository` field was set. The image now uses an absolute
+  `raw.githubusercontent.com` URL so it renders on npm, GitHub, and elsewhere
+
+### Changed
+
+- Added a `repository` field to `package.json`. This is standard package
+  metadata and lets npm resolve relative repository links
+
 ## [1.6.0] - 2026-06-23
 
 ### Added
