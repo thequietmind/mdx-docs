@@ -798,7 +798,7 @@
   resolved "https://registry.yarnpkg.com/@rolldown/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.1.3.tgz#f06c09db5c8ad4b6904b4d406c9b6f17f392b5c6"
   integrity sha512-OL4OMk7UPXOeVGGd3qo5zJyPIljf4AFgk5QAkPPS+OoLuOOozhuaQGC18MxVTnw/06q93gShAJzlwnSCY9YtqA==
 
-"@rolldown/pluginutils@^1.0.0":
+"@rolldown/pluginutils@^1.0.0", "@rolldown/pluginutils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.1.tgz#e3fcee093fbb5ce765e1ad088ff4de2889f6f9be"
   integrity sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==
@@ -985,12 +985,12 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.3.0.tgz#d06bbb384ebcf6c505fde1c3d0ed4ddffe0aaff8"
   integrity sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==
 
-"@vitejs/plugin-react@^6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-6.0.2.tgz#f70cb8ed0ce225dbc3055d78070f820d8aa35eda"
-  integrity sha512-DlSMqo4WhThw4vB8Mpn0Woe9J+Jfq1geJ61AKW0QEgLzGMNwtIMdxbDUzLxcun8W7NbJO0e2Jg/Nxm3cCSVzzg==
+"@vitejs/plugin-react@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-6.0.3.tgz#55f1d7f558534d10aef03c007dc208b7c3771ce4"
+  integrity sha512-vmFvco5/QuC2f9Oj+wTk0+9XeDFkHxSamwZKYc7MxYwKICfvUvlMhqKI0VuICPltGqh1neqBKDvO4kes1ya8vg==
   dependencies:
-    "@rolldown/pluginutils" "^1.0.0"
+    "@rolldown/pluginutils" "^1.0.1"
 
 "@vitest/coverage-v8@^4.1.9":
   version "4.1.9"
