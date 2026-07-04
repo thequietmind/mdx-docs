@@ -51,7 +51,7 @@
     "prismjs": "^1.30.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.0",
+    "react-router-dom": "^7.18.1",
     "vite": "^8.1.0"
   },
   "devDependencies": {
@@ -82,7 +82,7 @@
     "prismjs": "^1.30.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.0",
+    "react-router-dom": "^7.18.1",
     "remark-gfm": "^4.0.1",
     "vite": "^8.1.0",
     "vitest": "^4.1.9"
