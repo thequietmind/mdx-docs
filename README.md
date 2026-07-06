@@ -8,7 +8,7 @@ MDX Docs is a React + Vite framework for building MDX-powered documentation site
 
 **Demo:** [https://mdxdocs.com/](https://mdxdocs.com/)
 
-![mdx-docs documentation site](./docs/screenshot.png)
+![mdx-docs documentation site](https://raw.githubusercontent.com/thequietmind/mdx-docs/main/docs/screenshot.png)
 
 ## Features
 

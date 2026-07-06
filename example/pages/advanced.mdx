@@ -49,6 +49,46 @@ import { MDXContent } from '@quietmind/mdx-docs'
 
 `MDXContent` takes no props.
 
+## ColorModeToggle
+
+`ColorModeToggle` is the toolbar's light/dark switch exposed as a standalone
+component. It reads color-mode state from context, so you can render it anywhere
+in your content — which is useful on pages that hide the toolbar with
+`toolbar: false`. Style and position it through `sx`; any other props pass
+through to the underlying MUI `IconButton`.
+
+```jsx
+import { ColorModeToggle } from '@quietmind/mdx-docs'
+
+;<ColorModeToggle sx={{ position: "fixed", top: 16, right: 16 }} />
+```
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `sx` | `object` | No | MUI `sx` styles for placement and appearance (e.g. `position: "fixed"`) |
+| _...rest_ | `IconButtonProps` | No | Forwarded to the underlying MUI `IconButton` (e.g. `color`, `size`) |
+
+To build a custom control instead, the `useColorMode` hook exposes the same
+state the toggle uses:
+
+```jsx
+import { useColorMode } from '@quietmind/mdx-docs'
+
+function ThemeSwitch() {
+  const { darkMode, toggleColorMode } = useColorMode()
+  return (
+    <button onClick={toggleColorMode}>
+      Switch to {darkMode ? "light" : "dark"} mode
+    </button>
+  )
+}
+```
+
+`useColorMode` returns `{ darkMode, setDarkMode, toggleColorMode }`. Both helpers
+work inside the default shell rendered by `createApp`. In a custom layout built
+from `DocsProvider` and `MDXContent`, you supply your own theme state, so manage
+mode switching there yourself.
+
 ## Custom layout example
 
 Use these two components together to render just the content area inside your own layout:
@@ -144,7 +184,9 @@ A bare canvas — no sidebar, toolbar, or footer.
 These combine with the other layout fields, which is useful for landing or
 marketing pages that supply their own chrome. Note that the toolbar holds the
 site title link and the dark-mode toggle, so removing it drops those controls
-from that page. `footer: false` overrides the page only; the site-wide footer
+from that page. To keep light/dark switching on a toolbar-less page, drop in the
+standalone `ColorModeToggle` component (documented above) and position it
+wherever you like. `footer: false` overrides the page only; the site-wide footer
 configuration in `config/site.js` still controls every other page.
 
 ## Sitemap generation

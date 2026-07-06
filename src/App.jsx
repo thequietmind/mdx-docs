@@ -10,6 +10,7 @@ import AppBar from "./components/AppBar";
 import Footer from "./components/Footer";
 import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
+import { ColorModeContext } from "./context/ColorModeContext";
 import { DocsProvider } from "./context/DocsProvider";
 import { usePageMetadata } from "./hooks/usePageMetadata";
 import { useShowFooter } from "./hooks/useShowFooter";
@@ -55,8 +56,6 @@ function AppShell({
   showSidebar,
   showToolbar = true,
   showFooter = true,
-  darkMode,
-  setDarkMode,
   mobileOpen,
   handleDrawerToggle,
 }) {
@@ -64,8 +63,6 @@ function AppShell({
     <Box sx={{ display: "flex" }}>
       {showToolbar && (
         <AppBar
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
           handleDrawerToggle={handleDrawerToggle}
           showSidebar={showSidebar}
         />
@@ -127,19 +124,30 @@ function AppContent({ userTheme = {} }) {
     [darkMode, userTheme]
   );
 
+  const colorMode = useMemo(
+    () => ({
+      darkMode,
+      setDarkMode,
+      toggleColorMode: () => setDarkMode((value) => !value),
+    }),
+    [darkMode, setDarkMode]
+  );
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const shellProps = { darkMode, setDarkMode, mobileOpen, handleDrawerToggle };
+  const shellProps = { mobileOpen, handleDrawerToggle };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Suspense fallback={<AppShell showSidebar {...shellProps} />}>
-        <CurrentAppShell {...shellProps} />
-      </Suspense>
-    </ThemeProvider>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Suspense fallback={<AppShell showSidebar {...shellProps} />}>
+          <CurrentAppShell {...shellProps} />
+        </Suspense>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 

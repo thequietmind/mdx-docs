@@ -1,4 +1,5 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { ColorModeToggle } from "@quietmind/mdx-docs";
 import { Link as RouterLink } from "react-router-dom";
 
 const isExternal = (href) => /^(https?:|mailto:|tel:)/.test(href ?? "");
@@ -24,6 +25,7 @@ function FullBleedHero({
   return (
     <Box
       sx={{
+        position: "relative",
         width: "100vw",
         ml: "calc(50% - 50vw)",
         mb: 6,
@@ -39,6 +41,13 @@ function FullBleedHero({
         backgroundPosition: "center",
       }}
     >
+      {/* The toolbar (and its built-in toggle) is hidden on full-bleed pages, so
+          drop a standalone ColorModeToggle into the hero. `color="inherit"`
+          picks up the hero's white text; the caller controls placement. */}
+      <ColorModeToggle
+        color="inherit"
+        sx={{ position: "absolute", top: 16, right: 16 }}
+      />
       <Container maxWidth="md" disableGutters>
         <Typography
           variant="h2"
