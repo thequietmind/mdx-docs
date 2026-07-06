@@ -1,8 +1,12 @@
 {
   "name": "@quietmind/mdx-docs",
-  "version": "1.5.0",
+  "version": "1.6.1",
   "type": "module",
   "homepage": "https://mdxdocs.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thequietmind/mdx-docs.git"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js"
