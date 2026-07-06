@@ -1,5 +1,3 @@
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar as MuiAppBar,
@@ -10,9 +8,10 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
+import ColorModeToggle from "./ColorModeToggle";
 import { useDocsContext } from "../context/DocsContext";
 
-function AppBar({ darkMode, setDarkMode, handleDrawerToggle, showSidebar = true }) {
+function AppBar({ handleDrawerToggle, showSidebar = true }) {
   const { site } = useDocsContext();
   return (
     <MuiAppBar
@@ -47,19 +46,7 @@ function AppBar({ darkMode, setDarkMode, handleDrawerToggle, showSidebar = true 
           {site.name}
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <IconButton
-          onClick={() => setDarkMode(!darkMode)}
-          color="inherit"
-          aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-          sx={{
-            ml: 1,
-            "&:focus:not(:focus-visible)": {
-              outline: "none",
-            },
-          }}
-        >
-          {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
-        </IconButton>
+        <ColorModeToggle sx={{ ml: 1 }} />
       </Toolbar>
     </MuiAppBar>
   );

@@ -90,7 +90,10 @@ const createSitePrerenderPlugin = () => ({
         logLevel: "warn",
         plugins: [create404Plugin(), react(), createMdxPlugin()],
         resolve: {
-          alias: { "@pages": pagesDir },
+          alias: {
+            "@pages": pagesDir,
+            "@quietmind/mdx-docs": resolve(__dirname, "src/index.js"),
+          },
         },
         build: {
           ssr: prerenderEntry,
@@ -211,6 +214,11 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@pages": fileURLToPath(new URL("./example/pages", import.meta.url)),
+      // Let the example dogfood the published package by its real name, so its
+      // components import from "@quietmind/mdx-docs" exactly as a consumer would.
+      "@quietmind/mdx-docs": fileURLToPath(
+        new URL("./src/index.js", import.meta.url)
+      ),
     },
   },
 }));

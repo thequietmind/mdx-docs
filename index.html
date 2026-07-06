@@ -18,6 +18,28 @@
     <meta name="twitter:description" content="A lightweight React framework for MDX documentation sites." />
     <meta name="twitter:image" content="https://mdxdocs.com/og-image.png" />
     <meta name="theme-color" content="#7c3aed" />
+    <script>
+      const url = new URL(window.location.href);
+      [
+        "ref",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "utm_id",
+        "fbclid",
+        "gclid",
+        "gbraid",
+        "wbraid",
+        "dclid",
+        "msclkid",
+        "mc_cid",
+        "mc_eid",
+        "vero_id",
+      ].forEach((p) => url.searchParams.delete(p));
+      history.replaceState({}, "", url);
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KF62MPWGFK"></script>
     <script>
