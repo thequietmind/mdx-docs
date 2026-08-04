@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  lint-and-test:
+  test:
     runs-on: ubuntu-latest
     # The peer range allows MUI 7 or 9, so both are exercised. The lockfile
     # pins 9; the 7 leg overrides it after install. fail-fast is off so a
@@ -40,3 +40,20 @@ jobs:
         run: yarn lint
       - name: Test
         run: yarn test
+
+  # Single stable check for the branch ruleset to require. Matrix legs report as
+  # "test (7)" and "test (9)", so requiring them by name would mean editing repo
+  # settings every time the matrix changes -- and a leg that was dropped would
+  # silently stop being required. This job keeps that name fixed.
+  # `if: always()` is load-bearing: without it this job is skipped when a leg
+  # fails, the required check never reports, and the PR blocks forever instead
+  # of failing.
+  lint-and-test:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check matrix result
+        run: |
+          echo "test job result: ${{ needs.test.result }}"
+          [ "${{ needs.test.result }}" = "success" ] || exit 1
