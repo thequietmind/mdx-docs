@@ -16,7 +16,7 @@ MDX Docs is a React + Vite framework for building MDX-powered documentation site
 - Syntax highlighting with copy-to-clipboard on code blocks
 - Dark/light mode with system preference detection
 - Responsive sidebar navigation
-- Built on React 19, Material-UI 7, and Vite 6
+- Built on React, Material UI, and Vite
 
 ## Quick Start
 
@@ -319,10 +319,14 @@ Mode-specific overrides take precedence over `primaryColor` and `fontFamily` sho
 
 ## Tech Stack
 
-- React 19, Material-UI 7, Emotion
-- Vite 6, MDX 3
-- React Router DOM 7
+- React, Material UI, Emotion
+- Vite, MDX
+- React Router DOM
 - Prism React Renderer
+
+The exact supported ranges live in `peerDependencies` in
+[`package.json`](package.json), which is always current — unlike a version
+number written into prose.
 
 ## Contributing
 
