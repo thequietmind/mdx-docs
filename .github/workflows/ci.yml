@@ -11,6 +11,13 @@ permissions:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    # The peer range allows MUI 7 or 9, so both are exercised. The lockfile
+    # pins 9; the 7 leg overrides it after install. fail-fast is off so a
+    # break on one major still reports the other's result.
+    strategy:
+      fail-fast: false
+      matrix:
+        mui: ["7", "9"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -18,6 +25,17 @@ jobs:
           node-version: 24
           cache: yarn
       - run: yarn install --frozen-lockfile
+      - name: Downgrade to MUI ${{ matrix.mui }}
+        if: matrix.mui != '9'
+        run: yarn add --dev "@mui/material@^${{ matrix.mui }}" "@mui/icons-material@^${{ matrix.mui }}"
+      - name: Verify MUI major
+        run: |
+          actual=$(node -p "require('@mui/material/package.json').version")
+          echo "Resolved @mui/material $actual"
+          case "$actual" in
+            ${{ matrix.mui }}.*) ;;
+            *) echo "::error::expected MUI ${{ matrix.mui }}.x, got $actual"; exit 1 ;;
+          esac
       - name: Lint
         run: yarn lint
       - name: Test
