@@ -9,6 +9,12 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Only rewrite a range in package.json when the new version falls outside
+    # it; otherwise update the lockfile alone. peerDependencies are the published
+    # contract -- they state the minimum version that works, not the newest one
+    # tested -- and the default strategy kept raising those floors on in-range
+    # patch bumps, narrowing what consumers could install for no reason.
+    versioning-strategy: increase-if-necessary
     # Group packages that must move in lockstep so a partial bump can't leave
     # the versions out of sync (which breaks the lockfile, or fails at runtime
     # -- react refuses to start when react and react-dom disagree).
