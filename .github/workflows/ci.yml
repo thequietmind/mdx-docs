@@ -9,8 +9,15 @@ permissions:
   contents: read
 
 jobs:
-  lint-and-test:
+  test:
     runs-on: ubuntu-latest
+    # The peer range allows MUI 7 or 9, so both are exercised. The lockfile
+    # pins 9; the 7 leg overrides it after install. fail-fast is off so a
+    # break on one major still reports the other's result.
+    strategy:
+      fail-fast: false
+      matrix:
+        mui: ["7", "9"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -18,7 +25,35 @@ jobs:
           node-version: 24
           cache: yarn
       - run: yarn install --frozen-lockfile
+      - name: Downgrade to MUI ${{ matrix.mui }}
+        if: matrix.mui != '9'
+        run: yarn add --dev "@mui/material@^${{ matrix.mui }}" "@mui/icons-material@^${{ matrix.mui }}"
+      - name: Verify MUI major
+        run: |
+          actual=$(node -p "require('@mui/material/package.json').version")
+          echo "Resolved @mui/material $actual"
+          case "$actual" in
+            ${{ matrix.mui }}.*) ;;
+            *) echo "::error::expected MUI ${{ matrix.mui }}.x, got $actual"; exit 1 ;;
+          esac
       - name: Lint
         run: yarn lint
       - name: Test
         run: yarn test
+
+  # Single stable check for the branch ruleset to require. Matrix legs report as
+  # "test (7)" and "test (9)", so requiring them by name would mean editing repo
+  # settings every time the matrix changes -- and a leg that was dropped would
+  # silently stop being required. This job keeps that name fixed.
+  # `if: always()` is load-bearing: without it this job is skipped when a leg
+  # fails, the required check never reports, and the PR blocks forever instead
+  # of failing.
+  lint-and-test:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check matrix result
+        run: |
+          echo "test job result: ${{ needs.test.result }}"
+          [ "${{ needs.test.result }}" = "success" ] || exit 1
