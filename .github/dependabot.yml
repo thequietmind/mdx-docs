@@ -9,11 +9,25 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-    # Update vite, vitest, and the @vitest/* packages together so a partial
-    # bump can't leave the versions out of sync (which breaks the lockfile).
+    # Group packages that must move in lockstep so a partial bump can't leave
+    # the versions out of sync (which breaks the lockfile, or fails at runtime
+    # -- react refuses to start when react and react-dom disagree).
     groups:
       vite-vitest:
         patterns:
           - "vite"
           - "vitest"
           - "@vitest/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      mui:
+        patterns:
+          - "@mui/*"
+          - "@emotion/*"
+      testing-library:
+        patterns:
+          - "@testing-library/*"
