@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-08-04
+
+### Added
+
+- Material UI 9 support. The `@mui/material` and `@mui/icons-material` peer
+  ranges widen from `^7.1.2` to `^7.1.2 || ^9.0.0`, so a project on either major
+  can install this package. A project on MUI 9 previously could not install
+  1.6.1 without a peer dependency conflict
+
+### Changed
+
+- CI runs the full test suite against both MUI 7 and MUI 9, so support for both
+  majors is enforced on every pull request rather than assumed
+- The README no longer states dependency version numbers in prose. Those had
+  drifted out of date, and `peerDependencies` in `package.json` is the
+  authoritative source for which versions are supported
+
+### Notes
+
+- No library code changed in this release — `src/` is identical to 1.6.1, and
+  the built output differs only in bundler minification. Projects on MUI 7 need
+  no action and will see no change in behavior. MUI 7 remains supported; a
+  future 2.0 is reserved for the point where this package adopts MUI 9-only
+  behavior or drops MUI 7
+
 ## [1.6.1] - 2026-06-23
 
 ### Fixed
