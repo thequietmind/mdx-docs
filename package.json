@@ -73,8 +73,8 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
-    "@vitest/coverage-v8": "^4.1.10",
-    "@vitest/ui": "^4.1.10",
+    "@vitest/coverage-v8": "^5.0.1",
+    "@vitest/ui": "^5.0.1",
     "eslint": "^9.25.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -89,7 +89,7 @@
     "react-router-dom": "^7.18.2",
     "remark-gfm": "^4.0.1",
     "vite": "^8.2.0",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.1"
   },
   "publishConfig": {
     "access": "public"
