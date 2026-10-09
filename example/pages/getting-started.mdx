@@ -11,7 +11,7 @@ npx create-mdx-docs@latest my-docs
 Create an MDX file in `pages/`:
 
 ~~~mdx
-import { Button } from "@mui/material";
+import { Button } from "@mui/material"
 
 # Button
 
@@ -29,7 +29,7 @@ import { Button } from "@mui/material";
 Register your page in `config/pages.js`:
 
 ```js
-const GettingStartedMDX = lazy(() => import("@pages/getting-started.mdx"));
+const GettingStartedMDX = lazy(() => import("@pages/getting-started.mdx"))
 
 export const pages = [
   // ...existing pages
@@ -38,7 +38,7 @@ export const pages = [
     route: "/getting-started",
     component: GettingStartedMDX,
   },
-];
+]
 ```
 
 Pages with `isDefault: true` do not appear in the sidebar navigation.
@@ -49,7 +49,7 @@ Configure your site name and description in `config/site.js`.
 export const site = {
   name: "My Site",
   description: "My site description",
-};
+}
 ```
 
 ## Writing MDX

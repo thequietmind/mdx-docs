@@ -76,7 +76,7 @@ through to the underlying MUI `IconButton`.
 ```jsx
 import { ColorModeToggle } from '@quietmind/mdx-docs'
 
-;<ColorModeToggle sx={{ position: "fixed", top: 16, right: 16 }} />
+<ColorModeToggle sx={{ position: "fixed", top: 16, right: 16 }} />
 ```
 
 | Prop | Type | Required | Description |
@@ -216,7 +216,7 @@ export const site = {
   name: "My Site",
   description: "My site description",
   url: "https://docs.example.com",
-};
+}
 ```
 
 When `url` is set, `yarn build` writes a `sitemap.xml` that includes every
@@ -245,7 +245,7 @@ export const pages = [
     component: InternalNotesMDX,
     excludeFromSitemap: true,
   },
-];
+]
 ```
 
 For sites deployed at the domain root, MDX Docs also writes a `robots.txt`
