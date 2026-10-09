@@ -16,6 +16,7 @@ import { DocsProvider } from '@quietmind/mdx-docs'
 | `site` | `object` | Yes | Site config with `name` and `description` |
 | `hideHomeFromNav` | `boolean` | No | Hide the home route from navigation (default: `false`) |
 | `footer` | `object` | No | Footer config: `{ enabled, content }` (`enabled` defaults to `true`) |
+| `codeBlocks` | `object` | No | Code block config: `{ titleBar }` (`titleBar` defaults to `false`) |
 
 ## Footer
 
@@ -36,6 +37,21 @@ createApp({
   pages,
   site,
   footer: { content: <p>Made with care by Your Team.</p> },
+})
+```
+
+## Code blocks
+
+Fenced code blocks have no title bar by default. The copy button stays hidden
+until you hover over the block, and on touch screens it's always visible. Set
+`codeBlocks: { titleBar: true }` to show a title bar with the block's language
+and an always-visible copy button:
+
+```jsx
+createApp({
+  pages,
+  site,
+  codeBlocks: { titleBar: true },
 })
 ```
 

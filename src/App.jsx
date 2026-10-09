@@ -157,6 +157,7 @@ function App({
   theme = {},
   hideHomeFromNav = false,
   footer,
+  codeBlocks,
   RouterComponent = BrowserRouter,
   routerProps = { basename: import.meta.env.BASE_URL },
 }) {
@@ -168,6 +169,7 @@ function App({
       site={site}
       hideHomeFromNav={hideHomeFromNav}
       footer={footer}
+      codeBlocks={codeBlocks}
     >
       <AppRouter {...routerProps}>
         <Wrapper>
