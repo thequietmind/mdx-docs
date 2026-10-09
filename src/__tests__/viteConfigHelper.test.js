@@ -12,7 +12,10 @@ import {
   injectSiteUrlTags,
   injectVersionAttribute,
 } from "../prerenderHtml.js";
-import { createMdxDocsConfig } from "../vite.config.helper.js";
+import {
+  createMdxDocsConfig,
+  rehypeUnwrapJsxParagraphs,
+} from "../vite.config.helper.js";
 
 const template = `<!doctype html>
 <html>
@@ -286,5 +289,68 @@ describe("createMdxDocsConfig optimizeDeps", () => {
         "@mdx-js/react",
       ])
     );
+  });
+});
+
+describe("rehypeUnwrapJsxParagraphs", () => {
+  const text = (value) => ({ type: "text", value });
+  const element = (tagName, ...children) => ({
+    type: "element",
+    tagName,
+    properties: {},
+    children,
+  });
+  const jsxFlowElement = (...children) => ({
+    type: "mdxJsxFlowElement",
+    name: "Lead",
+    attributes: [],
+    children,
+  });
+  const transform = (node) => {
+    const tree = { type: "root", children: [node] };
+    rehypeUnwrapJsxParagraphs()(tree);
+    return tree.children[0];
+  };
+
+  it("unwraps a lone paragraph that contains inline elements", () => {
+    const code = element("code", text("yarn dev"));
+    const node = transform(
+      jsxFlowElement(
+        text("\n"),
+        element("p", text("Run "), code, text(" to start.")),
+        text("\n")
+      )
+    );
+
+    expect(node.children).toEqual([
+      text("\n"),
+      text("Run "),
+      code,
+      text(" to start."),
+      text("\n"),
+    ]);
+  });
+
+  it("keeps paragraphs with inline elements when there are several", () => {
+    const first = element("p", text("Run "), element("code", text("yarn")));
+    const second = element("p", text("See "), element("a", text("docs")));
+    const node = transform(jsxFlowElement(first, text("\n"), second));
+
+    expect(node.children).toEqual([first, text("\n"), second]);
+  });
+
+  it("unwraps plain-text paragraphs next to other block content", () => {
+    const list = element("ul", element("li", text("Item")));
+    const node = transform(
+      jsxFlowElement(element("p", text("Intro")), text("\n"), list)
+    );
+
+    expect(node.children).toEqual([text("Intro"), text("\n"), list]);
+  });
+
+  it("leaves paragraphs outside JSX elements alone", () => {
+    const paragraph = element("p", text("Run "), element("code", text("yarn")));
+
+    expect(transform(paragraph)).toEqual(paragraph);
   });
 });

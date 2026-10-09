@@ -124,23 +124,6 @@ const MDXContent = () => {
           tr: TableRow,
           th: (props) => <TableCell component="th" {...props} />,
           td: TableCell,
-          p: (props) => {
-            // Remove spacing for all paragraphs that contain React components
-            const hasReactComponents =
-              props.children &&
-              (Array.isArray(props.children)
-                ? props.children.some(
-                    (child) => typeof child === "object" && child.type
-                  )
-                : typeof props.children === "object" && props.children.type);
-
-            // If this paragraph contains a React component, render it directly without the p wrapper
-            if (hasReactComponents) {
-              return <>{props.children}</>;
-            }
-
-            return <p {...props} />;
-          },
         }}
       >
         <Suspense

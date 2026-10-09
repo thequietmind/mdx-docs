@@ -1,3 +1,5 @@
+import { fileURLToPath } from "url";
+
 import mdx from "@mdx-js/rollup";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
@@ -42,6 +44,10 @@ export default defineConfig({
     }
   },
   resolve: {
-    alias: {}
+    alias: {
+      'virtual:mdx-docs/404': fileURLToPath(
+        new URL('./src/components/NotFound.jsx', import.meta.url)
+      )
+    }
   }
 });
