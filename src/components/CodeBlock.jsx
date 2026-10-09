@@ -14,6 +14,8 @@ import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-tsx";
 
+import { useDocsContext } from "../context/DocsContext";
+
 const LANGUAGE_ALIASES = {
   sh: "bash",
   shell: "bash",
@@ -24,6 +26,7 @@ const LANGUAGE_ALIASES = {
 const CodeBlock = ({ children, className = "", ...props }) => {
   const [copied, setCopied] = useState(false);
   const muiTheme = useTheme();
+  const { titleBar } = useDocsContext().codeBlocks;
 
   // Extract language from className
   const rawLanguage = className.replace("language-", "") || "jsx";
@@ -110,9 +113,39 @@ const CodeBlock = ({ children, className = "", ...props }) => {
     }
   };
 
+  const paper = muiTheme.palette.background.paper;
+
   return (
-    <Box sx={{ position: "relative", my: 2 }}>
-      <Box sx={{ position: "absolute", top: 4, right: 4, zIndex: 1 }}>
+    <Box
+      sx={{
+        position: "relative",
+        my: 2,
+        ...(!titleBar && {
+          "@media (hover: hover)": {
+            "& .copy-button": { opacity: 0, transition: "opacity 150ms" },
+            "&:hover .copy-button, & .copy-button:has(:focus-visible)": {
+              opacity: 1,
+            },
+          },
+        }),
+      }}
+    >
+      <Box
+        className="copy-button"
+        sx={{
+          position: "absolute",
+          zIndex: 1,
+          ...(titleBar
+            ? { top: 4, right: 4 }
+            : {
+                // Centered on the first line of code (1px border + 16px padding)
+                top: 17,
+                right: 8,
+                pl: "16px",
+                background: `linear-gradient(to right, transparent, ${paper} 16px)`,
+              }),
+        }}
+      >
         <Tooltip title={copied ? "Copied!" : "Copy"}>
           <IconButton
             size="small"
@@ -141,26 +174,27 @@ const CodeBlock = ({ children, className = "", ...props }) => {
               boxShadow: 1,
             }}
           >
-            {/* Language indicator */}
-            <Box
-              sx={{
-                px: 2,
-                py: 1,
-                backgroundColor:
-                  muiTheme.palette.mode === "dark"
-                    ? "rgba(255,255,255,0.08)"
-                    : "rgba(0,0,0,0.04)",
-                borderBottom: 1,
-                borderColor: "divider",
-                fontSize: "0.75rem",
-                color: muiTheme.palette.text.secondary,
-                fontFamily: "monospace",
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              {language}
-            </Box>
+            {titleBar && (
+              <Box
+                sx={{
+                  px: 2,
+                  py: 1,
+                  backgroundColor:
+                    muiTheme.palette.mode === "dark"
+                      ? "rgba(255,255,255,0.08)"
+                      : "rgba(0,0,0,0.04)",
+                  borderBottom: 1,
+                  borderColor: "divider",
+                  fontSize: "0.75rem",
+                  color: muiTheme.palette.text.secondary,
+                  fontFamily: "monospace",
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                }}
+              >
+                {language}
+              </Box>
+            )}
             <pre
               className={className}
               style={{
@@ -175,6 +209,23 @@ const CodeBlock = ({ children, className = "", ...props }) => {
               }}
               {...props}
             >
+              {!titleBar && (
+                // On touch screens the copy button is always visible, so wrap
+                // the first line before it reaches the button and its fade
+                <Box
+                  component="span"
+                  aria-hidden="true"
+                  sx={{
+                    display: "none",
+                    "@media (hover: none)": {
+                      display: "block",
+                      float: "right",
+                      width: 31,
+                      height: "1lh",
+                    },
+                  }}
+                />
+              )}
               {tokens.map((line, i) => {
                 const lineProps = getLineProps({ line, key: i });
                 const { key: lineKey, ...restLineProps } = lineProps;

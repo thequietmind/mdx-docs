@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
+import { DocsProvider } from "../../context/DocsProvider";
+
 import CodeBlock from "../CodeBlock";
 
 // Mock prism-react-renderer
@@ -21,6 +23,13 @@ vi.mock("prism-react-renderer", () => ({
   },
 }));
 
+const renderCodeBlock = (ui, codeBlocks) =>
+  render(
+    <DocsProvider pages={[]} site={{ name: "Docs" }} codeBlocks={codeBlocks}>
+      {ui}
+    </DocsProvider>
+  );
+
 describe("CodeBlock component", () => {
   const defaultCode = 'const greeting = "Hello, World!";';
 
@@ -34,27 +43,30 @@ describe("CodeBlock component", () => {
   });
 
   it("should render code content", () => {
-    render(<CodeBlock>{defaultCode}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{defaultCode}</CodeBlock>);
 
     expect(screen.getByText(defaultCode)).toBeInTheDocument();
   });
 
   it("should render with default language (jsx)", () => {
-    render(<CodeBlock>{defaultCode}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{defaultCode}</CodeBlock>, { titleBar: true });
 
     // Check for the language label
     expect(screen.getByText("jsx")).toBeInTheDocument();
   });
 
   it("should render with custom language", () => {
-    render(<CodeBlock className="language-python">print("Hello")</CodeBlock>);
+    renderCodeBlock(
+      <CodeBlock className="language-python">print("Hello")</CodeBlock>,
+      { titleBar: true }
+    );
 
     // Check for the language label
     expect(screen.getByText("python")).toBeInTheDocument();
   });
 
   it("should render copy button", () => {
-    render(<CodeBlock>{defaultCode}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{defaultCode}</CodeBlock>);
 
     const copyButton = screen.getByRole("button");
     expect(copyButton).toBeInTheDocument();
@@ -73,7 +85,7 @@ describe("CodeBlock component", () => {
       configurable: true,
     });
 
-    render(<CodeBlock>{defaultCode}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{defaultCode}</CodeBlock>);
 
     const copyButton = screen.getByRole("button");
     await user.click(copyButton);
@@ -93,7 +105,7 @@ describe("CodeBlock component", () => {
       configurable: true,
     });
 
-    render(<CodeBlock>{defaultCode}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{defaultCode}</CodeBlock>);
 
     const copyButton = screen.getByRole("button");
     await user.click(copyButton);
@@ -103,7 +115,7 @@ describe("CodeBlock component", () => {
   });
 
   it("should handle empty children gracefully", () => {
-    render(<CodeBlock />);
+    renderCodeBlock(<CodeBlock />, { titleBar: true });
 
     // Should still render the container
     expect(screen.getByText("jsx")).toBeInTheDocument();
@@ -111,17 +123,27 @@ describe("CodeBlock component", () => {
 
   it("should handle children as array", () => {
     const codeArray = ["line1\n", "line2"];
-    render(<CodeBlock>{codeArray}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{codeArray}</CodeBlock>, { titleBar: true });
 
     // CodeBlock handles arrays by showing empty content
     expect(screen.getByText("jsx")).toBeInTheDocument();
   });
 
   it("should display language indicator", () => {
-    render(
-      <CodeBlock className="language-javascript">{defaultCode}</CodeBlock>
+    renderCodeBlock(
+      <CodeBlock className="language-javascript">{defaultCode}</CodeBlock>,
+      { titleBar: true }
     );
 
     expect(screen.getByText("javascript")).toBeInTheDocument();
+  });
+
+  it("should not render the title bar by default", () => {
+    renderCodeBlock(
+      <CodeBlock className="language-javascript">{defaultCode}</CodeBlock>
+    );
+
+    expect(screen.queryByText("javascript")).not.toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 });

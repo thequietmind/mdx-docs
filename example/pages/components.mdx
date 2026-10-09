@@ -28,7 +28,7 @@ Introductory text shown under a heading — larger, lighter, and responsive.
 Usage:
 
 ```jsx
-import Lead from "../components/Lead.jsx";
+import Lead from "../components/Lead.jsx"
 
 <Lead>
   Build beautiful documentation sites with MDX, React, and Material UI.
@@ -38,7 +38,7 @@ import Lead from "../components/Lead.jsx";
 Source — save as `components/Lead.jsx`:
 
 ```jsx
-import { Typography } from "@mui/material";
+import { Typography } from "@mui/material"
 
 function Lead({ children }) {
   return (
@@ -54,10 +54,10 @@ function Lead({ children }) {
     >
       {children}
     </Typography>
-  );
+  )
 }
 
-export default Lead;
+export default Lead
 ```
 
 ## Banner
@@ -76,7 +76,7 @@ A callout built on Material UI's `Alert`. Pass a `severity` (`info`, `success`,
 Usage:
 
 ```jsx
-import Banner from "../components/Banner.jsx";
+import Banner from "../components/Banner.jsx"
 
 <Banner severity="info">
   MDX Docs supports custom React components out of the box.
@@ -90,7 +90,7 @@ import Banner from "../components/Banner.jsx";
 Source — save as `components/Banner.jsx`:
 
 ```jsx
-import { Alert, AlertTitle } from "@mui/material";
+import { Alert, AlertTitle } from "@mui/material"
 
 function Banner({ severity = "info", title, children }) {
   return (
@@ -98,10 +98,10 @@ function Banner({ severity = "info", title, children }) {
       {title && <AlertTitle>{title}</AlertTitle>}
       {children}
     </Alert>
-  );
+  )
 }
 
-export default Banner;
+export default Banner
 ```
 
 ## Hero
@@ -123,7 +123,7 @@ page's main heading, use one `Hero` at the top of a page.
 Usage:
 
 ```jsx
-import Hero from "../components/Hero.jsx";
+import Hero from "../components/Hero.jsx"
 
 <Hero
   title="MDX Docs"
@@ -139,25 +139,25 @@ import Hero from "../components/Hero.jsx";
 Source — save as `components/Hero.jsx`:
 
 ```jsx
-import { Box, Button, Typography } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Box, Button, Typography } from "@mui/material"
+import { Link as RouterLink } from "react-router-dom"
 
-const isExternal = (href) => /^(https?:|mailto:|tel:)/.test(href ?? "");
+const isExternal = (href) => /^(https?:|mailto:|tel:)/.test(href ?? "")
 
 function renderAction(action, variant) {
   if (!action) {
-    return null;
+    return null
   }
 
   const linkProps = isExternal(action.href)
     ? { href: action.href, target: "_blank", rel: "noopener noreferrer" }
-    : { component: RouterLink, to: action.href };
+    : { component: RouterLink, to: action.href }
 
   return (
     <Button variant={variant} {...linkProps}>
       {action.label}
     </Button>
-  );
+  )
 }
 
 function Hero({ title, subtitle, primaryAction, secondaryAction }) {
@@ -182,10 +182,10 @@ function Hero({ title, subtitle, primaryAction, secondaryAction }) {
         </Box>
       )}
     </Box>
-  );
+  )
 }
 
-export default Hero;
+export default Hero
 ```
 
 ## FeatureGrid and Feature
@@ -215,12 +215,12 @@ or three columns depending on screen width. Each `Feature` takes a `title`, a
 Usage:
 
 ```jsx
-import BoltIcon from "@mui/icons-material/Bolt";
-import CodeIcon from "@mui/icons-material/Code";
-import ExtensionIcon from "@mui/icons-material/Extension";
+import BoltIcon from "@mui/icons-material/Bolt"
+import CodeIcon from "@mui/icons-material/Code"
+import ExtensionIcon from "@mui/icons-material/Extension"
 
-import Feature from "../components/Feature.jsx";
-import FeatureGrid from "../components/FeatureGrid.jsx";
+import Feature from "../components/Feature.jsx"
+import FeatureGrid from "../components/FeatureGrid.jsx"
 
 <FeatureGrid>
   <Feature
@@ -244,7 +244,7 @@ import FeatureGrid from "../components/FeatureGrid.jsx";
 Source — save as `components/FeatureGrid.jsx`:
 
 ```jsx
-import { Box } from "@mui/material";
+import { Box } from "@mui/material"
 
 function FeatureGrid({ children }) {
   return (
@@ -258,16 +258,16 @@ function FeatureGrid({ children }) {
     >
       {children}
     </Box>
-  );
+  )
 }
 
-export default FeatureGrid;
+export default FeatureGrid
 ```
 
 Source — save as `components/Feature.jsx`:
 
 ```jsx
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material"
 
 function Feature({ title, description, icon }) {
   return (
@@ -294,8 +294,8 @@ function Feature({ title, description, icon }) {
         </Typography>
       </CardContent>
     </Card>
-  );
+  )
 }
 
-export default Feature;
+export default Feature
 ```

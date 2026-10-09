@@ -23,23 +23,23 @@ hardcode hex values.
 `ColorSwatch` renders a single token; save it as `components/ColorSwatch.jsx`:
 
 ```jsx
-import CheckIcon from "@mui/icons-material/Check";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { Box, IconButton, Paper, Tooltip, Typography } from "@mui/material";
-import { useState } from "react";
+import CheckIcon from "@mui/icons-material/Check"
+import ContentCopyIcon from "@mui/icons-material/ContentCopy"
+import { Box, IconButton, Paper, Tooltip, Typography } from "@mui/material"
+import { useState } from "react"
 
 function ColorSwatch({ color, variable, displayVariable }) {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(variable);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(variable)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error("Failed to copy variable:", err);
+      console.error("Failed to copy variable:", err)
     }
-  };
+  }
 
   return (
     <Paper
@@ -94,19 +94,19 @@ function ColorSwatch({ color, variable, displayVariable }) {
         </IconButton>
       </Tooltip>
     </Paper>
-  );
+  )
 }
 
-export default ColorSwatch;
+export default ColorSwatch
 ```
 
 `ThemeColors` maps over the palette and renders a `ColorSwatch` for each token;
 save it as `components/ThemeColors.jsx`:
 
 ```jsx
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material"
 
-import ColorSwatch from "./ColorSwatch.jsx";
+import ColorSwatch from "./ColorSwatch.jsx"
 
 const colorGroups = [
   { name: "Primary", path: "primary", keys: ["light", "main", "dark", "contrastText"] },
@@ -117,17 +117,17 @@ const colorGroups = [
   { name: "Warning", path: "warning", keys: ["light", "main", "dark", "contrastText"] },
   { name: "Info", path: "info", keys: ["light", "main", "dark", "contrastText"] },
   { name: "Success", path: "success", keys: ["light", "main", "dark", "contrastText"] },
-];
+]
 
 const gridStyle = {
   display: "grid",
   gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
   gap: 2,
   mb: 3,
-};
+}
 
 function ThemeColors() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <Box>
@@ -149,16 +149,16 @@ function ThemeColors() {
         </Box>
       ))}
     </Box>
-  );
+  )
 }
 
-export default ThemeColors;
+export default ThemeColors
 ```
 
 Then render it on any MDX page:
 
 ```mdx
-import ThemeColors from "../components/ThemeColors.jsx";
+import ThemeColors from "../components/ThemeColors.jsx"
 
 ## Color tokens
 

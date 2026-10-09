@@ -29,7 +29,7 @@ npx create-mdx-docs@latest my-docs
 Create an MDX file in `pages/`:
 
 ~~~mdx
-import { Button } from "@mui/material";
+import { Button } from "@mui/material"
 
 # Button
 
@@ -47,7 +47,7 @@ import { Button } from "@mui/material";
 Register your page in `config/pages.js`:
 
 ```js
-const GettingStartedMDX = lazy(() => import("@pages/getting-started.mdx"));
+const GettingStartedMDX = lazy(() => import("@pages/getting-started.mdx"))
 
 export const pages = [
   // ...existing pages
@@ -56,7 +56,7 @@ export const pages = [
     route: "/getting-started",
     component: GettingStartedMDX,
   },
-];
+]
 ```
 
 Pages with `isDefault: true` do not appear in the sidebar navigation.
@@ -105,7 +105,7 @@ createMdxDocsConfig({
   entry: "src/main.jsx",
   outDir: "build",
   prerender: false,
-});
+})
 ```
 
 Configure your site name and description in `config/site.js`.
@@ -115,7 +115,7 @@ export const site = {
   name: "My Site",
   description: "My site description",
   url: "https://docs.example.com",
-};
+}
 ```
 
 Setting `url` to your site's absolute URL enables two SEO features during
@@ -192,12 +192,12 @@ required to use this package. New projects should prefer MUI 9.
 ### 3. `main.jsx`
 
 ```js
-import "@quietmind/mdx-docs/index.css";
-import { createApp } from "@quietmind/mdx-docs";
-import { pages } from "./config/pages.js";
-import { site } from "./config/site.js";
+import "@quietmind/mdx-docs/index.css"
+import { createApp } from "@quietmind/mdx-docs"
+import { pages } from "./config/pages.js"
+import { site } from "./config/site.js"
 
-createApp({ pages, site });
+createApp({ pages, site })
 ```
 
 ### 4. `config/site.js`
@@ -207,15 +207,15 @@ export const site = {
   name: "My Site",
   description: "My site description",
   url: "https://docs.example.com",
-};
+}
 ```
 
 ### 5. `config/pages.js`
 
 ```js
-import { lazy } from "react";
+import { lazy } from "react"
 
-const HomeMDX = lazy(() => import("@pages/home.mdx"));
+const HomeMDX = lazy(() => import("@pages/home.mdx"))
 
 export const pages = [
   {
@@ -224,19 +224,19 @@ export const pages = [
     component: HomeMDX,
     isDefault: true,
   },
-];
+]
 ```
 
 ### 6. `vite.config.js`
 
 ```js
-import { defineConfig } from "vite";
-import { createMdxDocsConfig } from "@quietmind/mdx-docs/vite";
-import { site } from "./config/site.js";
+import { defineConfig } from "vite"
+import { createMdxDocsConfig } from "@quietmind/mdx-docs/vite"
+import { site } from "./config/site.js"
 
 export default defineConfig(
   createMdxDocsConfig({ rootDir: import.meta.dirname, site })
-);
+)
 ```
 
 ### 7. `index.html`
@@ -273,7 +273,7 @@ createApp({
     primaryColor: "#6200ea",
     fontFamily: '"Inter", sans-serif',
   },
-});
+})
 ```
 
 ### Presets
@@ -281,9 +281,9 @@ createApp({
 Import a built-in color preset for a quick start:
 
 ```js
-import { createApp, themes } from "@quietmind/mdx-docs";
+import { createApp, themes } from "@quietmind/mdx-docs"
 
-createApp({ pages, site, theme: themes.ocean });
+createApp({ pages, site, theme: themes.ocean })
 ```
 
 Available presets: `themes.ocean`, `themes.forest`, `themes.rose`.
@@ -291,7 +291,7 @@ Available presets: `themes.ocean`, `themes.forest`, `themes.rose`.
 Presets can be extended:
 
 ```js
-createApp({ pages, site, theme: { ...themes.ocean, fontFamily: '"Inter", sans-serif' } });
+createApp({ pages, site, theme: { ...themes.ocean, fontFamily: '"Inter", sans-serif' } })
 ```
 
 ### Advanced
@@ -312,7 +312,7 @@ createApp({
       typography: { fontFamily: '"Inter", sans-serif' },
     },
   },
-});
+})
 ```
 
 Mode-specific overrides take precedence over `primaryColor` and `fontFamily` shorthands.

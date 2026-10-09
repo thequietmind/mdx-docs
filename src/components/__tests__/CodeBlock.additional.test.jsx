@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 
+import { DocsProvider } from "../../context/DocsProvider";
+
 import CodeBlock from "../CodeBlock";
 
 // Mock prism-react-renderer
@@ -17,17 +19,24 @@ vi.mock("prism-react-renderer", () => ({
   },
 }));
 
+const renderCodeBlock = (ui, codeBlocks) =>
+  render(
+    <DocsProvider pages={[]} site={{ name: "Docs" }} codeBlocks={codeBlocks}>
+      {ui}
+    </DocsProvider>
+  );
+
 describe("CodeBlock component - Additional Coverage Tests", () => {
   it("should handle React element children with string content", () => {
     const element = <span>const code = "test";</span>;
-    render(<CodeBlock>{element}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{element}</CodeBlock>);
 
     expect(screen.getByText('const code = "test";')).toBeInTheDocument();
   });
 
   it("should handle React element children with array content", () => {
     const element = <span>{["line1", "line2"]}</span>;
-    render(<CodeBlock>{element}</CodeBlock>);
+    renderCodeBlock(<CodeBlock>{element}</CodeBlock>);
 
     expect(screen.getByText("line1line2")).toBeInTheDocument();
   });
@@ -46,7 +55,7 @@ describe("CodeBlock component - Additional Coverage Tests", () => {
       configurable: true,
     });
 
-    render(<CodeBlock>test code</CodeBlock>);
+    renderCodeBlock(<CodeBlock>test code</CodeBlock>);
 
     const copyButton = screen.getByRole("button");
     await user.click(copyButton);
@@ -72,7 +81,10 @@ describe("CodeBlock component - Additional Coverage Tests", () => {
       };
     });
 
-    render(<CodeBlock className="language-typescript">const x = 1;</CodeBlock>);
+    renderCodeBlock(
+      <CodeBlock className="language-typescript">const x = 1;</CodeBlock>,
+      { titleBar: true }
+    );
 
     const languageIndicator = screen.getByText("typescript");
     expect(languageIndicator).toBeInTheDocument();

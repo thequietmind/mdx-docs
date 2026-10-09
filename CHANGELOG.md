@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `codeBlocks` option for `createApp()` and `DocsProvider`. Set
+  `codeBlocks: { titleBar: true }` to show the language title bar on fenced code
+  blocks
+
+### Changed
+
+- Fenced code blocks no longer show a title bar by default. The copy button
+  stays in the top-right corner and appears on hover, with a short fade so the
+  first line of code doesn't run under it. On touch screens the button is
+  always visible and the first line wraps before reaching it. Sites that want
+  the previous look can pass `codeBlocks: { titleBar: true }`
+
 ## [1.7.0] - 2026-08-04
 
 ### Added

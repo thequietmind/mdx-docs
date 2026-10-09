@@ -19,7 +19,7 @@ This page renders one small component that maps over `theme.typography`. Copy it
 into your `components/` folder as `components/TypeScale.jsx`:
 
 ```jsx
-import { Box, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Paper, Typography, useTheme } from "@mui/material"
 
 const typeTokens = [
   "h1",
@@ -35,15 +35,15 @@ const typeTokens = [
   "button",
   "caption",
   "overline",
-];
+]
 
 function TypeScale() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, my: 3 }}>
       {typeTokens.map((variant) => {
-        const token = theme.typography[variant] || {};
+        const token = theme.typography[variant] || {}
         return (
           <Paper
             key={variant}
@@ -68,19 +68,19 @@ function TypeScale() {
               typography.{variant} · {token.fontSize || "—"} / {token.fontWeight || "—"}
             </Typography>
           </Paper>
-        );
+        )
       })}
     </Box>
-  );
+  )
 }
 
-export default TypeScale;
+export default TypeScale
 ```
 
 Then render it on any MDX page:
 
 ```mdx
-import TypeScale from "../components/TypeScale.jsx";
+import TypeScale from "../components/TypeScale.jsx"
 
 ## Type scale
 
@@ -92,7 +92,7 @@ import TypeScale from "../components/TypeScale.jsx";
 Define your scale in the theme so every page inherits it:
 
 ```jsx
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles"
 
 const theme = createTheme({
   typography: {
@@ -102,7 +102,7 @@ const theme = createTheme({
     body1: { fontSize: "1rem", fontWeight: 400, lineHeight: 1.5 },
     caption: { fontSize: "0.75rem", lineHeight: 1.66 },
   },
-});
+})
 ```
 
 Each variant accepts `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`,
@@ -121,7 +121,7 @@ const theme = createTheme({
       "@media (min-width:900px)": { fontSize: "3rem" },
     },
   },
-});
+})
 ```
 
 ## Learn more
