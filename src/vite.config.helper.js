@@ -262,6 +262,12 @@ export function createMdxDocsConfig({
     build: {
       outDir,
     },
+    // Compiled MDX imports these, but Vite's dependency scan can't read .mdx
+    // files. Without this, the first dev load re-optimizes and reloads with
+    // two copies of React.
+    optimizeDeps: {
+      include: ["@emotion/react/jsx-dev-runtime", "@mdx-js/react"],
+    },
     resolve: {
       alias: {
         "@pages": fileURLToPath(new URL("./pages", `file://${rootDir}/`)),

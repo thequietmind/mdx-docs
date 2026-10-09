@@ -275,3 +275,16 @@ describe("createMdxDocsConfig html-site-config plugin", () => {
     expect(html).not.toContain("%SITE_DESCRIPTION%");
   });
 });
+
+describe("createMdxDocsConfig optimizeDeps", () => {
+  it("pre-bundles the runtime modules that compiled MDX imports", () => {
+    const config = createMdxDocsConfig({ rootDir: "/tmp/mdx-docs-test" });
+
+    expect(config.optimizeDeps.include).toEqual(
+      expect.arrayContaining([
+        "@emotion/react/jsx-dev-runtime",
+        "@mdx-js/react",
+      ])
+    );
+  });
+});
