@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.8.0] - 2026-10-09
 
 ### Added
 
@@ -20,6 +20,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   first line of code doesn't run under it. On touch screens the button is
   always visible and the first line wraps before reaching it. Sites that want
   the previous look can pass `codeBlocks: { titleBar: true }`
+- Code examples in the README and on the docs site no longer use semicolons,
+  which had been inconsistent from page to page
+
+### Fixed
+
+- The first dev server start on a new site no longer logs "Invalid hook call"
+  errors. Compiled MDX imports `@emotion/react/jsx-dev-runtime` and
+  `@mdx-js/react`, but Vite's dependency scan can't read `.mdx` files, so it
+  found them late and reloaded with two copies of React. `createMdxDocsConfig`
+  now pre-bundles both
+
+### Security
+
+- `remark-mdx-frontmatter` moves from `^5.0.0` to `^6.0.0`, which replaces its
+  `toml` dependency with `smol-toml`. That removes the two high-severity `toml`
+  advisories from every site's dependency tree. Frontmatter parses the same as
+  before and the `frontmatter` export is unchanged
 
 ## [1.7.0] - 2026-08-04
 
