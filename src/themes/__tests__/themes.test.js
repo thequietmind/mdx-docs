@@ -62,6 +62,18 @@ describe("Theme configuration", () => {
       }
     );
 
+    it.each(["light", "dark"])(
+      "should style <kbd> as a key cap derived from currentColor in %s mode",
+      (mode) => {
+        const theme = createAppTheme(mode);
+        const kbd = theme.components.MuiCssBaseline.styleOverrides(theme).kbd;
+
+        expect(kbd.display).toBe("inline-block");
+        expect(kbd.border).toContain("currentColor");
+        expect(kbd.backgroundColor).toContain("currentColor");
+      }
+    );
+
     it("should color bare HTML anchors using a custom primaryColor", () => {
       const theme = createAppTheme("light", { primaryColor: "#6200ea" });
       const anchor = theme.components.MuiCssBaseline.styleOverrides(theme).a;

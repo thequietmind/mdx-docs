@@ -25,6 +25,20 @@ const componentOverrides = {
             textDecoration: "none",
           },
         },
+        // Key-cap styling for <kbd>. Derived from currentColor so it follows
+        // the active mode and the surrounding text (table cells, blockquotes).
+        kbd: {
+          display: "inline-block",
+          padding: "0.1em 0.45em",
+          fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+          fontSize: "0.85em",
+          lineHeight: 1.4,
+          whiteSpace: "nowrap",
+          border: "1px solid color-mix(in srgb, currentColor 30%, transparent)",
+          borderBottomWidth: 2,
+          borderRadius: 4,
+          backgroundColor: "color-mix(in srgb, currentColor 8%, transparent)",
+        },
       }),
     },
     // Style markdown-syntax links, which render as MUI Link via the MDX
