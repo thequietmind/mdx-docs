@@ -1,5 +1,5 @@
-import { CssBaseline, ThemeProvider, Box } from "@mui/material";
-import { Suspense, useMemo, useState, useLayoutEffect, useEffect } from "react";
+import { CssBaseline, Box } from "@mui/material";
+import { Suspense, useState, useLayoutEffect, useEffect } from "react";
 import {
   BrowserRouter,
   useLocation,
@@ -10,14 +10,12 @@ import AppBar from "./components/AppBar";
 import Footer from "./components/Footer";
 import MDXContent from "./components/MDXContent";
 import SideNavigation, { drawerWidth } from "./components/SideNavigation";
-import { ColorModeContext } from "./context/ColorModeContext";
+import { ColorModeProvider } from "./context/ColorModeProvider";
 import { DocsProvider } from "./context/DocsProvider";
 import { usePageMetadata } from "./hooks/usePageMetadata";
 import { useShowFooter } from "./hooks/useShowFooter";
 import { useShowSidebar } from "./hooks/useShowSidebar";
 import { useShowToolbar } from "./hooks/useShowToolbar";
-import { useTheme } from "./hooks/useTheme";
-import { createAppTheme } from "./themes";
 
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -116,22 +114,7 @@ function CurrentAppShell(props) {
 }
 
 function AppContent({ userTheme = {} }) {
-  const { darkMode, setDarkMode } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const theme = useMemo(
-    () => createAppTheme(darkMode ? "dark" : "light", userTheme),
-    [darkMode, userTheme]
-  );
-
-  const colorMode = useMemo(
-    () => ({
-      darkMode,
-      setDarkMode,
-      toggleColorMode: () => setDarkMode((value) => !value),
-    }),
-    [darkMode, setDarkMode]
-  );
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -140,14 +123,12 @@ function AppContent({ userTheme = {} }) {
   const shellProps = { mobileOpen, handleDrawerToggle };
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Suspense fallback={<AppShell showSidebar {...shellProps} />}>
-          <CurrentAppShell {...shellProps} />
-        </Suspense>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <ColorModeProvider userTheme={userTheme}>
+      <CssBaseline />
+      <Suspense fallback={<AppShell showSidebar {...shellProps} />}>
+        <CurrentAppShell {...shellProps} />
+      </Suspense>
+    </ColorModeProvider>
   );
 }
 

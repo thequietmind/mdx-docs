@@ -4,6 +4,14 @@ import { IconButton } from "@mui/material";
 
 import { useColorMode } from "../context/ColorModeContext";
 
+// The icon is chosen in CSS from the active color scheme, so prerendered pages
+// show the right one before JavaScript knows the mode.
+const showInDarkMode = (theme) => ({
+  display: "none",
+  ...theme.applyStyles("dark", { display: "inline-block" }),
+});
+const hideInDarkMode = (theme) => theme.applyStyles("dark", { display: "none" });
+
 // A self-contained light/dark toggle. Reads color-mode state from context, so it
 // works anywhere inside the app — including pages that hide the toolbar. Style
 // and placement are left to the caller via `sx` and pass-through IconButton
@@ -23,7 +31,8 @@ function ColorModeToggle({ sx, ...props }) {
       }}
       {...props}
     >
-      {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+      <LightModeIcon sx={showInDarkMode} />
+      <DarkModeIcon sx={hideInDarkMode} />
     </IconButton>
   );
 }

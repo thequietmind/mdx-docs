@@ -14,6 +14,7 @@ import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import "prismjs/components/prism-tsx";
 
+import { createPrismTheme, getCodePalette } from "./prismTheme";
 import { useDocsContext } from "../context/DocsContext";
 
 // Importing prismjs in a browser schedules Prism.highlightAll() for the next
@@ -30,7 +31,7 @@ const LANGUAGE_ALIASES = {
 
 const CodeBlock = ({ children, className = "", ...props }) => {
   const [copied, setCopied] = useState(false);
-  const muiTheme = useTheme();
+  const palette = getCodePalette(useTheme());
   const { titleBar } = useDocsContext().codeBlocks;
 
   // Extract language from className
@@ -50,63 +51,10 @@ const CodeBlock = ({ children, className = "", ...props }) => {
     }
   }
 
-  // Create a simple theme that adapts to Material UI theme
-  const theme = {
-    plain: {
-      color: muiTheme.palette.text.primary,
-      backgroundColor: muiTheme.palette.background.paper,
-    },
-    styles: [
-      {
-        types: ["comment", "prolog", "doctype", "cdata"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#6a737d" : "#6a7781",
-        },
-      },
-      {
-        types: ["punctuation"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#e1e4e8" : "#24292e",
-        },
-      },
-      {
-        types: ["property", "tag", "boolean", "number", "constant", "symbol"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#79b8ff" : "#005cc5",
-        },
-      },
-      {
-        types: ["selector", "attr-name", "string", "char", "builtin"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#a5d6ff" : "#032f62",
-        },
-      },
-      {
-        types: ["operator", "entity", "url"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#d73a49" : "#d73a49",
-        },
-      },
-      {
-        types: ["atrule", "attr-value", "keyword"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#f97583" : "#d73a49",
-        },
-      },
-      {
-        types: ["function"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#b392f0" : "#6f42c1",
-        },
-      },
-      {
-        types: ["class-name"],
-        style: {
-          color: muiTheme.palette.mode === "dark" ? "#ffab70" : "#e36209",
-        },
-      },
-    ],
-  };
+  const theme = createPrismTheme(palette.code, {
+    color: palette.text.primary,
+    backgroundColor: palette.background.paper,
+  });
 
   const handleCopy = async () => {
     try {
@@ -118,7 +66,7 @@ const CodeBlock = ({ children, className = "", ...props }) => {
     }
   };
 
-  const paper = muiTheme.palette.background.paper;
+  const paper = palette.background.paper;
 
   return (
     <Box
@@ -175,7 +123,7 @@ const CodeBlock = ({ children, className = "", ...props }) => {
               borderColor: "divider",
               borderRadius: 2,
               overflow: "hidden",
-              backgroundColor: muiTheme.palette.background.paper,
+              backgroundColor: paper,
               boxShadow: 1,
             }}
           >
@@ -184,14 +132,11 @@ const CodeBlock = ({ children, className = "", ...props }) => {
                 sx={{
                   px: 2,
                   py: 1,
-                  backgroundColor:
-                    muiTheme.palette.mode === "dark"
-                      ? "rgba(255,255,255,0.08)"
-                      : "rgba(0,0,0,0.04)",
+                  backgroundColor: palette.code.titleBarBackground,
                   borderBottom: 1,
                   borderColor: "divider",
                   fontSize: "0.75rem",
-                  color: muiTheme.palette.text.secondary,
+                  color: palette.text.secondary,
                   fontFamily: "monospace",
                   textTransform: "uppercase",
                   letterSpacing: 0.5,

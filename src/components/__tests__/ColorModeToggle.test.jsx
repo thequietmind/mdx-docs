@@ -1,8 +1,10 @@
+import { ThemeProvider } from "@mui/material";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 
 import { ColorModeContext } from "../../context/ColorModeContext";
+import { createLegacyAppTheme } from "../../themes";
 
 import ColorModeToggle from "../ColorModeToggle";
 
@@ -12,29 +14,38 @@ const renderWithColorMode = (ui, value) =>
   );
 
 describe("ColorModeToggle component", () => {
-  it("should render the dark mode icon in light mode", () => {
+  it.each([
+    [false, "Switch to dark mode"],
+    [true, "Switch to light mode"],
+  ])("should label the button from darkMode=%s", (darkMode, label) => {
     renderWithColorMode(<ColorModeToggle />, {
-      darkMode: false,
+      darkMode,
       toggleColorMode: vi.fn(),
     });
 
-    expect(screen.getByTestId("DarkModeIcon")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Switch to dark mode" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: label })).toBeInTheDocument();
   });
 
-  it("should render the light mode icon in dark mode", () => {
-    renderWithColorMode(<ColorModeToggle />, {
-      darkMode: true,
-      toggleColorMode: vi.fn(),
-    });
+  it.each([
+    ["light", "DarkModeIcon", "LightModeIcon"],
+    ["dark", "LightModeIcon", "DarkModeIcon"],
+  ])(
+    "should show the icon for the theme's %s mode in CSS",
+    (mode, visibleIcon, hiddenIcon) => {
+      render(
+        <ThemeProvider theme={createLegacyAppTheme(mode)}>
+          <ColorModeContext.Provider
+            value={{ darkMode: false, toggleColorMode: vi.fn() }}
+          >
+            <ColorModeToggle />
+          </ColorModeContext.Provider>
+        </ThemeProvider>
+      );
 
-    expect(screen.getByTestId("LightModeIcon")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Switch to light mode" })
-    ).toBeInTheDocument();
-  });
+      expect(screen.getByTestId(visibleIcon)).toBeVisible();
+      expect(screen.getByTestId(hiddenIcon)).not.toBeVisible();
+    }
+  );
 
   it("should call toggleColorMode when clicked", async () => {
     const toggleColorMode = vi.fn();

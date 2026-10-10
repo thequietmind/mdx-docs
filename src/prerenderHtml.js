@@ -134,6 +134,20 @@ export const applyPageMetadata = (html, page) => {
 export const injectGeneratorTag = (html) =>
   replaceMetaContent(html, "name", "generator", "@quietmind/mdx-docs");
 
+// Sets the color scheme attribute before first paint, from the saved choice
+// (the `darkMode` key) or the OS setting, so prerendered pages show the right
+// colors before JavaScript loads. Keep the key and attribute in sync with
+// src/utils/darkModeStorageManager.js and src/themes/index.js.
+const COLOR_SCHEME_SCRIPT =
+  '<script data-mdx-docs-color-scheme-script>(function(){try{var s=localStorage.getItem("darkMode");' +
+  'var d=s==="true"||(s!=="false"&&matchMedia("(prefers-color-scheme: dark)").matches);' +
+  'document.documentElement.setAttribute("data-mdx-docs-color-scheme",d?"dark":"light")}catch(e){}})()</script>';
+
+export const injectColorSchemeScript = (html) => {
+  if (html.includes("data-mdx-docs-color-scheme-script")) return html;
+  return html.replace("</head>", `  ${COLOR_SCHEME_SCRIPT}\n</head>`);
+};
+
 export const injectVersionAttribute = (html, version) => {
   if (!version) return html;
 

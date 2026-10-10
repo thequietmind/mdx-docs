@@ -15,17 +15,15 @@
   color: inherit;
 }
 
-/* Dark mode text selection */
-@media (prefers-color-scheme: dark) {
-  ::selection {
-    background-color: rgba(144, 202, 249, 0.3);
-    color: inherit;
-  }
+/* Dark mode text selection, following the site's color mode toggle */
+[data-mdx-docs-color-scheme="dark"] ::selection {
+  background-color: rgba(144, 202, 249, 0.3);
+  color: inherit;
+}
 
-  ::-moz-selection {
-    background-color: rgba(144, 202, 249, 0.3);
-    color: inherit;
-  }
+[data-mdx-docs-color-scheme="dark"] ::-moz-selection {
+  background-color: rgba(144, 202, 249, 0.3);
+  color: inherit;
 }
 
 html,

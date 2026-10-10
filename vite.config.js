@@ -17,6 +17,7 @@ import {
   generateSitemap,
   getCanonicalBaseUrl,
   getRouteOutputPath,
+  injectColorSchemeScript,
   injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
@@ -163,12 +164,14 @@ export default defineConfig(({ mode }) => ({
       name: "html-site-config",
       transformIndexHtml: (html) =>
         injectVersionAttribute(
-          injectGeneratorTag(
-            injectSiteUrlTags(
-              html
-                .replace("%SITE_NAME%", site.name)
-                .replace("%SITE_DESCRIPTION%", site.description ?? ""),
-              site.url
+          injectColorSchemeScript(
+            injectGeneratorTag(
+              injectSiteUrlTags(
+                html
+                  .replace("%SITE_NAME%", site.name)
+                  .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+                site.url
+              )
             )
           ),
           packageVersion

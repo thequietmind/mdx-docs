@@ -82,5 +82,18 @@ export const darkTheme = {
       focusOpacity: 0.12,
       activatedOpacity: 0.24,
     },
+    // Syntax highlighting colors for inline code and code blocks
+    code: {
+      comment: "#6a737d",
+      punctuation: "#e1e4e8",
+      property: "#79b8ff",
+      string: "#a5d6ff",
+      operator: "#d73a49",
+      keyword: "#f97583",
+      function: "#b392f0",
+      className: "#ffab70",
+      inlineBackground: "rgba(255, 255, 255, 0.08)",
+      titleBarBackground: "rgba(255, 255, 255, 0.08)",
+    },
   },
 };
