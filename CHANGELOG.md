@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-10-09
+
+### Removed
+
+- Material UI 7 support. The `@mui/material` and `@mui/icons-material` peer
+  ranges are `^9.0.0`. Sites on MUI 7 can stay on 1.10.x
+- Settings other than `palette` under `theme.light` and `theme.dark`.
+  `createApp` throws an error that names the setting instead of falling back to
+  one theme per mode. Move settings for both modes to the top-level
+  `typography` and `components` keys and use `theme.applyStyles("dark", ...)`
+  for dark-only styles
+- The `data-mdx-docs-theme` attribute on the prerendered `#root`. The color
+  mode comes from `data-mdx-docs-color-scheme` on `<html>`, set before first
+  paint
+
+### Notes
+
+- Sites on MUI 9 that only set `palette` under `light` and `dark` can upgrade
+  from 1.10.0 without changes. 1.10.0 logs a warning in development for the
+  theme settings 2.0.0 rejects, so check the console before upgrading
+
 ## [1.10.0] - 2026-10-09
 
 ### Added
