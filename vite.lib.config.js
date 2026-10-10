@@ -12,6 +12,12 @@ const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
 
 export default defineConfig({
   publicDir: false,
+  // Lib mode replaces import.meta.env.BASE_URL with this build's base ("/"),
+  // which would pin every site to the root path. Leave it for the site's own
+  // Vite build to replace, and fall back to "/" where nothing defines it.
+  define: {
+    "import.meta.env.BASE_URL": '(import.meta.env?.BASE_URL ?? "/")',
+  },
   plugins: [
     {
       name: "mdx-docs-404",

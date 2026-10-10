@@ -63,6 +63,31 @@ describe("createApp", () => {
     expect(hydrateRoot).toHaveBeenCalledTimes(1);
   });
 
+  describe.each(["/docs/", "/docs"])("under base %s", (base) => {
+    beforeEach(() => {
+      vi.stubEnv("BASE_URL", base);
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it.each([
+      ["/docs/getting-started/", "/getting-started"],
+      ["/docs/", "/"],
+    ])("waits for the page at %s to load before hydrating", async (url, route) => {
+      window.history.pushState({}, "", url);
+      const pages = [deferredPage("/"), deferredPage("/getting-started")];
+      createApp({ pages: pages.map(({ page }) => page), site });
+
+      await Promise.resolve();
+      expect(hydrateRoot).not.toHaveBeenCalled();
+
+      pages.find(({ page }) => page.route === route).resolve();
+      await vi.waitFor(() => expect(hydrateRoot).toHaveBeenCalledTimes(1));
+    });
+  });
+
   it("renders from scratch when there is no prerendered HTML", () => {
     document.body.innerHTML = '<div id="root"></div>';
     createApp({ pages: [deferredPage("/").page], site });
