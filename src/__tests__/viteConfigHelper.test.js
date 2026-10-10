@@ -12,11 +12,14 @@ import {
   generateSitemap,
   getCanonicalBaseUrl,
   getRouteOutputPath,
+  injectColorSchemeScript,
   injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
   injectVersionAttribute,
 } from "../prerenderHtml.js";
+import { COLOR_SCHEME_ATTRIBUTE } from "../themes/index.js";
+import { DARK_MODE_STORAGE_KEY } from "../utils/darkModeStorageManager.js";
 import {
   createMdxDocsConfig,
   createPreviewTrailingSlashPlugin,
@@ -214,6 +217,61 @@ describe("injectGeneratorTag", () => {
   });
 });
 
+describe("injectColorSchemeScript", () => {
+  const html = injectColorSchemeScript("<html><head></head><body></body></html>");
+  const openTag = "<script data-mdx-docs-color-scheme-script>";
+  const scriptStart = html.indexOf(openTag);
+  const scriptEnd = html.indexOf("</script>", scriptStart);
+
+  const runScript = ({ saved, osDark }) => {
+    const body = html.slice(scriptStart + openTag.length, scriptEnd);
+    const attributes = {};
+    const document = {
+      documentElement: {
+        setAttribute: (name, value) => {
+          attributes[name] = value;
+        },
+      },
+    };
+    const localStorage = { getItem: () => saved };
+    const matchMedia = () => ({ matches: osDark });
+    new Function("document", "localStorage", "matchMedia", body)(
+      document,
+      localStorage,
+      matchMedia
+    );
+    return attributes[COLOR_SCHEME_ATTRIBUTE];
+  };
+
+  it("adds the script before the closing head", () => {
+    expect(scriptStart).toBeGreaterThan(html.indexOf("<head>"));
+    expect(html.slice(scriptEnd)).toMatch(/^<\/script>\n<\/head>/);
+  });
+
+  it("does not add a second script when one already exists", () => {
+    expect(
+      injectColorSchemeScript(html).match(/data-mdx-docs-color-scheme-script/g)
+    ).toHaveLength(1);
+  });
+
+  it.each([
+    ["true", false, "dark"],
+    ["false", true, "light"],
+    [null, true, "dark"],
+    [null, false, "light"],
+  ])(
+    "picks the scheme from saved=%s and OS dark=%s",
+    (saved, osDark, expected) => {
+      expect(runScript({ saved, osDark })).toBe(expected);
+    }
+  );
+
+  it("uses the same storage key and attribute as the app", () => {
+    expect(html).toContain(`localStorage.getItem("${DARK_MODE_STORAGE_KEY}")`);
+    expect(html).toContain(`setAttribute("${COLOR_SCHEME_ATTRIBUTE}"`);
+  });
+});
+
 describe("injectVersionAttribute", () => {
   it("adds the version attribute while preserving existing ones", () => {
     const html = injectVersionAttribute(
@@ -311,6 +369,18 @@ describe("createMdxDocsConfig html-site-config plugin", () => {
 
     expect(html).not.toContain("%SITE_NAME%");
     expect(html).not.toContain("%SITE_DESCRIPTION%");
+  });
+
+  it("adds the color scheme script", () => {
+    const transformIndexHtml = getTransform(
+      createMdxDocsConfig({ rootDir: "/tmp/mdx-docs-test" })
+    );
+
+    const html = transformIndexHtml(
+      '<html><head></head><body><div id="root"></div></body></html>'
+    );
+
+    expect(html).toContain("data-mdx-docs-color-scheme-script");
   });
 });
 

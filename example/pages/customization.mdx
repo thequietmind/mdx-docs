@@ -62,9 +62,9 @@ createApp({
 })
 ```
 
-## Mode-specific overrides
+## Mode-specific colors
 
-For full control, use the `light` and `dark` keys to provide MUI theme overrides that only apply in the respective mode. These are deep-merged on top of the base theme.
+Use the `light` and `dark` keys to change the [MUI palette](https://mui.com/material-ui/customization/palette/) for each color mode. They're deep-merged on top of the built-in palette, so you only need to specify what you want to change.
 
 ```js
 createApp({
@@ -94,33 +94,52 @@ createApp({
 })
 ```
 
-Any valid [MUI theme object](https://mui.com/material-ui/customization/theming/) is accepted under `light` and `dark`, including `palette`, `typography`, `spacing`, and `components`.
+Each mode's colors become CSS variables, so prerendered pages show the visitor's color mode before JavaScript loads.
+
+Settings other than `palette` under `light` or `dark` (like `typography` or `components`) still work, but they switch the site back to one theme per mode, which can show the wrong color mode until JavaScript loads, and they log a warning in development. They'll stop working in 2.0, so put them in the top-level keys below instead.
 
 ## Component overrides
 
-To restyle individual MUI components, use the `components` key inside `light` or `dark`:
+To restyle individual MUI components, use the top-level `components` key. It applies in both color modes:
 
 ```js
 createApp({
   pages,
   site,
   theme: {
-    light: {
-      components: {
-        MuiButton: {
-          styleOverrides: {
-            root: {
-              borderRadius: 8,
-              textTransform: 'none',
-            },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            textTransform: 'none',
           },
         },
-        MuiLink: {
-          styleOverrides: {
-            root: {
-              textDecoration: 'none',
-            },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            textDecoration: 'none',
           },
+        },
+      },
+    },
+  },
+})
+```
+
+For a style that should only apply in one mode, use `theme.applyStyles` inside the override:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    components: {
+      MuiAppBar: {
+        styleOverrides: {
+          root: ({ theme }) =>
+            theme.applyStyles('dark', { backgroundColor: '#000' }),
         },
       },
     },
@@ -130,7 +149,7 @@ createApp({
 
 ## Typography
 
-Override the font for headings and body text independently using the MUI `typography` key:
+Override the font for headings and body text independently using the top-level `typography` key. It takes precedence over `fontFamily`:
 
 ```js
 createApp({
@@ -138,12 +157,10 @@ createApp({
   site,
   theme: {
     fontFamily: '"Inter", sans-serif',
-    light: {
-      typography: {
-        h1: { fontWeight: 800 },
-        h2: { fontWeight: 700 },
-        body1: { lineHeight: 1.75 },
-      },
+    typography: {
+      h1: { fontWeight: 800 },
+      h2: { fontWeight: 700 },
+      body1: { lineHeight: 1.75 },
     },
   },
 })

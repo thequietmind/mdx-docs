@@ -22,6 +22,7 @@ import {
   generateSitemap,
   getCanonicalBaseUrl,
   getRouteOutputPath,
+  injectColorSchemeScript,
   injectGeneratorTag,
   injectPrerenderedApp,
   injectSiteUrlTags,
@@ -300,12 +301,14 @@ export function createMdxDocsConfig({
         name: "html-site-config",
         transformIndexHtml: (html) =>
           injectVersionAttribute(
-            injectGeneratorTag(
-              injectSiteUrlTags(
-                html
-                  .replaceAll("%SITE_NAME%", site.name ?? "")
-                  .replaceAll("%SITE_DESCRIPTION%", site.description ?? ""),
-                site.url
+            injectColorSchemeScript(
+              injectGeneratorTag(
+                injectSiteUrlTags(
+                  html
+                    .replaceAll("%SITE_NAME%", site.name ?? "")
+                    .replaceAll("%SITE_DESCRIPTION%", site.description ?? ""),
+                  site.url
+                )
               )
             ),
             packageVersion

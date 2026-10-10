@@ -6,6 +6,11 @@ import { lightTheme } from "./lightTheme";
 export { lightTheme } from "./lightTheme";
 export { darkTheme } from "./darkTheme";
 
+// Attribute on <html> that selects the active color scheme. The script that
+// injectColorSchemeScript (src/prerenderHtml.js) adds to <head> sets it before
+// first paint, and MUI keeps it in sync after that.
+export const COLOR_SCHEME_ATTRIBUTE = "data-mdx-docs-color-scheme";
+
 // Base font stack, owned by the theme so CssBaseline applies it to <body> and
 // it cascades app-wide. Previously set on :root in main.css; moved here so
 // removing that global rule doesn't fall back to MUI's default Roboto stack.
@@ -19,7 +24,7 @@ const componentOverrides = {
       styleOverrides: (theme) => ({
         a: {
           // Match the markdown-link color (MUI Link defaults to color="primary")
-          color: theme.palette.primary.main,
+          color: (theme.vars ?? theme).palette.primary.main,
           textDecoration: "underline",
           "&:hover": {
             textDecoration: "none",
@@ -82,31 +87,77 @@ const componentOverrides = {
   },
 };
 
-export const createAppTheme = (mode = "light", userTheme = {}) => {
-  const baseConfig = mode === "dark" ? darkTheme : lightTheme;
-  const modeSpecific = userTheme[mode];
+const isPlainObject = (value) =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
 
-  // Translate shorthand options to MUI theme shape
-  const shorthandLayer = {};
-  if (userTheme.primaryColor) {
-    shorthandLayer.palette = { primary: { main: userTheme.primaryColor } };
-  }
-  if (userTheme.fontFamily) {
-    shorthandLayer.typography = { fontFamily: userTheme.fontFamily };
-  }
+const mergeDeep = (target, source) => {
+  if (!isPlainObject(source)) return target;
+  const merged = { ...target };
+  Object.entries(source).forEach(([key, value]) => {
+    merged[key] =
+      isPlainObject(value) && isPlainObject(target[key])
+        ? mergeDeep(target[key], value)
+        : value;
+  });
+  return merged;
+};
 
-  // Merge order: base → shorthand → mode-specific → component overrides (always last)
-  // fontFamily lives in the base layer so userTheme.fontFamily (shorthand) can override it.
-  const args = [
+// Merge order: built-in → shorthand (primaryColor, fontFamily) → top-level
+// theme keys → mode-specific keys. Component overrides always go last.
+const getPalette = (mode, userTheme) => {
+  const base = mode === "dark" ? darkTheme : lightTheme;
+  const shorthand = userTheme.primaryColor
+    ? { primary: { main: userTheme.primaryColor } }
+    : {};
+  return mergeDeep(mergeDeep(base.palette, shorthand), userTheme[mode]?.palette);
+};
+
+// Passed as createTheme options rather than merged in afterwards, so the font
+// reaches every typography variant (body1, h1, ...) and not only the root.
+const getTypography = (userTheme, modeTypography) =>
+  mergeDeep(
+    mergeDeep(
+      { fontFamily: userTheme.fontFamily ?? DEFAULT_FONT_FAMILY },
+      userTheme.typography
+    ),
+    modeTypography
+  );
+
+// Color schemes only let the palette differ between modes, so a theme with
+// other settings under `light` or `dark` keeps the one-theme-per-mode setup.
+export const usesModeSpecificSettings = (userTheme = {}) =>
+  ["light", "dark"].some((mode) =>
+    Object.keys(userTheme[mode] ?? {}).some((key) => key !== "palette")
+  );
+
+// One theme for both modes. Its colors are CSS variables switched by
+// COLOR_SCHEME_ATTRIBUTE, so prerendered HTML is right in either mode.
+export const createAppTheme = (userTheme = {}) =>
+  createTheme(
     {
-      ...baseConfig,
-      palette: { ...baseConfig.palette, mode },
-      typography: { fontFamily: DEFAULT_FONT_FAMILY, ...baseConfig.typography },
+      cssVariables: { colorSchemeSelector: COLOR_SCHEME_ATTRIBUTE },
+      colorSchemes: {
+        light: { palette: getPalette("light", userTheme) },
+        dark: { palette: getPalette("dark", userTheme) },
+      },
+      typography: getTypography(userTheme),
     },
-    shorthandLayer,
-  ];
-  if (modeSpecific) args.push(modeSpecific);
-  args.push(componentOverrides);
+    { components: userTheme.components ?? {} },
+    componentOverrides
+  );
 
-  return createTheme(...args);
+// The original setup: a separate theme per mode, rebuilt when the mode changes.
+// Only used when usesModeSpecificSettings(userTheme) is true.
+export const createLegacyAppTheme = (mode = "light", userTheme = {}) => {
+  const { palette: _palette, typography, ...modeSettings } =
+    userTheme[mode] ?? {};
+  return createTheme(
+    {
+      palette: { ...getPalette(mode, userTheme), mode },
+      typography: getTypography(userTheme, typography),
+    },
+    { components: userTheme.components ?? {} },
+    modeSettings,
+    componentOverrides
+  );
 };

@@ -296,7 +296,7 @@ createApp({ pages, site, theme: { ...themes.ocean, fontFamily: '"Inter", sans-se
 
 ### Advanced
 
-Use `light` and `dark` keys for full per-mode [MUI theme](https://mui.com/material-ui/customization/theming/) overrides. These are deep-merged into the built-in palette, so you only need to specify what you want to change:
+Use the `light` and `dark` keys to change the [MUI palette](https://mui.com/material-ui/customization/palette/) for each color mode, and the top-level `typography` and `components` keys for [MUI theme](https://mui.com/material-ui/customization/theming/) settings that apply to both modes. Palettes are deep-merged into the built-in ones, so you only need to specify what you want to change:
 
 ```js
 createApp({
@@ -304,18 +304,39 @@ createApp({
   site,
   theme: {
     primaryColor: "#6200ea",
+    typography: { h1: { fontWeight: 800 } },
     light: {
       palette: { background: { default: "#f0f4f8" } },
     },
     dark: {
       palette: { primary: { main: "#bb86fc" } },
-      typography: { fontFamily: '"Inter", sans-serif' },
     },
   },
 })
 ```
 
-Mode-specific overrides take precedence over `primaryColor` and `fontFamily` shorthands.
+Mode-specific palettes take precedence over `primaryColor`, and `typography` takes precedence over `fontFamily`.
+
+Each mode's colors are CSS variables, so prerendered pages show the visitor's color mode before JavaScript loads. For a style that should only apply in one mode, use `theme.applyStyles` in a component override:
+
+```js
+createApp({
+  pages,
+  site,
+  theme: {
+    components: {
+      MuiAppBar: {
+        styleOverrides: {
+          root: ({ theme }) =>
+            theme.applyStyles("dark", { backgroundColor: "#000" }),
+        },
+      },
+    },
+  },
+})
+```
+
+Settings other than `palette` under `light` or `dark` (like `typography` or `components`) still work in 1.x, but they switch the site back to one theme per mode, which can show the wrong color mode until JavaScript loads, and they log a warning in development. They'll stop working in 2.0.
 
 ## Tech Stack
 
