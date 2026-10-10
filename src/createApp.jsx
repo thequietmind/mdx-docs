@@ -8,11 +8,12 @@ import { preloadComponent } from "./utils/preloadComponent.js";
 import "./main.css";
 
 const findCurrentPage = (pages) => {
-  const base = import.meta.env.BASE_URL;
+  const base = normalizeRoute(import.meta.env.BASE_URL);
   const { pathname } = window.location;
-  const route = pathname.startsWith(base)
-    ? `/${pathname.slice(base.length)}`
-    : pathname;
+  const route =
+    base !== "/" && pathname.startsWith(base)
+      ? pathname.slice(base.length) || "/"
+      : pathname;
   return pages.find(
     (page) => normalizeRoute(page.route) === normalizeRoute(route)
   );
