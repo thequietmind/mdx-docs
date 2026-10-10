@@ -36,19 +36,24 @@ const packageVersion = JSON.parse(
  * Rehype plugin that removes <p> wrappers MDX generates around text children
  * of JSX flow elements. This happens because Prettier formats JSX text onto
  * its own line, which MDX interprets as a paragraph. The unwrapping only
- * applies to <p> elements whose children are all plain text nodes — explicit
- * block content is left untouched.
+ * applies to <p> elements whose children are all plain text nodes, or to a
+ * <p> that is the element's only content (even with inline code or links) —
+ * other block content is left untouched.
  */
 export function rehypeUnwrapJsxParagraphs() {
   function processNode(node) {
     if (!node.children) return;
     node.children.forEach(processNode);
     if (node.type === "mdxJsxFlowElement") {
+      const content = node.children.filter(
+        (child) => !(child.type === "text" && !child.value.trim())
+      );
       node.children = node.children.flatMap((child) => {
         if (
           child.type === "element" &&
           child.tagName === "p" &&
-          child.children.every((c) => c.type === "text")
+          (content.length === 1 ||
+            child.children.every((c) => c.type === "text"))
         ) {
           return child.children;
         }
