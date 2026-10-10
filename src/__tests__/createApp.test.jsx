@@ -95,4 +95,24 @@ describe("createApp", () => {
     expect(createRoot).toHaveBeenCalledTimes(1);
     expect(hydrateRoot).not.toHaveBeenCalled();
   });
+
+  it("rejects settings other than palette under theme.light or theme.dark", () => {
+    const pages = [deferredPage("/").page];
+    const theme = {
+      dark: { palette: {}, typography: { fontFamily: "Inter" } },
+    };
+
+    expect(() => createApp({ pages, site, theme })).toThrow(
+      "theme.dark.typography isn't supported"
+    );
+    expect(createRoot).not.toHaveBeenCalled();
+    expect(hydrateRoot).not.toHaveBeenCalled();
+  });
+
+  it("accepts palettes under theme.light and theme.dark", () => {
+    const pages = [deferredPage("/").page];
+    const theme = { light: { palette: { primary: { main: "#6200ea" } } } };
+
+    expect(() => createApp({ pages, site, theme })).not.toThrow();
+  });
 });

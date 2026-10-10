@@ -334,7 +334,7 @@ createApp({
 })
 ```
 
-Settings other than `palette` under `light` or `dark` (like `typography` or `components`) still work in 1.x, but they switch the site back to one theme per mode, which can show the wrong color mode until JavaScript loads, and they log a warning in development. They'll stop working in 2.0.
+`light` and `dark` only take a `palette`. `createApp` throws an error for anything else under them, like `typography` or `components`, so put those in the top-level keys.
 
 ## Tech Stack
 

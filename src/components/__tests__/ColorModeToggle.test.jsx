@@ -1,10 +1,9 @@
-import { ThemeProvider } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 
 import { ColorModeContext } from "../../context/ColorModeContext";
-import { createLegacyAppTheme } from "../../themes";
 
 import ColorModeToggle from "../ColorModeToggle";
 
@@ -32,8 +31,10 @@ describe("ColorModeToggle component", () => {
   ])(
     "should show the icon for the theme's %s mode in CSS",
     (mode, visibleIcon, hiddenIcon) => {
+      // jsdom can't match the :where() selector that applyStyles produces for
+      // color scheme themes, so this uses a plain theme in the given mode
       render(
-        <ThemeProvider theme={createLegacyAppTheme(mode)}>
+        <ThemeProvider theme={createTheme({ palette: { mode } })}>
           <ColorModeContext.Provider
             value={{ darkMode: false, toggleColorMode: vi.fn() }}
           >

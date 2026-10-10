@@ -204,6 +204,6 @@ export const injectPrerenderedApp = (html, appHtml) => {
 
   return html.replace(
     rootPattern,
-    `<div id="root" data-mdx-docs-theme="dark">${appHtml}</div>`
+    `<div id="root">${appHtml}</div>`
   );
 };

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { createAppTheme, usesModeSpecificSettings } from "../index";
+import { createAppTheme, findModeSpecificSettings } from "../index";
 import { themes } from "../presets";
 
 const schemePalette = (theme, mode) => theme.colorSchemes[mode].palette;
@@ -28,7 +28,7 @@ describe("Theme presets", () => {
 
   it("each preset should only set the palette per mode", () => {
     for (const [name, preset] of Object.entries(themes)) {
-      expect(usesModeSpecificSettings(preset), `preset "${name}"`).toBe(false);
+      expect(findModeSpecificSettings(preset), `preset "${name}"`).toEqual([]);
     }
   });
 

@@ -4,8 +4,7 @@ import { darkTheme } from "../darkTheme";
 import {
   COLOR_SCHEME_ATTRIBUTE,
   createAppTheme,
-  createLegacyAppTheme,
-  usesModeSpecificSettings,
+  findModeSpecificSettings,
 } from "../index";
 import { lightTheme } from "../lightTheme";
 
@@ -172,71 +171,26 @@ describe("Theme configuration", () => {
     });
   });
 
-  describe("usesModeSpecificSettings", () => {
-    it("should be false for palette-only per-mode settings", () => {
-      expect(usesModeSpecificSettings()).toBe(false);
+  describe("findModeSpecificSettings", () => {
+    it("should find nothing for palette-only per-mode settings", () => {
+      expect(findModeSpecificSettings()).toEqual([]);
       expect(
-        usesModeSpecificSettings({
+        findModeSpecificSettings({
           primaryColor: "#6200ea",
           typography: { h1: { fontWeight: 800 } },
           light: { palette: { background: { default: "#fff" } } },
           dark: { palette: { primary: { main: "#bb86fc" } } },
         })
-      ).toBe(false);
+      ).toEqual([]);
     });
 
-    it("should be true when light or dark holds anything besides palette", () => {
+    it("should name anything besides palette under light or dark", () => {
       expect(
-        usesModeSpecificSettings({ dark: { typography: { fontFamily: "Inter" } } })
-      ).toBe(true);
-      expect(
-        usesModeSpecificSettings({ light: { components: { MuiButton: {} } } })
-      ).toBe(true);
-    });
-  });
-
-  describe("createLegacyAppTheme", () => {
-    it.each(["light", "dark"])("should create a %s theme", (mode) => {
-      const theme = createLegacyAppTheme(mode);
-      const base = mode === "dark" ? darkTheme : lightTheme;
-
-      expect(theme.palette.mode).toBe(mode);
-      expect(theme.palette.background.default).toBe(
-        base.palette.background.default
-      );
-      expect(theme.vars).toBeUndefined();
-    });
-
-    it("should apply mode-specific typography and components to that mode only", () => {
-      const userTheme = {
-        light: {
-          typography: { h1: { fontWeight: 800 } },
-          components: { MuiButton: { styleOverrides: { root: { borderRadius: 8 } } } },
-        },
-      };
-      const light = createLegacyAppTheme("light", userTheme);
-      const dark = createLegacyAppTheme("dark", userTheme);
-
-      expect(light.typography.h1.fontWeight).toBe(800);
-      expect(dark.typography.h1.fontWeight).not.toBe(800);
-      expect(light.components.MuiButton).toBeDefined();
-      expect(dark.components.MuiButton).toBeUndefined();
-      expect(light.components.MuiIconButton).toBeDefined();
-    });
-
-    it("should apply shorthand fontFamily to every typography variant", () => {
-      const theme = createLegacyAppTheme("dark", {
-        fontFamily: '"Inter", sans-serif',
-        dark: { spacing: 4 },
-      });
-
-      expect(theme.typography.body1.fontFamily).toBe('"Inter", sans-serif');
-    });
-
-    it("should color bare HTML anchors with the mode's primary color", () => {
-      const theme = createLegacyAppTheme("dark", { primaryColor: "#6200ea" });
-
-      expect(baselineOverrides(theme).a.color).toBe("#6200ea");
+        findModeSpecificSettings({
+          light: { palette: {}, components: { MuiButton: {} } },
+          dark: { typography: { fontFamily: "Inter" } },
+        })
+      ).toEqual(["theme.light.components", "theme.dark.typography"]);
     });
   });
 
