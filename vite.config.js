@@ -22,7 +22,10 @@ import {
   injectSiteUrlTags,
   injectVersionAttribute,
 } from "./src/prerenderHtml.js";
-import { rehypeUnwrapJsxParagraphs } from "./src/vite.config.helper.js";
+import {
+  createPreviewTrailingSlashPlugin,
+  rehypeUnwrapJsxParagraphs,
+} from "./src/vite.config.helper.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const packageVersion = JSON.parse(
@@ -174,6 +177,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     createMdxPlugin(),
     createSitePrerenderPlugin(),
+    createPreviewTrailingSlashPlugin(),
   ],
   build: {
     rollupOptions: {

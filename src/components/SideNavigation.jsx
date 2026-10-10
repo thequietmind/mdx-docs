@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { useDocsContext } from "../context/DocsContext";
-import { getNavigationPages } from "../utils/navigation";
+import { getNavigationPages, withTrailingSlash } from "../utils/navigation";
 
 export const drawerWidth = 240;
 
@@ -42,7 +42,7 @@ const SideNavigation = ({ mobileOpen, handleDrawerToggle }) => {
           <ListItem disablePadding key={page.route}>
             <ListItemButton
               component={Link}
-              to={page.route}
+              to={withTrailingSlash(page.route)}
               onClick={() => handleNavigationClick()}
               sx={{
                 "&:hover": {

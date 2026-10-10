@@ -83,8 +83,12 @@ export const getCanonicalBaseUrl = (html) => {
   return canonicalHref.endsWith("/") ? canonicalHref : `${canonicalHref}/`;
 };
 
-export const buildPageUrl = (route, baseUrl) =>
-  new URL(route === "/" ? "." : route.slice(1), baseUrl).href;
+// Pages are written to <route>/index.html, which static hosts serve at the
+// trailing-slash URL, so canonical and sitemap URLs use that form too.
+export const buildPageUrl = (route, baseUrl) => {
+  const path = route.split("/").filter(Boolean).join("/");
+  return new URL(path ? `${path}/` : ".", baseUrl).href;
+};
 
 const applyPageUrl = (html, route) => {
   const canonicalTag = html.match(CANONICAL_TAG_PATTERN)?.[0];

@@ -226,12 +226,13 @@ prerendered route:
 dist/sitemap.xml
 ```
 
-Each page URL is built from the site URL and the page route. For example, a
-page registered at `/getting-started` appears as:
+Each page URL is built from the site URL and the page route, with a trailing
+slash to match the `getting-started/index.html` file the build writes for it.
+For example, a page registered at `/getting-started` appears as:
 
 ```xml
 <url>
-  <loc>https://docs.example.com/getting-started</loc>
+  <loc>https://docs.example.com/getting-started/</loc>
 </url>
 ```
 

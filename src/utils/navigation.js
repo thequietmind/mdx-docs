@@ -40,3 +40,9 @@ export const normalizeRoute = (route) => {
   }
   return route.slice(0, end);
 };
+
+// Prerendered pages live at <route>/index.html, which static hosts serve at
+// the trailing-slash URL, so links point there directly instead of through a
+// redirect.
+export const withTrailingSlash = (route) =>
+  route.endsWith("/") ? route : `${route}/`;

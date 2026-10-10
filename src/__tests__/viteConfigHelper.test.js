@@ -1,8 +1,13 @@
 // @vitest-environment node
-import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
+
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
   applyPageMetadata,
+  buildPageUrl,
   generateRobotsTxt,
   generateSitemap,
   getCanonicalBaseUrl,
@@ -14,6 +19,7 @@ import {
 } from "../prerenderHtml.js";
 import {
   createMdxDocsConfig,
+  createPreviewTrailingSlashPlugin,
   rehypeUnwrapJsxParagraphs,
 } from "../vite.config.helper.js";
 
@@ -53,10 +59,10 @@ describe("prerender HTML helpers", () => {
       'name="twitter:title" content="Docs &amp; Setup"'
     );
     expect(html).toContain(
-      '<link rel="canonical" href="https://example.com/setup"'
+      '<link rel="canonical" href="https://example.com/setup/"'
     );
     expect(html).toContain(
-      'property="og:url" content="https://example.com/setup"'
+      'property="og:url" content="https://example.com/setup/"'
     );
   });
 
@@ -127,6 +133,35 @@ describe("getCanonicalBaseUrl", () => {
 
   it("returns null when no canonical tag is present", () => {
     expect(getCanonicalBaseUrl("<head></head>")).toBeNull();
+  });
+});
+
+describe("buildPageUrl", () => {
+  it("resolves the home route to the base url", () => {
+    expect(buildPageUrl("/", "https://example.com/")).toBe(
+      "https://example.com/"
+    );
+  });
+
+  it("adds a trailing slash to page routes", () => {
+    expect(buildPageUrl("/setup", "https://example.com/")).toBe(
+      "https://example.com/setup/"
+    );
+    expect(buildPageUrl("/guides/setup", "https://example.com/")).toBe(
+      "https://example.com/guides/setup/"
+    );
+  });
+
+  it("does not double a trailing slash already in the route", () => {
+    expect(buildPageUrl("/setup/", "https://example.com/")).toBe(
+      "https://example.com/setup/"
+    );
+  });
+
+  it("resolves routes under a base url with a path", () => {
+    expect(buildPageUrl("/setup", "https://example.com/docs/")).toBe(
+      "https://example.com/docs/setup/"
+    );
   });
 });
 
@@ -216,12 +251,12 @@ describe("generateSitemap", () => {
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     );
     expect(xml).toContain("<loc>https://example.com/</loc>");
-    expect(xml).toContain("<loc>https://example.com/examples</loc>");
+    expect(xml).toContain("<loc>https://example.com/examples/</loc>");
   });
 
   it("escapes XML-significant characters in urls", () => {
     const xml = generateSitemap(["/a&b"], "https://example.com/");
-    expect(xml).toContain("<loc>https://example.com/a&amp;b</loc>");
+    expect(xml).toContain("<loc>https://example.com/a&amp;b/</loc>");
   });
 });
 
@@ -289,6 +324,79 @@ describe("createMdxDocsConfig optimizeDeps", () => {
         "@mdx-js/react",
       ])
     );
+  });
+});
+
+describe("createPreviewTrailingSlashPlugin", () => {
+  let rootDir;
+
+  beforeAll(() => {
+    rootDir = mkdtempSync(join(tmpdir(), "mdx-docs-preview-"));
+    mkdirSync(join(rootDir, "dist", "getting-started"), { recursive: true });
+    writeFileSync(join(rootDir, "dist", "getting-started", "index.html"), "");
+    mkdirSync(join(rootDir, "outside"));
+    writeFileSync(join(rootDir, "outside", "index.html"), "");
+  });
+
+  afterAll(() => {
+    rmSync(rootDir, { force: true, recursive: true });
+  });
+
+  const request = (url, { base = "/" } = {}) => {
+    const plugin = createPreviewTrailingSlashPlugin();
+    plugin.configResolved({ base, root: rootDir, build: { outDir: "dist" } });
+
+    let middleware;
+    plugin.configurePreviewServer({
+      middlewares: { use: (handler) => (middleware = handler) },
+    });
+
+    const res = { headers: {}, setHeader: vi.fn(), end: vi.fn() };
+    res.setHeader.mockImplementation((name, value) => {
+      res.headers[name] = value;
+    });
+    const next = vi.fn();
+    middleware({ url }, res, next);
+    return { res, next };
+  };
+
+  it("redirects a slashless route to its directory index", () => {
+    const { res, next } = request("/getting-started?ref=nav");
+
+    expect(next).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(301);
+    expect(res.headers.Location).toBe("/getting-started/?ref=nav");
+    expect(res.end).toHaveBeenCalled();
+  });
+
+  it("redirects under a non-root base", () => {
+    const { res } = request("/docs/getting-started", { base: "/docs/" });
+
+    expect(res.statusCode).toBe(301);
+    expect(res.headers.Location).toBe("/docs/getting-started/");
+  });
+
+  it.each([
+    ["the trailing-slash form", "/getting-started/", "/"],
+    ["routes without a directory index", "/missing", "/"],
+    ["paths outside the base", "/getting-started", "/docs/"],
+    ["paths that escape the output directory", "/..%2Foutside", "/"],
+    ["protocol-relative paths", "/.//getting-started", "/"],
+  ])("passes through %s", (_, url, base) => {
+    const { res, next } = request(url, { base });
+
+    expect(next).toHaveBeenCalled();
+    expect(res.end).not.toHaveBeenCalled();
+  });
+
+  it("is included in the generated config", () => {
+    const config = createMdxDocsConfig({ rootDir: "/tmp/mdx-docs-test" });
+
+    expect(
+      config.plugins.some(
+        (plugin) => plugin?.name === "mdx-docs-preview-trailing-slash"
+      )
+    ).toBe(true);
   });
 });
 
