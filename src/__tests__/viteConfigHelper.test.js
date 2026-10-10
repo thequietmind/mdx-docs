@@ -219,9 +219,12 @@ describe("injectGeneratorTag", () => {
 
 describe("injectColorSchemeScript", () => {
   const html = injectColorSchemeScript("<html><head></head><body></body></html>");
+  const openTag = "<script data-mdx-docs-color-scheme-script>";
+  const scriptStart = html.indexOf(openTag);
+  const scriptEnd = html.indexOf("</script>", scriptStart);
 
   const runScript = ({ saved, osDark }) => {
-    const body = html.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1];
+    const body = html.slice(scriptStart + openTag.length, scriptEnd);
     const attributes = {};
     const document = {
       documentElement: {
@@ -241,7 +244,8 @@ describe("injectColorSchemeScript", () => {
   };
 
   it("adds the script before the closing head", () => {
-    expect(html).toMatch(/<script data-mdx-docs-color-scheme-script>[\s\S]*<\/script>\n<\/head>/);
+    expect(scriptStart).toBeGreaterThan(html.indexOf("<head>"));
+    expect(html.slice(scriptEnd)).toMatch(/^<\/script>\n<\/head>/);
   });
 
   it("does not add a second script when one already exists", () => {
