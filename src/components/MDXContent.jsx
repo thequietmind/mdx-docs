@@ -102,7 +102,7 @@ const MDXContent = () => {
               sx={{
                 borderLeft: "4px solid",
                 borderColor: "primary.main",
-                pl: 2,
+                px: 2,
                 py: 0.5,
                 my: 2,
                 mx: 0,
