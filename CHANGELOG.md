@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-10-09
+
+### Added
+
+- `createPreviewTrailingSlashPlugin` export from `@quietmind/mdx-docs/vite`.
+  `createMdxDocsConfig` already includes it; sites with their own Vite config
+  can add it to `plugins`
+
+### Changed
+
+- Canonical tags, `og:url`, `sitemap.xml` and sidebar links use the
+  trailing-slash form of each page URL, like
+  `https://docs.example.com/getting-started/`. Pages are written to
+  `getting-started/index.html`, which Netlify, GitHub Pages and Cloudflare
+  serve at that URL and redirect `/getting-started` to, so the old URLs all
+  pointed at a redirect and search engines ignored the declared canonical.
+  Resubmit the sitemap in Search Console after upgrading
+
+### Fixed
+
+- `vite preview` redirects `/getting-started` to `/getting-started/` the same
+  way those hosts do. It used to answer with the home page's HTML, so the page
+  briefly showed the wrong content and logged a hydration error (React #418)
+
 ## [1.8.2] - 2026-10-09
 
 ### Fixed
