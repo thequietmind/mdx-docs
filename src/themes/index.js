@@ -103,7 +103,7 @@ const mergeDeep = (target, source) => {
 };
 
 // Merge order: built-in → shorthand (primaryColor, fontFamily) → top-level
-// theme keys → mode-specific keys. Component overrides always go last.
+// theme keys → mode-specific palette. Component overrides always go last.
 const getPalette = (mode, userTheme) => {
   const base = mode === "dark" ? darkTheme : lightTheme;
   const shorthand = userTheme.primaryColor
@@ -114,20 +114,19 @@ const getPalette = (mode, userTheme) => {
 
 // Passed as createTheme options rather than merged in afterwards, so the font
 // reaches every typography variant (body1, h1, ...) and not only the root.
-const getTypography = (userTheme, modeTypography) =>
+const getTypography = (userTheme) =>
   mergeDeep(
-    mergeDeep(
-      { fontFamily: userTheme.fontFamily ?? DEFAULT_FONT_FAMILY },
-      userTheme.typography
-    ),
-    modeTypography
+    { fontFamily: userTheme.fontFamily ?? DEFAULT_FONT_FAMILY },
+    userTheme.typography
   );
 
-// Color schemes only let the palette differ between modes, so a theme with
-// other settings under `light` or `dark` keeps the one-theme-per-mode setup.
-export const usesModeSpecificSettings = (userTheme = {}) =>
-  ["light", "dark"].some((mode) =>
-    Object.keys(userTheme[mode] ?? {}).some((key) => key !== "palette")
+// Color schemes only let the palette differ between modes, so `light` and
+// `dark` only take a palette. Returns any other keys, like "theme.dark.typography".
+export const findModeSpecificSettings = (userTheme = {}) =>
+  ["light", "dark"].flatMap((mode) =>
+    Object.keys(userTheme[mode] ?? {})
+      .filter((key) => key !== "palette")
+      .map((key) => `theme.${mode}.${key}`)
   );
 
 // One theme for both modes. Its colors are CSS variables switched by
@@ -145,19 +144,3 @@ export const createAppTheme = (userTheme = {}) =>
     { components: userTheme.components ?? {} },
     componentOverrides
   );
-
-// The original setup: a separate theme per mode, rebuilt when the mode changes.
-// Only used when usesModeSpecificSettings(userTheme) is true.
-export const createLegacyAppTheme = (mode = "light", userTheme = {}) => {
-  const { palette: _palette, typography, ...modeSettings } =
-    userTheme[mode] ?? {};
-  return createTheme(
-    {
-      palette: { ...getPalette(mode, userTheme), mode },
-      typography: getTypography(userTheme, typography),
-    },
-    { components: userTheme.components ?? {} },
-    modeSettings,
-    componentOverrides
-  );
-};

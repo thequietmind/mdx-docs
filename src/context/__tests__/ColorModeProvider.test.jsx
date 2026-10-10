@@ -124,26 +124,4 @@ describe("ColorModeProvider", () => {
     });
   });
 
-  describe("with settings other than palette under light or dark", () => {
-    const userTheme = { dark: { typography: { h1: { fontWeight: 800 } } } };
-
-    it("warns once and keeps the toggle and attribute working", async () => {
-      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-      const user = userEvent.setup();
-
-      const { unmount } = renderProvider(userTheme);
-      unmount();
-      renderProvider(userTheme);
-
-      expect(warn).toHaveBeenCalledTimes(1);
-      expect(warn.mock.calls[0][0]).toContain("theme.dark.typography");
-      expect(warn.mock.calls[0][0]).toContain("2.0");
-
-      await user.click(screen.getByText("toggle"));
-      expect(mode()).toBe("dark");
-      expect(schemeAttribute()).toBe("dark");
-
-      warn.mockRestore();
-    });
-  });
 });

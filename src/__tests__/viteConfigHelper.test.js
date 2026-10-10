@@ -88,9 +88,7 @@ describe("prerender HTML helpers", () => {
   it("injects prerendered markup into the app root", () => {
     const html = injectPrerenderedApp(template, "<main>Page content</main>");
 
-    expect(html).toContain(
-      '<div id="root" data-mdx-docs-theme="dark"><main>Page content</main></div>'
-    );
+    expect(html).toContain('<div id="root"><main>Page content</main></div>');
   });
 
   it("rejects templates without an empty app root", () => {

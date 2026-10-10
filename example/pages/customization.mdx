@@ -96,7 +96,7 @@ createApp({
 
 Each mode's colors become CSS variables, so prerendered pages show the visitor's color mode before JavaScript loads.
 
-Settings other than `palette` under `light` or `dark` (like `typography` or `components`) still work, but they switch the site back to one theme per mode, which can show the wrong color mode until JavaScript loads, and they log a warning in development. They'll stop working in 2.0, so put them in the top-level keys below instead.
+`light` and `dark` only take a `palette`. `createApp` throws an error for anything else under them, like `typography` or `components`, so put those in the top-level keys below instead.
 
 ## Component overrides
 

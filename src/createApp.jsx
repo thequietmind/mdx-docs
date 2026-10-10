@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 
 import App from "./App.jsx";
 import { registerAppOptions } from "./appOptions.js";
+import { findModeSpecificSettings } from "./themes";
 import { normalizeRoute } from "./utils/navigation.js";
 import { preloadComponent } from "./utils/preloadComponent.js";
 import "./main.css";
@@ -36,6 +37,17 @@ export function createApp({
   if (homePages.length > 1) {
     throw new Error(
       '[mdx-docs] Multiple pages with route "/" found. Only one home page is allowed.'
+    );
+  }
+
+  const modeSpecificSettings = findModeSpecificSettings(theme);
+  if (modeSpecificSettings.length > 0) {
+    const verb = modeSpecificSettings.length === 1 ? "isn't" : "aren't";
+    throw new Error(
+      `[mdx-docs] ${modeSpecificSettings.join(", ")} ${verb} supported: ` +
+        "theme.light and theme.dark only take a palette. Move settings for both " +
+        "modes to theme.typography or theme.components, and use " +
+        'theme.applyStyles("dark", ...) in component overrides for dark-only styles.'
     );
   }
 
