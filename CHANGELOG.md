@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2026-10-09
+
+### Fixed
+
+- Paragraphs that contain inline elements (links, inline code, bold text,
+  `<kbd>`) render inside a `<p>` again. They were rendered without one, so they
+  lost their spacing and ran into the next paragraph, which made a blockquote
+  with two paragraphs read as one line. A component whose only content is a
+  single paragraph on its own lines (like a `<Lead>` or a banner) still renders
+  that text without an extra `<p>` inside it
+- `<kbd>` elements are styled as keyboard keys instead of plain monospace text.
+  The styling is based on the surrounding text color, so it follows the color
+  mode toggle and looks right in table cells and blockquotes
+
 ## [1.8.0] - 2026-10-09
 
 ### Added
