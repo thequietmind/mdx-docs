@@ -16,16 +16,8 @@ commit (bypass in an emergency with `git commit --no-verify`).
 yarn install
 ```
 
-The lockfile pins MUI 9, so that is what you develop against. The published
-peer range also allows MUI 7, and CI runs the suite against both majors, so a
-change that only works on one of them will fail there even though it passed
-locally. To reproduce the MUI 7 leg:
-
-```sh
-yarn add --dev "@mui/material@^7" "@mui/icons-material@^7"
-yarn lint && yarn test
-git checkout package.json yarn.lock && yarn install --frozen-lockfile
-```
+The lockfile pins MUI 9, which is the only major the package supports. Changes
+for the 1.x line (which also supports MUI 7) go on the `1.x` branch.
 
 ## Merge driver setup
 

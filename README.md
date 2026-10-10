@@ -185,9 +185,7 @@ npm install react react-dom react-router-dom \
   vite @vitejs/plugin-react
 ```
 
-Both MUI 7 and MUI 9 are supported, and CI runs the full test suite against
-each. If your project is already on MUI 7 you can stay there — upgrading is not
-required to use this package. New projects should prefer MUI 9.
+MUI 9 is required. Projects still on MUI 7 can stay on mdx-docs 1.x.
 
 ### 3. `main.jsx`
 
