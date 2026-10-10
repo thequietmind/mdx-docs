@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.2] - 2026-10-09
+
+### Fixed
+
+- Prerendered pages no longer log a hydration error (React #418) when they end
+  up in dark mode. `prismjs` was re-highlighting the page's code before React
+  hydrated it, so React threw away the page content and rendered it again. Code
+  blocks are still highlighted the same way
+- Blockquotes have padding on the right as well as the left, so their text no
+  longer runs up to the right edge
+
 ## [1.8.1] - 2026-10-09
 
 ### Fixed
