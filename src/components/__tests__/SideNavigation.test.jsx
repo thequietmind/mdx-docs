@@ -51,7 +51,7 @@ describe("SideNavigation component", () => {
 
     const buttonLink = screen.getByText("Button").closest("a");
     // Check that it's the button route
-    expect(buttonLink).toHaveAttribute("href", "/button");
+    expect(buttonLink).toHaveAttribute("href", "/button/");
   });
 
   it("should not highlight inactive routes", () => {

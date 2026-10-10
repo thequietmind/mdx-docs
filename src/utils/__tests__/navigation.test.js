@@ -5,6 +5,7 @@ import {
   getDefaultPage,
   isExternalLink,
   normalizeRoute,
+  withTrailingSlash,
 } from "../navigation";
 
 const mockPages = [
@@ -69,6 +70,21 @@ describe("Navigation utilities", () => {
       expect(normalizeRoute("/about///")).toBe("/about");
       const manySlashes = "/".repeat(100000);
       expect(normalizeRoute(manySlashes)).toBe("");
+    });
+  });
+
+  describe("withTrailingSlash", () => {
+    it("leaves the root route unchanged", () => {
+      expect(withTrailingSlash("/")).toBe("/");
+    });
+
+    it("adds a trailing slash to page routes", () => {
+      expect(withTrailingSlash("/about")).toBe("/about/");
+      expect(withTrailingSlash("/guides/setup")).toBe("/guides/setup/");
+    });
+
+    it("leaves routes that already end in a slash unchanged", () => {
+      expect(withTrailingSlash("/about/")).toBe("/about/");
     });
   });
 

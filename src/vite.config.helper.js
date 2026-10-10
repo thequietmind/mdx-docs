@@ -6,7 +6,7 @@ import {
   rm,
   writeFile,
 } from "fs/promises";
-import { dirname, join, resolve } from "path";
+import { dirname, join, resolve, sep } from "path";
 import { pathToFileURL, fileURLToPath } from "url";
 
 import mdx from "@mdx-js/rollup";
@@ -113,6 +113,58 @@ const createMdxPlugin = () =>
     remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter],
     rehypePlugins: [rehypeUnwrapJsxParagraphs],
   });
+
+/**
+ * Vite plugin that makes `vite preview` redirect `/route` to `/route/` when
+ * `<outDir>/route/index.html` exists, matching Netlify, GitHub Pages and
+ * Cloudflare Pages. Without it, Vite's SPA fallback answers `/route` with the
+ * root index.html, and hydration fails against the wrong page's markup.
+ */
+export const createPreviewTrailingSlashPlugin = () => {
+  let base = "/";
+  let outputDirectory = "";
+
+  return {
+    name: "mdx-docs-preview-trailing-slash",
+    configResolved(config) {
+      base = config.base;
+      outputDirectory = resolve(config.root, config.build.outDir);
+    },
+    // Middlewares added here run before Vite strips the base from the URL.
+    configurePreviewServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const { pathname, search } = new URL(req.url, "http://localhost");
+        // A leading "//" would make the Location header protocol-relative.
+        if (
+          pathname.endsWith("/") ||
+          pathname.startsWith("//") ||
+          !pathname.startsWith(base)
+        ) {
+          return next();
+        }
+
+        let routePath;
+        try {
+          routePath = decodeURIComponent(pathname.slice(base.length));
+        } catch {
+          return next();
+        }
+
+        const indexPath = join(outputDirectory, routePath, "index.html");
+        if (
+          !indexPath.startsWith(outputDirectory + sep) ||
+          !existsSync(indexPath)
+        ) {
+          return next();
+        }
+
+        res.statusCode = 301;
+        res.setHeader("Location", `${pathname}/${search}`);
+        res.end();
+      });
+    },
+  };
+};
 
 const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
   name: "mdx-docs-prerender",
@@ -263,6 +315,7 @@ export function createMdxDocsConfig({
       createMdxPlugin(),
       prerender &&
         createPrerenderPlugin({ rootDir, base, entry, outDir }),
+      createPreviewTrailingSlashPlugin(),
     ],
     build: {
       outDir,
