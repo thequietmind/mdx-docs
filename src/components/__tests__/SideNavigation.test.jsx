@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useState } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
@@ -21,6 +22,17 @@ const renderWithRouter = (component, { route = "/" } = {}) => {
     <DocsProvider pages={mockNavigationPages} site={mockSite}>
       <MemoryRouter initialEntries={[route]}>{component}</MemoryRouter>
     </DocsProvider>
+  );
+};
+
+// Wires the drawer state the same way App does
+const SideNavigationWithDrawerState = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  return (
+    <SideNavigation
+      mobileOpen={mobileOpen}
+      handleDrawerToggle={() => setMobileOpen(!mobileOpen)}
+    />
   );
 };
 
@@ -63,14 +75,25 @@ describe("SideNavigation component", () => {
     expect(colorsLink).not.toHaveClass("active");
   });
 
-  it("should navigate when a link is clicked", async () => {
+  it("should close the mobile drawer when a link in it is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<SideNavigation {...defaultProps} />);
+    renderWithRouter(<SideNavigation {...defaultProps} mobileOpen={true} />);
 
-    const colorsLink = screen.getByText("Colors");
-    await user.click(colorsLink);
+    // The open drawer is modal, so its link is the only accessible one
+    await user.click(screen.getByRole("link", { name: "Colors" }));
 
-    expect(mockHandleDrawerToggle).toHaveBeenCalled();
+    expect(mockHandleDrawerToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not open the mobile drawer when a link is clicked", async () => {
+    const user = userEvent.setup();
+    const { container } = renderWithRouter(<SideNavigationWithDrawerState />);
+
+    await user.click(screen.getByRole("link", { name: "Colors" }));
+
+    // An open drawer is a modal that hides the page from screen readers, even
+    // on desktop where the drawer itself is hidden with CSS
+    expect(container).not.toHaveAttribute("aria-hidden");
   });
 
   it("should render drawer with correct width", () => {
