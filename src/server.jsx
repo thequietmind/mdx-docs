@@ -5,22 +5,7 @@ import { StaticRouter } from "react-router-dom";
 import App from "./App.jsx";
 import { getAppOptions } from "./appOptions.js";
 import { normalizeRoute } from "./utils/navigation.js";
-
-const preloadComponent = async (page) => {
-  if (page.load) {
-    await page.load();
-  }
-
-  const { component } = page;
-  if (!component?._payload || !component?._init) return;
-
-  try {
-    component._init(component._payload);
-  } catch (result) {
-    if (typeof result?.then !== "function") throw result;
-    await result;
-  }
-};
+import { preloadComponent } from "./utils/preloadComponent.js";
 
 export const getPrerenderPages = () => {
   const { pages, site } = getAppOptions();

@@ -3,7 +3,20 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 
 import App from "./App.jsx";
 import { registerAppOptions } from "./appOptions.js";
+import { normalizeRoute } from "./utils/navigation.js";
+import { preloadComponent } from "./utils/preloadComponent.js";
 import "./main.css";
+
+const findCurrentPage = (pages) => {
+  const base = import.meta.env.BASE_URL;
+  const { pathname } = window.location;
+  const route = pathname.startsWith(base)
+    ? `/${pathname.slice(base.length)}`
+    : pathname;
+  return pages.find(
+    (page) => normalizeRoute(page.route) === normalizeRoute(route)
+  );
+};
 
 export function createApp({
   pages,
@@ -40,7 +53,17 @@ export function createApp({
   );
 
   if (root.hasChildNodes()) {
-    hydrateRoot(root, app);
+    // Hydrate once the current route's lazy page has loaded. Until then its
+    // Suspense boundary is still dehydrated, and any context change after mount
+    // (like the color mode settling) makes React discard the prerendered page
+    // content and render it again.
+    const hydrate = () => hydrateRoot(root, app);
+    const page = findCurrentPage(pages);
+    if (!page) {
+      hydrate();
+      return;
+    }
+    preloadComponent(page).then(hydrate, hydrate);
     return;
   }
 
