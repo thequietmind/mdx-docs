@@ -8,6 +8,16 @@ import {
 const modeStorage = () =>
   darkModeStorageManager({ key: DARK_MODE_STORAGE_KEY, storageWindow: window });
 
+// Simulates a localStorage change made in another tab
+const dispatchStorageEvent = (key, newValue) => {
+  const event = new Event("storage");
+  Object.defineProperties(event, {
+    key: { value: key },
+    newValue: { value: newValue },
+  });
+  window.dispatchEvent(event);
+};
+
 describe("darkModeStorageManager", () => {
   afterEach(() => {
     localStorage.clear();
@@ -57,19 +67,11 @@ describe("darkModeStorageManager", () => {
     const handler = vi.fn();
     const unsubscribe = modeStorage().subscribe(handler);
 
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: DARK_MODE_STORAGE_KEY, newValue: "true" })
-    );
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: DARK_MODE_STORAGE_KEY, newValue: null })
-    );
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: "somethingElse", newValue: "true" })
-    );
+    dispatchStorageEvent(DARK_MODE_STORAGE_KEY, "true");
+    dispatchStorageEvent(DARK_MODE_STORAGE_KEY, null);
+    dispatchStorageEvent("somethingElse", "true");
     unsubscribe();
-    window.dispatchEvent(
-      new StorageEvent("storage", { key: DARK_MODE_STORAGE_KEY, newValue: "false" })
-    );
+    dispatchStorageEvent(DARK_MODE_STORAGE_KEY, "false");
 
     expect(handler.mock.calls).toEqual([["dark"], [null]]);
   });
