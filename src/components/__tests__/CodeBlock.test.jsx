@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import Prism from "prismjs";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
 import { DocsProvider } from "../../context/DocsProvider";
@@ -145,5 +146,9 @@ describe("CodeBlock component", () => {
 
     expect(screen.queryByText("javascript")).not.toBeInTheDocument();
     expect(screen.getByRole("button")).toBeInTheDocument();
+  });
+
+  it("should turn off Prism's automatic highlighting of the page", () => {
+    expect(Prism.manual).toBe(true);
   });
 });

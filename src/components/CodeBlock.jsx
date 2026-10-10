@@ -16,6 +16,11 @@ import "prismjs/components/prism-tsx";
 
 import { useDocsContext } from "../context/DocsContext";
 
+// Importing prismjs in a browser schedules Prism.highlightAll() for the next
+// frame, which rewrites prerendered <code class="language-*"> markup before
+// React hydrates it. Highlighting is done through prism-react-renderer instead.
+Prism.manual = true;
+
 const LANGUAGE_ALIASES = {
   sh: "bash",
   shell: "bash",
