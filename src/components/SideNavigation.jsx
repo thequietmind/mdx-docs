@@ -30,8 +30,12 @@ const SideNavigation = ({ mobileOpen, handleDrawerToggle }) => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
+  // Only ever close the mobile drawer. Opening it on desktop, where it's hidden
+  // with CSS, would still mount a modal that hides the app from screen readers.
   const handleNavigationClick = () => {
-    handleDrawerToggle();
+    if (mobileOpen) {
+      handleDrawerToggle();
+    }
   };
 
   const drawer = (
