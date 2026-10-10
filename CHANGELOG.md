@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-10-09
+
+### Added
+
+- `typography` and `components` keys on the `theme` option, for MUI theme
+  settings that apply in both color modes
+
+### Changed
+
+- Prerendered pages show the visitor's color mode from the first paint. Each
+  mode's colors are CSS variables, and a small script that
+  `createMdxDocsConfig` adds to `index.html` picks the mode before the page
+  paints. Visitors in light mode used to see the dark theme until JavaScript
+  loaded. Sites with their own Vite config get the light colors until
+  JavaScript loads instead
+- With no saved choice, the site follows the OS color setting, including when
+  it changes, until the visitor uses the toggle. Before, the first visit saved
+  whatever the OS setting was at the time. The choice is still saved in the
+  `darkMode` localStorage key, so existing visitors keep theirs
+- `useColorMode().darkMode` is `false` until the page has loaded, then switches
+  to the active mode. It used to start out `true`
+- Syntax highlighting colors for code blocks and inline code are part of the
+  theme palette, under `palette.code`
+
+### Fixed
+
+- `fontFamily` and `typography` settings reach body text and headings. They
+  used to only change MUI's top-level font setting, so text kept the default
+  font. Sites that set either will see their font after upgrading
+- Clicking a sidebar link on a desktop-width screen no longer hides the page
+  from screen readers. Each click toggled the mobile drawer, which is hidden at
+  that width but still marked the rest of the page `aria-hidden` while open
+- Sites built with a `base` other than `/` route correctly in the browser.
+  Every page turned into the 404 page once it loaded, because the published
+  package had the base hardcoded as `/`. A base without a trailing slash, like
+  `/docs`, also works now
+- The dark text selection color follows the color mode toggle instead of the
+  OS setting
+
+### Deprecated
+
+- Settings other than `palette` under `theme.light` and `theme.dark` (like
+  `typography` or `components`). They still work, but they keep the site on one
+  theme per mode, which can show the wrong color mode until JavaScript loads,
+  and they log a warning in development. They'll stop working in 2.0. Move
+  settings for both modes to the new top-level keys and use
+  `theme.applyStyles("dark", ...)` for dark-only styles
+
 ## [1.9.1] - 2026-10-09
 
 ### Fixed
