@@ -228,9 +228,12 @@ const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
         },
       });
 
-      const serverModuleUrl = `${pathToFileURL(
+      // No cache-busting query: lazy page chunks import "../entry.mjs" by its
+      // bare URL, and a query would load them a second entry instance with
+      // its own React contexts. The mkdtemp path is already unique per build.
+      const serverModuleUrl = pathToFileURL(
         join(serverOutput, "entry.mjs")
-      ).href}?t=${Date.now()}`;
+      ).href;
       const { getPrerenderPages, renderPage } = await import(serverModuleUrl);
       const pages = getPrerenderPages();
       const outputDirectory = resolve(rootDir, outDir);
