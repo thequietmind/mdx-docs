@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-10-11
+
+### Fixed
+
+- Pages that call `useColorMode()` or render `ColorModeToggle` in their content
+  are prerendered with that content instead of a loading spinner. The page only
+  showed up once JavaScript loaded, so search engines and the first paint got
+  the spinner, and the build didn't report an error. A toggle that waits until
+  after mount to render can render right away now
+
 ## [2.0.0] - 2026-10-09
 
 ### Removed
