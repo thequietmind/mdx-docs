@@ -19,6 +19,22 @@ vi.mock("prism-react-renderer", () => ({
   },
 }));
 
+// Mock dark theme
+vi.mock("@mui/material", async () => {
+  const actual = await vi.importActual("@mui/material");
+  return {
+    ...actual,
+    useTheme: () => ({
+      palette: {
+        mode: "dark",
+        text: { primary: "#fff", secondary: "#aaa" },
+        background: { paper: "#1e1e1e" },
+        divider: "#444",
+      },
+    }),
+  };
+});
+
 const renderCodeBlock = (ui, codeBlocks) =>
   render(
     <DocsProvider pages={[]} site={{ name: "Docs" }} codeBlocks={codeBlocks}>
@@ -65,22 +81,6 @@ describe("CodeBlock component - Additional Coverage Tests", () => {
   });
 
   it("should render dark mode styles for language indicator", () => {
-    // Mock dark theme
-    vi.mock("@mui/material", async () => {
-      const actual = await vi.importActual("@mui/material");
-      return {
-        ...actual,
-        useTheme: () => ({
-          palette: {
-            mode: "dark",
-            text: { primary: "#fff", secondary: "#aaa" },
-            background: { paper: "#1e1e1e" },
-            divider: "#444",
-          },
-        }),
-      };
-    });
-
     renderCodeBlock(
       <CodeBlock className="language-typescript">const x = 1;</CodeBlock>,
       { titleBar: true }
