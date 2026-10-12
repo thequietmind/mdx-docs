@@ -87,12 +87,18 @@ Production builds automatically prerender every configured page route:
 dist/index.html
 dist/getting-started/index.html
 dist/examples/index.html
+dist/404.html
 ```
 
 Each file contains the rendered MDX content, page title, meta description,
 Open Graph metadata, and Twitter metadata before JavaScript runs. React then
 hydrates that HTML in the browser, so embedded React and Material UI components
 remain interactive.
+
+`404.html` is the site's 404 page, which Netlify, Cloudflare Pages and GitHub
+Pages serve with a 404 status for any unknown URL. It's marked `noindex`, has no
+canonical or `og:url` tag, and isn't listed in the sitemap. An existing
+`public/404.html` is never overwritten.
 
 Prerendering requires static routes such as `/getting-started`. Dynamic route
 patterns containing parameters or wildcards are not supported.

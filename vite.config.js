@@ -12,6 +12,7 @@ import { build, defineConfig } from "vite";
 
 import { site } from "./example/config/site.js";
 import {
+  applyNotFoundMetadata,
   applyPageMetadata,
   generateRobotsTxt,
   generateSitemap,
@@ -82,6 +83,7 @@ const createSitePrerenderPlugin = () => ({
           import ${JSON.stringify(resolve(__dirname, "src/main.jsx"))};
           export {
             getPrerenderPages,
+            renderNotFoundPage,
             renderPage
           } from ${JSON.stringify(resolve(__dirname, "src/server.jsx"))};
         `
@@ -117,7 +119,8 @@ const createSitePrerenderPlugin = () => ({
       const serverModuleUrl = pathToFileURL(
         join(serverOutput, "entry.mjs")
       ).href;
-      const { getPrerenderPages, renderPage } = await import(serverModuleUrl);
+      const { getPrerenderPages, renderNotFoundPage, renderPage } =
+        await import(serverModuleUrl);
       const outputDirectory = resolve(__dirname, "dist");
       const template = await readFile(
         join(outputDirectory, "index.html"),
@@ -135,6 +138,15 @@ const createSitePrerenderPlugin = () => ({
 
         await mkdir(dirname(outputPath), { recursive: true });
         await writeFile(outputPath, pageHtml);
+      }
+
+      const notFoundPath = join(outputDirectory, "404.html");
+      if (!existsSync(notFoundPath)) {
+        const notFoundHtml = injectPrerenderedApp(
+          applyNotFoundMetadata(template),
+          await renderNotFoundPage("/")
+        );
+        await writeFile(notFoundPath, notFoundHtml);
       }
 
       const baseUrl = getCanonicalBaseUrl(template);
@@ -171,8 +183,8 @@ export default defineConfig(({ mode }) => ({
             injectGeneratorTag(
               injectSiteUrlTags(
                 html
-                  .replace("%SITE_NAME%", site.name)
-                  .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+                  .replace("%SITE_NAME%", () => site.name)
+                  .replace("%SITE_DESCRIPTION%", () => site.description ?? ""),
                 site.url
               )
             )

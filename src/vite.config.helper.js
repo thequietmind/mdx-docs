@@ -17,6 +17,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { build } from "vite";
 
 import {
+  applyNotFoundMetadata,
   applyPageMetadata,
   generateRobotsTxt,
   generateSitemap,
@@ -191,6 +192,7 @@ const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
           import ${JSON.stringify(serverEntry)};
           export {
             getPrerenderPages,
+            renderNotFoundPage,
             renderPage
           } from ${JSON.stringify(serverRenderer)};
         `
@@ -234,7 +236,8 @@ const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
       const serverModuleUrl = pathToFileURL(
         join(serverOutput, "entry.mjs")
       ).href;
-      const { getPrerenderPages, renderPage } = await import(serverModuleUrl);
+      const { getPrerenderPages, renderNotFoundPage, renderPage } =
+        await import(serverModuleUrl);
       const pages = getPrerenderPages();
       const outputDirectory = resolve(rootDir, outDir);
       const template = await readFile(
@@ -252,6 +255,17 @@ const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
 
         await mkdir(dirname(outputPath), { recursive: true });
         await writeFile(outputPath, pageHtml);
+      }
+
+      // Netlify, Cloudflare Pages and GitHub Pages serve a top-level 404.html
+      // with a 404 status for unknown URLs. One from public/ is left as is.
+      const notFoundPath = join(outputDirectory, "404.html");
+      if (!existsSync(notFoundPath)) {
+        const notFoundHtml = injectPrerenderedApp(
+          applyNotFoundMetadata(template),
+          await renderNotFoundPage(base)
+        );
+        await writeFile(notFoundPath, notFoundHtml);
       }
 
       await writeSiteFiles({ pages, template, base, outputDirectory });
@@ -308,8 +322,8 @@ export function createMdxDocsConfig({
               injectGeneratorTag(
                 injectSiteUrlTags(
                   html
-                    .replaceAll("%SITE_NAME%", site.name ?? "")
-                    .replaceAll("%SITE_DESCRIPTION%", site.description ?? ""),
+                    .replaceAll("%SITE_NAME%", () => site.name ?? "")
+                    .replaceAll("%SITE_DESCRIPTION%", () => site.description ?? ""),
                   site.url
                 )
               )

@@ -43,35 +43,44 @@ const replaceTitle = (html, title) => {
 
   const titleTag = `<title>${escapeHtml(title)}</title>`;
   return /<title\b[^>]*>[\s\S]*?<\/title>/i.test(html)
-    ? html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, titleTag)
-    : html.replace("</head>", `  ${titleTag}\n</head>`);
+    ? html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, () => titleTag)
+    : html.replace("</head>", () => `  ${titleTag}\n</head>`);
+};
+
+const getMetaPattern = (attribute, value) =>
+  new RegExp(
+    `<meta\\b(?=[^>]*\\b${escapeRegExp(attribute)}=(["'])${escapeRegExp(value)}\\1)[^>]*>`,
+    "i"
+  );
+
+// Removes the first tag that matches, along with the indentation before it.
+const removeTag = (html, pattern) => {
+  const tag = html.match(pattern)?.[0];
+  if (!tag) return html;
+
+  return html.replace(new RegExp(`\\n?[ \\t]*${escapeRegExp(tag)}`), "");
 };
 
 const replaceMetaContent = (html, attribute, value, content) => {
   if (!content) return html;
 
-  const escapedAttribute = escapeRegExp(attribute);
-  const escapedValue = escapeRegExp(value);
-  const metaPattern = new RegExp(
-    `<meta\\b(?=[^>]*\\b${escapedAttribute}=(["'])${escapedValue}\\1)[^>]*>`,
-    "i"
-  );
-  const existingTag = html.match(metaPattern)?.[0];
+  const existingTag = html.match(getMetaPattern(attribute, value))?.[0];
   const escapedContent = escapeHtml(content);
 
   if (!existingTag) {
     return html.replace(
       "</head>",
-      `  <meta ${attribute}="${escapeHtml(value)}" content="${escapedContent}" />\n</head>`
+      () =>
+        `  <meta ${attribute}="${escapeHtml(value)}" content="${escapedContent}" />\n</head>`
     );
   }
 
   const contentPattern = /\bcontent=(["'])[\s\S]*?\1/i;
   const updatedTag = contentPattern.test(existingTag)
-    ? existingTag.replace(contentPattern, `content="${escapedContent}"`)
-    : existingTag.replace(/\/?>$/, ` content="${escapedContent}" />`);
+    ? existingTag.replace(contentPattern, () => `content="${escapedContent}"`)
+    : existingTag.replace(/\/?>$/, () => ` content="${escapedContent}" />`);
 
-  return html.replace(existingTag, updatedTag);
+  return html.replace(existingTag, () => updatedTag);
 };
 
 export const getCanonicalBaseUrl = (html) => {
@@ -98,9 +107,9 @@ const applyPageUrl = (html, route) => {
   const pageUrl = buildPageUrl(route, baseUrl);
   const updatedCanonical = canonicalTag.replace(
     /\bhref=(["'])[\s\S]*?\1/i,
-    `href="${escapeHtml(pageUrl)}"`
+    () => `href="${escapeHtml(pageUrl)}"`
   );
-  const output = html.replace(canonicalTag, updatedCanonical);
+  const output = html.replace(canonicalTag, () => updatedCanonical);
 
   return replaceMetaContent(output, "property", "og:url", pageUrl);
 };
@@ -131,6 +140,14 @@ export const applyPageMetadata = (html, page) => {
   return output;
 };
 
+// The 404 page is served at every unknown URL, so it has no URL of its own to
+// declare, and search engines shouldn't index it.
+export const applyNotFoundMetadata = (html) => {
+  let output = removeTag(html, CANONICAL_TAG_PATTERN);
+  output = removeTag(output, getMetaPattern("property", "og:url"));
+  return replaceMetaContent(output, "name", "robots", "noindex");
+};
+
 export const injectGeneratorTag = (html) =>
   replaceMetaContent(html, "name", "generator", "@quietmind/mdx-docs");
 
@@ -159,7 +176,7 @@ export const injectVersionAttribute = (html, version) => {
     /\s+data-mdx-docs-version=(["'])[\s\S]*?\1/i;
   const attribute = ` data-mdx-docs-version="${escapeHtml(version)}"`;
   const attributes = versionAttributePattern.test(match[1])
-    ? match[1].replace(versionAttributePattern, attribute)
+    ? match[1].replace(versionAttributePattern, () => attribute)
     : `${match[1]}${attribute}`;
 
   return html.replace(htmlTagPattern, () => `<html${attributes}>`);
@@ -173,7 +190,7 @@ export const injectSiteUrlTags = (html, siteUrl) => {
   if (!CANONICAL_TAG_PATTERN.test(output)) {
     output = output.replace(
       "</head>",
-      `  <link rel="canonical" href="${escapeHtml(baseHref)}" />\n</head>`
+      () => `  <link rel="canonical" href="${escapeHtml(baseHref)}" />\n</head>`
     );
   }
 
@@ -192,6 +209,16 @@ export const generateSitemap = (routes, baseUrl) => {
 export const generateRobotsTxt = (baseUrl) =>
   `User-agent: *\nAllow: /\nSitemap: ${baseUrl}sitemap.xml\n`;
 
+// Emotion renders each global style inline where its component renders, and
+// MUI renders the one with its CSS variables after the page content. Until the
+// parser reaches it every var(--mui-*) is undefined, so the page paints without
+// theme colors. Global styles go at the end of <head> instead, after the color
+// scheme script. Emotion moves every server-rendered style into <head> before
+// hydrating and puts global styles ahead of the rest, so this is the order the
+// page ends up with anyway.
+const GLOBAL_STYLE_PATTERN =
+  /<style\b[^>]*\bdata-emotion="[a-z-]+-global [^"]*"[^>]*>[\s\S]*?<\/style>/g;
+
 export const injectPrerenderedApp = (html, appHtml) => {
   const rootPattern =
     /<div(?=[^>]*\bid=(["'])root\1)[^>]*>\s*<\/div>/i;
@@ -202,8 +229,16 @@ export const injectPrerenderedApp = (html, appHtml) => {
     );
   }
 
-  return html.replace(
-    rootPattern,
-    `<div id="root">${appHtml}</div>`
-  );
+  const globalStyles = appHtml.match(GLOBAL_STYLE_PATTERN) ?? [];
+  let content = appHtml;
+  let previous;
+  do {
+    previous = content;
+    content = content.replace(GLOBAL_STYLE_PATTERN, "");
+  } while (content !== previous);
+  const output = globalStyles.length
+    ? html.replace("</head>", () => `  ${globalStyles.join("")}\n</head>`)
+    : html;
+
+  return output.replace(rootPattern, () => `<div id="root">${content}</div>`);
 };

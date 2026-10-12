@@ -6,6 +6,7 @@ import { join } from "path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
+  applyNotFoundMetadata,
   applyPageMetadata,
   buildPageUrl,
   generateRobotsTxt,
@@ -91,6 +92,38 @@ describe("prerender HTML helpers", () => {
     expect(html).toContain('<div id="root"><main>Page content</main></div>');
   });
 
+  it("moves global styles to the end of the head", () => {
+    const html = injectPrerenderedApp(
+      injectColorSchemeScript(template),
+      '<style data-emotion="css-global a1">body{margin:0}</style>' +
+        '<header><style data-emotion="css b2">.css-b2{color:red}</style></header>' +
+        "<main>Page content</main>" +
+        '<style data-emotion="css-global c3">:root{--mui-spacing:8px}</style>'
+    );
+    const head = html.slice(0, html.indexOf("</head>"));
+
+    expect(html).toContain(
+      '<style data-emotion="css-global a1">body{margin:0}</style>' +
+        '<style data-emotion="css-global c3">:root{--mui-spacing:8px}</style>' +
+        "\n</head>"
+    );
+    expect(head.indexOf("data-mdx-docs-color-scheme-script")).toBeLessThan(
+      head.indexOf("css-global")
+    );
+    expect(html).toContain(
+      '<div id="root"><header><style data-emotion="css b2">.css-b2{color:red}</style></header>' +
+        "<main>Page content</main></div>"
+    );
+  });
+
+  it("leaves the head alone when there are no global styles", () => {
+    const html = injectPrerenderedApp(template, "<main>Page content</main>");
+
+    expect(html.slice(0, html.indexOf("</head>"))).toBe(
+      template.slice(0, template.indexOf("</head>"))
+    );
+  });
+
   it("rejects templates without an empty app root", () => {
     expect(() =>
       injectPrerenderedApp(
@@ -98,6 +131,151 @@ describe("prerender HTML helpers", () => {
         "<main>New content</main>"
       )
     ).toThrow(/empty <div id="root">/);
+  });
+});
+
+// String.prototype.replace treats these as patterns in a replacement string.
+describe.each(["$1", "$&", "$`", "$'", "$$"])(
+  "prerender HTML helpers with %s in the content",
+  (pattern) => {
+    const escaped = pattern.replaceAll("&", "&amp;");
+
+    it("keeps it in prerendered markup", () => {
+      const html = injectPrerenderedApp(
+        template,
+        `<p>Costs ${pattern}17.11 a month</p>`
+      );
+
+      expect(html).toContain(
+        `<div id="root"><p>Costs ${pattern}17.11 a month</p></div>`
+      );
+    });
+
+    it("keeps it in a page title and description", () => {
+      const html = applyPageMetadata(template, {
+        route: "/",
+        title: `Plans from ${pattern}1.99`,
+        description: `Costs ${pattern}12.60 a month`,
+      });
+
+      expect(html).toContain(`<title>Plans from ${escaped}1.99</title>`);
+      for (const tag of [
+        'name="description"',
+        'property="og:description"',
+        'name="twitter:description"',
+      ]) {
+        expect(html).toContain(
+          `${tag} content="Costs ${escaped}12.60 a month"`
+        );
+      }
+      for (const tag of ['property="og:title"', 'name="twitter:title"']) {
+        expect(html).toContain(`${tag} content="Plans from ${escaped}1.99"`);
+      }
+    });
+
+    it("keeps it in metadata tags it adds", () => {
+      const html = applyPageMetadata(
+        '<html><head><meta name="description"></head><body></body></html>',
+        {
+          route: "/",
+          title: `Plans from ${pattern}1.99`,
+          description: `Costs ${pattern}12.60 a month`,
+        }
+      );
+
+      expect(html).toContain(`<title>Plans from ${escaped}1.99</title>`);
+      expect(html).toContain(
+        `<meta name="description" content="Costs ${escaped}12.60 a month" />`
+      );
+      expect(html).toContain(
+        `<meta property="og:title" content="Plans from ${escaped}1.99" />`
+      );
+    });
+
+    it("keeps it in canonical and og:url page urls", () => {
+      const route = `/plans-${pattern}`;
+      const html = applyPageMetadata(template, { route });
+      const pageUrl = buildPageUrl(route, "https://example.com/").replaceAll(
+        "&",
+        "&amp;"
+      );
+
+      expect(html).toContain(`<link rel="canonical" href="${pageUrl}" />`);
+      expect(html).toContain(`property="og:url" content="${pageUrl}"`);
+    });
+
+    it("keeps it in canonical and og:url site urls", () => {
+      const html = injectSiteUrlTags(
+        "<html><head></head><body></body></html>",
+        `https://example.com/${pattern}/`
+      );
+
+      expect(html).toContain(
+        `<link rel="canonical" href="https://example.com/${escaped}/" />`
+      );
+      expect(html).toContain(
+        `<meta property="og:url" content="https://example.com/${escaped}/" />`
+      );
+    });
+
+    it("keeps it in a replaced version attribute", () => {
+      const html = injectVersionAttribute(
+        '<html lang="en" data-mdx-docs-version="1.0.0"><head></head></html>',
+        `2.0.2-${pattern}`
+      );
+
+      expect(html).toContain(`data-mdx-docs-version="2.0.2-${escaped}"`);
+    });
+
+    it("keeps it in the site name and description", () => {
+      const transformIndexHtml = createMdxDocsConfig({
+        rootDir: "/tmp/mdx-docs-test",
+        site: {
+          name: `Plans from ${pattern}1.99`,
+          description: `Costs ${pattern}12.60 a month`,
+        },
+      }).plugins.find(
+        (plugin) => plugin?.name === "html-site-config"
+      ).transformIndexHtml;
+
+      const html = transformIndexHtml(
+        '<html><head><title>%SITE_NAME%</title>' +
+          '<meta name="description" content="%SITE_DESCRIPTION%" />' +
+          '</head><body><div id="root"></div></body></html>'
+      );
+
+      expect(html).toContain(`<title>Plans from ${pattern}1.99</title>`);
+      expect(html).toContain(
+        `<meta name="description" content="Costs ${pattern}12.60 a month" />`
+      );
+    });
+  }
+);
+
+describe("applyNotFoundMetadata", () => {
+  it("drops the page url and marks the page noindex", () => {
+    const html = applyNotFoundMetadata(template);
+
+    expect(html).not.toMatch(/rel="canonical"/);
+    expect(html).not.toMatch(/property="og:url"/);
+    expect(html).toContain(
+      '<meta name="robots" content="noindex" />\n</head>'
+    );
+    expect(html).toContain(
+      '<meta property="og:description" content="Default description" />\n' +
+        '    <meta name="twitter:title" content="Default title" />'
+    );
+    expect(html).toContain("<title>Default title</title>");
+  });
+
+  it("overrides an existing robots tag", () => {
+    const html = applyNotFoundMetadata(
+      '<html><head><meta name="robots" content="index, follow" /></head></html>'
+    );
+
+    expect(html).toBe(
+      '<html><head><meta name="robots" content="noindex" /></head></html>'
+    );
   });
 });
 
