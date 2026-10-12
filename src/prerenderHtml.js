@@ -43,8 +43,8 @@ const replaceTitle = (html, title) => {
 
   const titleTag = `<title>${escapeHtml(title)}</title>`;
   return /<title\b[^>]*>[\s\S]*?<\/title>/i.test(html)
-    ? html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, titleTag)
-    : html.replace("</head>", `  ${titleTag}\n</head>`);
+    ? html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, () => titleTag)
+    : html.replace("</head>", () => `  ${titleTag}\n</head>`);
 };
 
 const replaceMetaContent = (html, attribute, value, content) => {
@@ -62,16 +62,17 @@ const replaceMetaContent = (html, attribute, value, content) => {
   if (!existingTag) {
     return html.replace(
       "</head>",
-      `  <meta ${attribute}="${escapeHtml(value)}" content="${escapedContent}" />\n</head>`
+      () =>
+        `  <meta ${attribute}="${escapeHtml(value)}" content="${escapedContent}" />\n</head>`
     );
   }
 
   const contentPattern = /\bcontent=(["'])[\s\S]*?\1/i;
   const updatedTag = contentPattern.test(existingTag)
-    ? existingTag.replace(contentPattern, `content="${escapedContent}"`)
-    : existingTag.replace(/\/?>$/, ` content="${escapedContent}" />`);
+    ? existingTag.replace(contentPattern, () => `content="${escapedContent}"`)
+    : existingTag.replace(/\/?>$/, () => ` content="${escapedContent}" />`);
 
-  return html.replace(existingTag, updatedTag);
+  return html.replace(existingTag, () => updatedTag);
 };
 
 export const getCanonicalBaseUrl = (html) => {
@@ -98,9 +99,9 @@ const applyPageUrl = (html, route) => {
   const pageUrl = buildPageUrl(route, baseUrl);
   const updatedCanonical = canonicalTag.replace(
     /\bhref=(["'])[\s\S]*?\1/i,
-    `href="${escapeHtml(pageUrl)}"`
+    () => `href="${escapeHtml(pageUrl)}"`
   );
-  const output = html.replace(canonicalTag, updatedCanonical);
+  const output = html.replace(canonicalTag, () => updatedCanonical);
 
   return replaceMetaContent(output, "property", "og:url", pageUrl);
 };
@@ -159,7 +160,7 @@ export const injectVersionAttribute = (html, version) => {
     /\s+data-mdx-docs-version=(["'])[\s\S]*?\1/i;
   const attribute = ` data-mdx-docs-version="${escapeHtml(version)}"`;
   const attributes = versionAttributePattern.test(match[1])
-    ? match[1].replace(versionAttributePattern, attribute)
+    ? match[1].replace(versionAttributePattern, () => attribute)
     : `${match[1]}${attribute}`;
 
   return html.replace(htmlTagPattern, () => `<html${attributes}>`);
@@ -173,7 +174,7 @@ export const injectSiteUrlTags = (html, siteUrl) => {
   if (!CANONICAL_TAG_PATTERN.test(output)) {
     output = output.replace(
       "</head>",
-      `  <link rel="canonical" href="${escapeHtml(baseHref)}" />\n</head>`
+      () => `  <link rel="canonical" href="${escapeHtml(baseHref)}" />\n</head>`
     );
   }
 
@@ -202,8 +203,5 @@ export const injectPrerenderedApp = (html, appHtml) => {
     );
   }
 
-  return html.replace(
-    rootPattern,
-    `<div id="root">${appHtml}</div>`
-  );
+  return html.replace(rootPattern, () => `<div id="root">${appHtml}</div>`);
 };

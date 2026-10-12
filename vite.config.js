@@ -171,8 +171,8 @@ export default defineConfig(({ mode }) => ({
             injectGeneratorTag(
               injectSiteUrlTags(
                 html
-                  .replace("%SITE_NAME%", site.name)
-                  .replace("%SITE_DESCRIPTION%", site.description ?? ""),
+                  .replace("%SITE_NAME%", () => site.name)
+                  .replace("%SITE_DESCRIPTION%", () => site.description ?? ""),
                 site.url
               )
             )

@@ -101,6 +101,124 @@ describe("prerender HTML helpers", () => {
   });
 });
 
+// String.prototype.replace treats these as patterns in a replacement string.
+describe.each(["$1", "$&", "$`", "$'", "$$"])(
+  "prerender HTML helpers with %s in the content",
+  (pattern) => {
+    const escaped = pattern.replaceAll("&", "&amp;");
+
+    it("keeps it in prerendered markup", () => {
+      const html = injectPrerenderedApp(
+        template,
+        `<p>Costs ${pattern}17.11 a month</p>`
+      );
+
+      expect(html).toContain(
+        `<div id="root"><p>Costs ${pattern}17.11 a month</p></div>`
+      );
+    });
+
+    it("keeps it in a page title and description", () => {
+      const html = applyPageMetadata(template, {
+        route: "/",
+        title: `Plans from ${pattern}1.99`,
+        description: `Costs ${pattern}12.60 a month`,
+      });
+
+      expect(html).toContain(`<title>Plans from ${escaped}1.99</title>`);
+      for (const tag of [
+        'name="description"',
+        'property="og:description"',
+        'name="twitter:description"',
+      ]) {
+        expect(html).toContain(
+          `${tag} content="Costs ${escaped}12.60 a month"`
+        );
+      }
+      for (const tag of ['property="og:title"', 'name="twitter:title"']) {
+        expect(html).toContain(`${tag} content="Plans from ${escaped}1.99"`);
+      }
+    });
+
+    it("keeps it in metadata tags it adds", () => {
+      const html = applyPageMetadata(
+        '<html><head><meta name="description"></head><body></body></html>',
+        {
+          route: "/",
+          title: `Plans from ${pattern}1.99`,
+          description: `Costs ${pattern}12.60 a month`,
+        }
+      );
+
+      expect(html).toContain(`<title>Plans from ${escaped}1.99</title>`);
+      expect(html).toContain(
+        `<meta name="description" content="Costs ${escaped}12.60 a month" />`
+      );
+      expect(html).toContain(
+        `<meta property="og:title" content="Plans from ${escaped}1.99" />`
+      );
+    });
+
+    it("keeps it in canonical and og:url page urls", () => {
+      const route = `/plans-${pattern}`;
+      const html = applyPageMetadata(template, { route });
+      const pageUrl = buildPageUrl(route, "https://example.com/").replaceAll(
+        "&",
+        "&amp;"
+      );
+
+      expect(html).toContain(`<link rel="canonical" href="${pageUrl}" />`);
+      expect(html).toContain(`property="og:url" content="${pageUrl}"`);
+    });
+
+    it("keeps it in canonical and og:url site urls", () => {
+      const html = injectSiteUrlTags(
+        "<html><head></head><body></body></html>",
+        `https://example.com/${pattern}/`
+      );
+
+      expect(html).toContain(
+        `<link rel="canonical" href="https://example.com/${escaped}/" />`
+      );
+      expect(html).toContain(
+        `<meta property="og:url" content="https://example.com/${escaped}/" />`
+      );
+    });
+
+    it("keeps it in a replaced version attribute", () => {
+      const html = injectVersionAttribute(
+        '<html lang="en" data-mdx-docs-version="1.0.0"><head></head></html>',
+        `2.0.2-${pattern}`
+      );
+
+      expect(html).toContain(`data-mdx-docs-version="2.0.2-${escaped}"`);
+    });
+
+    it("keeps it in the site name and description", () => {
+      const transformIndexHtml = createMdxDocsConfig({
+        rootDir: "/tmp/mdx-docs-test",
+        site: {
+          name: `Plans from ${pattern}1.99`,
+          description: `Costs ${pattern}12.60 a month`,
+        },
+      }).plugins.find(
+        (plugin) => plugin?.name === "html-site-config"
+      ).transformIndexHtml;
+
+      const html = transformIndexHtml(
+        '<html><head><title>%SITE_NAME%</title>' +
+          '<meta name="description" content="%SITE_DESCRIPTION%" />' +
+          '</head><body><div id="root"></div></body></html>'
+      );
+
+      expect(html).toContain(`<title>Plans from ${pattern}1.99</title>`);
+      expect(html).toContain(
+        `<meta name="description" content="Costs ${pattern}12.60 a month" />`
+      );
+    });
+  }
+);
+
 describe("getRouteOutputPath", () => {
   it("maps the home route to the output root index.html", () => {
     expect(getRouteOutputPath("dist", "/")).toBe("dist/index.html");
