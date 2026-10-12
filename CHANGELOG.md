@@ -26,6 +26,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Pages answered unknown URLs with the home page and a 200. The page is marked
   `noindex`, has no canonical or `og:url` tag, and isn't in the sitemap. An
   existing `public/404.html` is left as is
+- A site's `pages/404.mdx` renders for unknown URLs and in the prerendered
+  `404.html`. The published package had the built-in 404 page bundled in, so
+  sites using `createMdxDocsConfig` always got "Page not found" instead. The
+  package now imports its 404 page from a new `@quietmind/mdx-docs/404` export,
+  which `createMdxDocsConfig` points at `pages/404.mdx` when the site has one.
+  Sites with their own Vite config still get the built-in page
+- The built-in 404 page's "Go home" link goes to the site's base path instead
+  of `/`
 
 ## [2.0.1] - 2026-10-11
 

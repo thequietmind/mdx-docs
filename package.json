@@ -15,6 +15,9 @@
     "./server": {
       "import": "./dist/server.js"
     },
+    "./404": {
+      "import": "./dist/404.js"
+    },
     "./vite": "./src/vite.config.helper.js"
   },
   "files": [

@@ -90,21 +90,16 @@ export function rehypeUnwrapJsxParagraphs() {
  *   createMdxDocsConfig({ rootDir: import.meta.dirname })
  * );
  */
-const VIRTUAL_404_ID = "virtual:mdx-docs/404";
-const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
+// The package renders its 404 route from this export, which resolves to the
+// built-in NotFound unless a site plugin resolves it first.
+const PACKAGE_404_ID = "@quietmind/mdx-docs/404";
 
-const create404Plugin = ({ hasCustom404 }) => ({
+const create404Plugin = (custom404Path) => ({
   name: "mdx-docs-404",
+  // Vite's resolver would otherwise resolve the export to the built-in page.
+  enforce: "pre",
   resolveId(id) {
-    if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
-  },
-  load(id) {
-    if (id === RESOLVED_VIRTUAL_404_ID) {
-      if (hasCustom404) {
-        return `export { default } from "@pages/404.mdx";`;
-      }
-      return `export { NotFound as default } from "@quietmind/mdx-docs";`;
-    }
+    if (id === PACKAGE_404_ID) return custom404Path;
   },
 });
 
@@ -204,7 +199,7 @@ const createPrerenderPlugin = ({ rootDir, base, entry, outDir }) => ({
         base,
         logLevel: "warn",
         plugins: [
-          create404Plugin({ hasCustom404 }),
+          hasCustom404 && create404Plugin(custom404Path),
           react(),
           createMdxPlugin(),
         ],
@@ -313,7 +308,7 @@ export function createMdxDocsConfig({
   return {
     base,
     plugins: [
-      create404Plugin({ hasCustom404 }),
+      hasCustom404 && create404Plugin(custom404Path),
       {
         name: "html-site-config",
         transformIndexHtml: (html) =>
@@ -345,6 +340,9 @@ export function createMdxDocsConfig({
     // two copies of React.
     optimizeDeps: {
       include: ["@emotion/react/jsx-dev-runtime", "@mdx-js/react"],
+      // The optimizer doesn't run site plugins, so it would bundle the built-in
+      // 404 page into the package. Left out, the import resolves at request time.
+      exclude: hasCustom404 ? [PACKAGE_404_ID] : [],
     },
     resolve: {
       alias: {
