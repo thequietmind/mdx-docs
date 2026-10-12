@@ -230,7 +230,12 @@ export const injectPrerenderedApp = (html, appHtml) => {
   }
 
   const globalStyles = appHtml.match(GLOBAL_STYLE_PATTERN) ?? [];
-  const content = appHtml.replace(GLOBAL_STYLE_PATTERN, "");
+  let content = appHtml;
+  let previous;
+  do {
+    previous = content;
+    content = content.replace(GLOBAL_STYLE_PATTERN, "");
+  } while (content !== previous);
   const output = globalStyles.length
     ? html.replace("</head>", () => `  ${globalStyles.join("")}\n</head>`)
     : html;
