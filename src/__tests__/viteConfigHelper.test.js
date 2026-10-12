@@ -579,7 +579,14 @@ describe("createPreviewTrailingSlashPlugin", () => {
   beforeAll(() => {
     rootDir = mkdtempSync(join(tmpdir(), "mdx-docs-preview-"));
     mkdirSync(join(rootDir, "dist", "getting-started"), { recursive: true });
+    mkdirSync(join(rootDir, "dist", "assets"));
+    writeFileSync(join(rootDir, "dist", "index.html"), "");
     writeFileSync(join(rootDir, "dist", "getting-started", "index.html"), "");
+    writeFileSync(join(rootDir, "dist", "404.html"), "<p>Not found</p>");
+    writeFileSync(join(rootDir, "dist", "legacy.html"), "");
+    writeFileSync(join(rootDir, "dist", "assets", "app.js"), "");
+    mkdirSync(join(rootDir, "dist-without-404"));
+    writeFileSync(join(rootDir, "dist-without-404", "index.html"), "");
     mkdirSync(join(rootDir, "outside"));
     writeFileSync(join(rootDir, "outside", "index.html"), "");
   });
@@ -588,21 +595,36 @@ describe("createPreviewTrailingSlashPlugin", () => {
     rmSync(rootDir, { force: true, recursive: true });
   });
 
-  const request = (url, { base = "/" } = {}) => {
+  const request = (
+    url,
+    {
+      base = "/",
+      outDir = "dist",
+      method = "GET",
+      accept = "text/html,application/xhtml+xml,*/*;q=0.8",
+    } = {}
+  ) => {
     const plugin = createPreviewTrailingSlashPlugin();
-    plugin.configResolved({ base, root: rootDir, build: { outDir: "dist" } });
+    plugin.configResolved({ base, root: rootDir, build: { outDir } });
 
-    let middleware;
-    plugin.configurePreviewServer({
-      middlewares: { use: (handler) => (middleware = handler) },
+    const middlewares = [];
+    const addPostMiddlewares = plugin.configurePreviewServer({
+      middlewares: { use: (handler) => middlewares.push(handler) },
     });
+    addPostMiddlewares();
+    const [redirect, notFound] = middlewares;
 
+    const req = { method, url, originalUrl: url, headers: { accept } };
     const res = { headers: {}, setHeader: vi.fn(), end: vi.fn() };
     res.setHeader.mockImplementation((name, value) => {
       res.headers[name] = value;
     });
     const next = vi.fn();
-    middleware({ url }, res, next);
+    redirect(req, res, () => {
+      // Vite's SPA fallback rewrites the URL before the post middleware runs.
+      req.url = "/index.html";
+      notFound(req, res, next);
+    });
     return { res, next };
   };
 
@@ -623,13 +645,32 @@ describe("createPreviewTrailingSlashPlugin", () => {
   });
 
   it.each([
-    ["the trailing-slash form", "/getting-started/", "/"],
-    ["routes without a directory index", "/missing", "/"],
-    ["paths outside the base", "/getting-started", "/docs/"],
-    ["paths that escape the output directory", "/..%2Foutside", "/"],
-    ["protocol-relative paths", "/.//getting-started", "/"],
-  ])("passes through %s", (_, url, base) => {
+    ["unknown routes", "/nope", "/"],
+    ["unknown routes with a trailing slash", "/nope/", "/"],
+    ["directories without an index.html", "/assets", "/"],
+    ["unknown routes under a non-root base", "/docs/nope", "/docs/"],
+  ])("serves 404.html with a 404 status for %s", (_, url, base) => {
     const { res, next } = request(url, { base });
+
+    expect(next).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(404);
+    expect(res.headers["Content-Type"]).toBe("text/html; charset=utf-8");
+    expect(String(res.end.mock.calls[0][0])).toBe("<p>Not found</p>");
+  });
+
+  it.each([
+    ["the trailing-slash form", "/getting-started/", {}],
+    ["the site root", "/", {}],
+    ["existing files", "/assets/app.js", {}],
+    [".html files requested without the extension", "/legacy", {}],
+    ["asset requests", "/assets/missing.js", { accept: "*/*" }],
+    ["requests other than GET and HEAD", "/nope", { method: "POST" }],
+    ["builds without a 404.html", "/nope", { outDir: "dist-without-404" }],
+    ["paths outside the base", "/getting-started", { base: "/docs/" }],
+    ["paths that escape the output directory", "/..%2Foutside", {}],
+    ["protocol-relative paths", "/.//getting-started", {}],
+  ])("passes through %s", (_, url, options) => {
+    const { res, next } = request(url, options);
 
     expect(next).toHaveBeenCalled();
     expect(res.end).not.toHaveBeenCalled();
