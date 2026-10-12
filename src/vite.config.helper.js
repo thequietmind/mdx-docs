@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync, statSync } from "fs";
 import {
   mkdir,
   mkdtemp,
@@ -112,14 +112,39 @@ const createMdxPlugin = () =>
   });
 
 /**
- * Vite plugin that makes `vite preview` redirect `/route` to `/route/` when
- * `<outDir>/route/index.html` exists, matching Netlify, GitHub Pages and
- * Cloudflare Pages. Without it, Vite's SPA fallback answers `/route` with the
- * root index.html, and hydration fails against the wrong page's markup.
+ * Vite plugin that makes `vite preview` answer like Netlify, GitHub Pages and
+ * Cloudflare Pages. `/route` redirects to `/route/` when
+ * `<outDir>/route/index.html` exists, and a page request that doesn't match a
+ * file gets `<outDir>/404.html` with a 404 status. Without it, Vite's SPA
+ * fallback answers both with the root index.html, and hydration fails against
+ * the wrong page's markup.
  */
 export const createPreviewTrailingSlashPlugin = () => {
   let base = "/";
   let outputDirectory = "";
+
+  const resolveRequestPath = (url) => {
+    const { pathname, search } = new URL(url, "http://localhost");
+    // A leading "//" would make the Location header protocol-relative.
+    if (pathname.startsWith("//") || !pathname.startsWith(base)) return null;
+
+    let routePath;
+    try {
+      routePath = decodeURIComponent(pathname.slice(base.length));
+    } catch {
+      return null;
+    }
+
+    const filePath = join(outputDirectory, routePath);
+    const indexPath = join(filePath, "index.html");
+    if (!indexPath.startsWith(outputDirectory + sep)) return null;
+
+    return { pathname, search, filePath, indexPath };
+  };
+
+  const isOutputFile = (path) =>
+    path.startsWith(outputDirectory + sep) &&
+    statSync(path, { throwIfNoEntry: false })?.isFile() === true;
 
   return {
     name: "mdx-docs-preview-trailing-slash",
@@ -130,35 +155,48 @@ export const createPreviewTrailingSlashPlugin = () => {
     // Middlewares added here run before Vite strips the base from the URL.
     configurePreviewServer(server) {
       server.middlewares.use((req, res, next) => {
-        const { pathname, search } = new URL(req.url, "http://localhost");
-        // A leading "//" would make the Location header protocol-relative.
+        const request = resolveRequestPath(req.url);
         if (
-          pathname.endsWith("/") ||
-          pathname.startsWith("//") ||
-          !pathname.startsWith(base)
-        ) {
-          return next();
-        }
-
-        let routePath;
-        try {
-          routePath = decodeURIComponent(pathname.slice(base.length));
-        } catch {
-          return next();
-        }
-
-        const indexPath = join(outputDirectory, routePath, "index.html");
-        if (
-          !indexPath.startsWith(outputDirectory + sep) ||
-          !existsSync(indexPath)
+          !request ||
+          request.pathname.endsWith("/") ||
+          !existsSync(request.indexPath)
         ) {
           return next();
         }
 
         res.statusCode = 301;
-        res.setHeader("Location", `${pathname}/${search}`);
+        res.setHeader("Location", `${request.pathname}/${request.search}`);
         res.end();
       });
+
+      // Runs after Vite's proxy and static files, but before it serves the SPA
+      // fallback it already rewrote req.url to, so this reads req.originalUrl.
+      return () => {
+        server.middlewares.use((req, res, next) => {
+          const notFoundPath = join(outputDirectory, "404.html");
+          if (
+            (req.method !== "GET" && req.method !== "HEAD") ||
+            !req.headers.accept?.includes("text/html") ||
+            !existsSync(notFoundPath)
+          ) {
+            return next();
+          }
+
+          const request = resolveRequestPath(req.originalUrl);
+          if (
+            !request ||
+            isOutputFile(request.filePath) ||
+            isOutputFile(`${request.filePath}.html`) ||
+            isOutputFile(request.indexPath)
+          ) {
+            return next();
+          }
+
+          res.statusCode = 404;
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          res.end(readFileSync(notFoundPath));
+        });
+      };
     },
   };
 };

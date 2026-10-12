@@ -34,6 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Sites with their own Vite config still get the built-in page
 - The built-in 404 page's "Go home" link goes to the site's base path instead
   of `/`
+- `vite preview` answers unknown URLs like `/nope` with `404.html` and a 404
+  status, the way Netlify, Cloudflare Pages and GitHub Pages do. It used to
+  answer with the home page's HTML and a 200, so the 404 page logged a
+  hydration error (React #418) that a real host wouldn't. Sites with their own
+  Vite config get this from `createPreviewTrailingSlashPlugin`. Requests for
+  files that exist and for assets like scripts and images are left to Vite
 
 ## [2.0.1] - 2026-10-11
 
