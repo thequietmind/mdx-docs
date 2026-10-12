@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-10-12
+
+### Fixed
+
+- Prerendered pages define the theme's CSS variables in `<head>`, right after
+  the color scheme script. MUI renders them after the page content, so until
+  the browser got that far the page painted without theme colors over a canvas
+  that follows the OS setting. A visitor who chose light mode on a dark OS saw
+  a dark, unstyled page while the rest of the document loaded. Global styles
+  that page content renders, like a nested `ThemeProvider` with `cssVariables`,
+  move to `<head>` too
+- `$1`, `$&`, `` $` ``, `$'` and `$$` in page content, titles, descriptions,
+  page URLs or the site name and description come through prerendering as
+  written. They were treated as replacement patterns, so "Costs $17.11" came
+  out as `Costs "7.11`
+- Production builds write a `404.html` from the 404 route, which Netlify,
+  Cloudflare Pages and GitHub Pages serve with a 404 status for unknown URLs.
+  Netlify showed its generic "Page not found" page instead, and Cloudflare
+  Pages answered unknown URLs with the home page and a 200. The page is marked
+  `noindex`, has no canonical or `og:url` tag, and isn't in the sitemap. An
+  existing `public/404.html` is left as is
+
 ## [2.0.1] - 2026-10-11
 
 ### Fixed
