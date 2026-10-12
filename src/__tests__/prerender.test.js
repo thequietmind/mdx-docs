@@ -3,6 +3,7 @@ import {
   cpSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -110,6 +111,14 @@ describe("site prerender", () => {
   const readPage = (path, site = "site") =>
     readFileSync(join(fixtureDirectory, site, "dist", path), "utf8");
 
+  const readClientScripts = (site) => {
+    const assetsDirectory = join(fixtureDirectory, site, "dist/assets");
+    return readdirSync(assetsDirectory)
+      .filter((file) => file.endsWith(".js"))
+      .map((file) => readFileSync(join(assetsDirectory, file), "utf8"))
+      .join("\n");
+  };
+
   beforeAll(async () => {
     // Inside the repo so the fixture resolves react and MUI from node_modules.
     fixtureDirectory = mkdtempSync(join(root, ".prerender-fixture-"));
@@ -141,6 +150,10 @@ describe("site prerender", () => {
     await buildSite("site-with-404", {
       ...siteFiles,
       "public/404.html": "<p>Custom 404</p>",
+    });
+    await buildSite("site-with-404-page", {
+      ...siteFiles,
+      "pages/404.mdx": "# Lost in the fixture",
     });
   }, 90000);
 
@@ -192,5 +205,15 @@ describe("site prerender", () => {
 
   it("leaves a 404 page from public/ as is", () => {
     expect(readPage("404.html", "site-with-404")).toBe("<p>Custom 404</p>");
+  });
+
+  it("renders the site's pages/404.mdx in 404.html and the client", () => {
+    const html = readPage("404.html", "site-with-404-page");
+
+    expect(html).toContain("Lost in the fixture");
+    expect(html).not.toContain("Page not found");
+    expect(readClientScripts("site-with-404-page")).toContain(
+      "Lost in the fixture"
+    );
   });
 });
