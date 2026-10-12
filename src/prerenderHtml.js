@@ -193,6 +193,16 @@ export const generateSitemap = (routes, baseUrl) => {
 export const generateRobotsTxt = (baseUrl) =>
   `User-agent: *\nAllow: /\nSitemap: ${baseUrl}sitemap.xml\n`;
 
+// Emotion renders each global style inline where its component renders, and
+// MUI renders the one with its CSS variables after the page content. Until the
+// parser reaches it every var(--mui-*) is undefined, so the page paints without
+// theme colors. Global styles go at the end of <head> instead, after the color
+// scheme script. Emotion moves every server-rendered style into <head> before
+// hydrating and puts global styles ahead of the rest, so this is the order the
+// page ends up with anyway.
+const GLOBAL_STYLE_PATTERN =
+  /<style\b[^>]*\bdata-emotion="[a-z-]+-global [^"]*"[^>]*>[\s\S]*?<\/style>/g;
+
 export const injectPrerenderedApp = (html, appHtml) => {
   const rootPattern =
     /<div(?=[^>]*\bid=(["'])root\1)[^>]*>\s*<\/div>/i;
@@ -203,5 +213,11 @@ export const injectPrerenderedApp = (html, appHtml) => {
     );
   }
 
-  return html.replace(rootPattern, () => `<div id="root">${appHtml}</div>`);
+  const globalStyles = appHtml.match(GLOBAL_STYLE_PATTERN) ?? [];
+  const content = appHtml.replace(GLOBAL_STYLE_PATTERN, "");
+  const output = globalStyles.length
+    ? html.replace("</head>", () => `  ${globalStyles.join("")}\n</head>`)
+    : html;
+
+  return output.replace(rootPattern, () => `<div id="root">${content}</div>`);
 };

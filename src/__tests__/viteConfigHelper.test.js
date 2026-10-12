@@ -91,6 +91,38 @@ describe("prerender HTML helpers", () => {
     expect(html).toContain('<div id="root"><main>Page content</main></div>');
   });
 
+  it("moves global styles to the end of the head", () => {
+    const html = injectPrerenderedApp(
+      injectColorSchemeScript(template),
+      '<style data-emotion="css-global a1">body{margin:0}</style>' +
+        '<header><style data-emotion="css b2">.css-b2{color:red}</style></header>' +
+        "<main>Page content</main>" +
+        '<style data-emotion="css-global c3">:root{--mui-spacing:8px}</style>'
+    );
+    const head = html.slice(0, html.indexOf("</head>"));
+
+    expect(html).toContain(
+      '<style data-emotion="css-global a1">body{margin:0}</style>' +
+        '<style data-emotion="css-global c3">:root{--mui-spacing:8px}</style>' +
+        "\n</head>"
+    );
+    expect(head.indexOf("data-mdx-docs-color-scheme-script")).toBeLessThan(
+      head.indexOf("css-global")
+    );
+    expect(html).toContain(
+      '<div id="root"><header><style data-emotion="css b2">.css-b2{color:red}</style></header>' +
+        "<main>Page content</main></div>"
+    );
+  });
+
+  it("leaves the head alone when there are no global styles", () => {
+    const html = injectPrerenderedApp(template, "<main>Page content</main>");
+
+    expect(html.slice(0, html.indexOf("</head>"))).toBe(
+      template.slice(0, template.indexOf("</head>"))
+    );
+  });
+
   it("rejects templates without an empty app root", () => {
     expect(() =>
       injectPrerenderedApp(

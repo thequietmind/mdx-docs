@@ -43,16 +43,38 @@ createApp({
       route: "/color-mode",
       component: lazy(() => import("./pages/ColorMode.jsx")),
     },
+    {
+      name: "Nested theme",
+      route: "/nested-theme",
+      component: lazy(() => import("./pages/NestedTheme.jsx")),
+    },
   ],
 });`,
   "pages/Home.jsx": `export default function Home() {
-  return <p>Home page</p>;
+  return <p>Costs $17.11 a month</p>;
 }`,
   "pages/ColorMode.jsx": `import { useColorMode } from "@quietmind/mdx-docs";
 
 export default function ColorMode() {
   const { darkMode } = useColorMode();
   return <p>{\`Rendered in \${darkMode ? "dark" : "light"} mode\`}</p>;
+}`,
+  "pages/NestedTheme.jsx": `import { Box, ThemeProvider, createTheme } from "@mui/material";
+
+const theme = createTheme({
+  cssVariables: {
+    colorSchemeSelector: "data-mdx-docs-color-scheme",
+    cssVarPrefix: "nested",
+  },
+  colorSchemes: { light: true, dark: true },
+});
+
+export default function NestedTheme() {
+  return (
+    <ThemeProvider theme={theme}>
+      <Box sx={{ color: "text.primary" }}>Nested theme</Box>
+    </ThemeProvider>
+  );
 }`,
 };
 
@@ -84,7 +106,10 @@ const installPackage = async (packageDirectory) => {
 
 describe("site prerender", () => {
   let fixtureDirectory;
-  let html;
+  let siteDirectory;
+
+  const readPage = (path) =>
+    readFileSync(join(siteDirectory, "dist", path), "utf8");
 
   beforeAll(async () => {
     // Inside the repo so the fixture resolves react and MUI from node_modules.
@@ -93,7 +118,7 @@ describe("site prerender", () => {
       fixtureDirectory,
       "node_modules/@quietmind/mdx-docs"
     );
-    const siteDirectory = join(fixtureDirectory, "site");
+    siteDirectory = join(fixtureDirectory, "site");
 
     await installPackage(packageDirectory);
     writeFiles(siteDirectory, siteFiles);
@@ -110,11 +135,6 @@ describe("site prerender", () => {
         site: { name: "Fixture", url: "https://example.com" },
       }),
     });
-
-    html = readFileSync(
-      join(siteDirectory, "dist/color-mode/index.html"),
-      "utf8"
-    );
   }, 60000);
 
   afterAll(() => {
@@ -124,7 +144,29 @@ describe("site prerender", () => {
   });
 
   it("renders lazy pages that read the color mode context", () => {
+    const html = readPage("color-mode/index.html");
+
     expect(html).toContain("Rendered in light mode");
     expect(html).not.toContain("<!--$!-->");
+  });
+
+  it("keeps $ patterns in page content", () => {
+    expect(readPage("index.html")).toContain("<p>Costs $17.11 a month</p>");
+  });
+
+  it.each([
+    ["index.html", "--mui-palette-"],
+    ["nested-theme/index.html", "--nested-palette-"],
+  ])("defines the theme variables in the head of %s", (path, variable) => {
+    const html = readPage(path);
+    const head = html.slice(0, html.indexOf("</head>"));
+    const body = html.slice(html.indexOf("</head>"));
+
+    expect(head).toContain('[data-mdx-docs-color-scheme="dark"]{');
+    expect(head).toContain(variable);
+    expect(head.indexOf("data-mdx-docs-color-scheme-script")).toBeLessThan(
+      head.indexOf('data-emotion="css-global')
+    );
+    expect(body).not.toContain('data-emotion="css-global');
   });
 });
