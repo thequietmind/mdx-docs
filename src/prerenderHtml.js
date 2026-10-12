@@ -47,16 +47,24 @@ const replaceTitle = (html, title) => {
     : html.replace("</head>", () => `  ${titleTag}\n</head>`);
 };
 
+const getMetaPattern = (attribute, value) =>
+  new RegExp(
+    `<meta\\b(?=[^>]*\\b${escapeRegExp(attribute)}=(["'])${escapeRegExp(value)}\\1)[^>]*>`,
+    "i"
+  );
+
+// Removes the first tag that matches, along with the indentation before it.
+const removeTag = (html, pattern) => {
+  const tag = html.match(pattern)?.[0];
+  if (!tag) return html;
+
+  return html.replace(new RegExp(`\\n?[ \\t]*${escapeRegExp(tag)}`), "");
+};
+
 const replaceMetaContent = (html, attribute, value, content) => {
   if (!content) return html;
 
-  const escapedAttribute = escapeRegExp(attribute);
-  const escapedValue = escapeRegExp(value);
-  const metaPattern = new RegExp(
-    `<meta\\b(?=[^>]*\\b${escapedAttribute}=(["'])${escapedValue}\\1)[^>]*>`,
-    "i"
-  );
-  const existingTag = html.match(metaPattern)?.[0];
+  const existingTag = html.match(getMetaPattern(attribute, value))?.[0];
   const escapedContent = escapeHtml(content);
 
   if (!existingTag) {
@@ -130,6 +138,14 @@ export const applyPageMetadata = (html, page) => {
   );
   output = applyPageUrl(output, page.route);
   return output;
+};
+
+// The 404 page is served at every unknown URL, so it has no URL of its own to
+// declare, and search engines shouldn't index it.
+export const applyNotFoundMetadata = (html) => {
+  let output = removeTag(html, CANONICAL_TAG_PATTERN);
+  output = removeTag(output, getMetaPattern("property", "og:url"));
+  return replaceMetaContent(output, "name", "robots", "noindex");
 };
 
 export const injectGeneratorTag = (html) =>

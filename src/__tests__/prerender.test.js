@@ -106,10 +106,9 @@ const installPackage = async (packageDirectory) => {
 
 describe("site prerender", () => {
   let fixtureDirectory;
-  let siteDirectory;
 
-  const readPage = (path) =>
-    readFileSync(join(siteDirectory, "dist", path), "utf8");
+  const readPage = (path, site = "site") =>
+    readFileSync(join(fixtureDirectory, site, "dist", path), "utf8");
 
   beforeAll(async () => {
     // Inside the repo so the fixture resolves react and MUI from node_modules.
@@ -118,24 +117,32 @@ describe("site prerender", () => {
       fixtureDirectory,
       "node_modules/@quietmind/mdx-docs"
     );
-    siteDirectory = join(fixtureDirectory, "site");
 
     await installPackage(packageDirectory);
-    writeFiles(siteDirectory, siteFiles);
-
     const { createMdxDocsConfig } = await import(
       pathToFileURL(join(packageDirectory, "src/vite.config.helper.js")).href
     );
-    await build({
-      configFile: false,
-      logLevel: "silent",
-      root: siteDirectory,
-      ...createMdxDocsConfig({
-        rootDir: siteDirectory,
-        site: { name: "Fixture", url: "https://example.com" },
-      }),
+
+    const buildSite = async (name, files) => {
+      const siteDirectory = join(fixtureDirectory, name);
+      writeFiles(siteDirectory, files);
+      await build({
+        configFile: false,
+        logLevel: "silent",
+        root: siteDirectory,
+        ...createMdxDocsConfig({
+          rootDir: siteDirectory,
+          site: { name: "Fixture", url: "https://example.com" },
+        }),
+      });
+    };
+
+    await buildSite("site", siteFiles);
+    await buildSite("site-with-404", {
+      ...siteFiles,
+      "public/404.html": "<p>Custom 404</p>",
     });
-  }, 60000);
+  }, 90000);
 
   afterAll(() => {
     if (fixtureDirectory) {
@@ -168,5 +175,22 @@ describe("site prerender", () => {
       head.indexOf('data-emotion="css-global')
     );
     expect(body).not.toContain('data-emotion="css-global');
+  });
+
+  it("writes a 404 page from the 404 route", () => {
+    const html = readPage("404.html");
+    const head = html.slice(0, html.indexOf("</head>"));
+
+    expect(html).toContain("Page not found");
+    expect(html).toContain('href="/color-mode/"');
+    expect(head).toContain('<meta name="robots" content="noindex" />');
+    expect(head).not.toContain("canonical");
+    expect(head).not.toContain("og:url");
+    expect(head).toContain('[data-mdx-docs-color-scheme="dark"]{');
+    expect(readPage("sitemap.xml")).not.toContain("404");
+  });
+
+  it("leaves a 404 page from public/ as is", () => {
+    expect(readPage("404.html", "site-with-404")).toBe("<p>Custom 404</p>");
   });
 });

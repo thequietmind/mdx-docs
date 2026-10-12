@@ -6,6 +6,7 @@ import { join } from "path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import {
+  applyNotFoundMetadata,
   applyPageMetadata,
   buildPageUrl,
   generateRobotsTxt,
@@ -250,6 +251,33 @@ describe.each(["$1", "$&", "$`", "$'", "$$"])(
     });
   }
 );
+
+describe("applyNotFoundMetadata", () => {
+  it("drops the page url and marks the page noindex", () => {
+    const html = applyNotFoundMetadata(template);
+
+    expect(html).not.toMatch(/rel="canonical"/);
+    expect(html).not.toMatch(/property="og:url"/);
+    expect(html).toContain(
+      '<meta name="robots" content="noindex" />\n</head>'
+    );
+    expect(html).toContain(
+      '<meta property="og:description" content="Default description" />\n' +
+        '    <meta name="twitter:title" content="Default title" />'
+    );
+    expect(html).toContain("<title>Default title</title>");
+  });
+
+  it("overrides an existing robots tag", () => {
+    const html = applyNotFoundMetadata(
+      '<html><head><meta name="robots" content="index, follow" /></head></html>'
+    );
+
+    expect(html).toBe(
+      '<html><head><meta name="robots" content="noindex" /></head></html>'
+    );
+  });
+});
 
 describe("getRouteOutputPath", () => {
   it("maps the home route to the output root index.html", () => {
