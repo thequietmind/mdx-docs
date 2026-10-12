@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- A site's `pages/404.mdx` renders for unknown URLs and in the prerendered
+  `404.html`. The published package had the built-in 404 page bundled in, so
+  sites using `createMdxDocsConfig` always got "Page not found" instead. The
+  package now imports its 404 page from a new `@quietmind/mdx-docs/404` export,
+  which `createMdxDocsConfig` points at `pages/404.mdx` when the site has one.
+  Sites with their own Vite config still get the built-in page
+- The built-in 404 page's "Go home" link goes to the site's base path instead
+  of `/`
+
 ## [2.0.1] - 2026-10-11
 
 ### Fixed

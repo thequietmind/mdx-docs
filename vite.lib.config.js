@@ -8,7 +8,9 @@ import { defineConfig } from "vite";
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const VIRTUAL_404_ID = "virtual:mdx-docs/404";
-const RESOLVED_VIRTUAL_404_ID = "\0" + VIRTUAL_404_ID;
+// The package's own "./404" export, which resolves to the built-in NotFound
+// unless the site's Vite config swaps in its pages/404.mdx.
+const PACKAGE_404_ID = "@quietmind/mdx-docs/404";
 
 export default defineConfig({
   publicDir: false,
@@ -22,13 +24,7 @@ export default defineConfig({
     {
       name: "mdx-docs-404",
       resolveId(id) {
-        if (id === VIRTUAL_404_ID) return RESOLVED_VIRTUAL_404_ID;
-      },
-      load(id) {
-        if (id === RESOLVED_VIRTUAL_404_ID) {
-          const notFoundPath = resolve(__dirname, "src/components/NotFound.jsx");
-          return `export { default } from ${JSON.stringify(notFoundPath)};`;
-        }
+        if (id === VIRTUAL_404_ID) return { id: PACKAGE_404_ID, external: true };
       },
     },
     react(),
@@ -42,6 +38,7 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, "src/index.js"),
         server: resolve(__dirname, "src/server.jsx"),
+        404: resolve(__dirname, "src/components/NotFound.jsx"),
       },
       cssFileName: "index",
       formats: ["es"],

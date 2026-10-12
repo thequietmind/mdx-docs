@@ -1,4 +1,5 @@
 import { Box, Typography, Link } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 const NotFound = () => {
   return (
@@ -19,7 +20,7 @@ const NotFound = () => {
       <Typography variant="h5" color="text.secondary">
         Page not found
       </Typography>
-      <Link href="/" underline="hover">
+      <Link component={RouterLink} to="/" underline="hover">
         Go home
       </Link>
     </Box>

@@ -96,9 +96,10 @@ hydrates that HTML in the browser, so embedded React and Material UI components
 remain interactive.
 
 `404.html` is the site's 404 page, which Netlify, Cloudflare Pages and GitHub
-Pages serve with a 404 status for any unknown URL. It's marked `noindex`, has no
-canonical or `og:url` tag, and isn't listed in the sitemap. An existing
-`public/404.html` is never overwritten.
+Pages serve with a 404 status for any unknown URL. It shows `pages/404.mdx` if
+the site has one, and a built-in "Page not found" page otherwise. It's marked
+`noindex`, has no canonical or `og:url` tag, and isn't listed in the sitemap. An
+existing `public/404.html` is never overwritten.
 
 Prerendering requires static routes such as `/getting-started`. Dynamic route
 patterns containing parameters or wildcards are not supported.
