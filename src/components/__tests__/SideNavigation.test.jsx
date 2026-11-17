@@ -1,3 +1,4 @@
+import { ThemeProvider, createTheme } from "@mui/material";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
@@ -24,6 +25,12 @@ const renderWithRouter = (component, { route = "/" } = {}) => {
     </DocsProvider>
   );
 };
+
+// jsdom matches media queries against a fixed 1024px-wide viewport, so raise
+// every breakpoint above it to lay the page out as it is on a phone
+const phoneTheme = createTheme({
+  breakpoints: { values: { xs: 0, sm: 2000, md: 2100, lg: 2200, xl: 2300 } },
+});
 
 // Wires the drawer state the same way App does
 const SideNavigationWithDrawerState = () => {
@@ -77,7 +84,11 @@ describe("SideNavigation component", () => {
 
   it("should close the mobile drawer when a link in it is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<SideNavigation {...defaultProps} mobileOpen={true} />);
+    renderWithRouter(
+      <ThemeProvider theme={phoneTheme}>
+        <SideNavigation {...defaultProps} mobileOpen={true} />
+      </ThemeProvider>
+    );
 
     // The open drawer is modal, so its link is the only accessible one
     await user.click(screen.getByRole("link", { name: "Colors" }));
